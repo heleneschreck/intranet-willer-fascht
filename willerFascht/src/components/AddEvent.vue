@@ -113,9 +113,9 @@ export default {
  
     .then((result) => console.log(result.id))
         .catch((error) => console.log("error", error));
-      //   setTimeout(() => {
-      //   this.$router.push({ path: "/liste"});
-      // }, "2000");
+        setTimeout(() => {
+        this.$router.push({ path: "/liste"});
+      }, "2000");
  
    
     },

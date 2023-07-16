@@ -4,7 +4,6 @@ import { useRoute } from "vue-router";
 const route = useRoute();
 
 export default {
- 
   data() {
     return {
       mode: false,
@@ -29,31 +28,48 @@ export default {
   },
 
   methods: {
-updateEvent(){
-  var requestOptions = {
-  method: 'PUT',
-  redirect: 'follow'
-};
+    updateEvent(evenement) {
+      console.log(this.$route.params.evenement);
+      console.log(evenement.title);
+      console.log(evenement.description);
+      var myHeaders = new Headers();
 
-fetch("http://127.0.0.1:8000/api/rendezvous/74?title=test modifié&description=est ce que ca fonctionne ?", requestOptions)
-  .then(response => response.text())
-  .then(result => console.log(result))
-  .catch(error => console.log('error', error));
-}
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("title", evenement.title);
+      urlencoded.append("description", evenement.description);
+
+      var requestOptions = {
+        method: "PUT",
+        body: urlencoded,
+        redirect: "follow",
+      };
+
+      let url =
+        "http://127.0.0.1:8000/api/rendezvous/" + this.$route.params.evenement;
+      fetch(url, requestOptions)
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error", error));
+        setTimeout(() => {
+        this.$router.push({ path: "/liste"});
+      }, "2000");
+    },
   },
 };
 </script>
 <template>
-    <router-link :to="`/liste`">
+  <router-link :to="`/liste`">
     <button class="button rounded-lg">Retour</button>
   </router-link>
   <div v-for="evenement in evenements">
     <div v-if="evenement.id == $route.params.evenement">
-      <h1>Modification du rendez-vous <br>
-        "{{evenement.title}}" </h1>
+      <h1>
+        Modification du rendez-vous <br />
+        "{{ evenement.title }}"
+      </h1>
 
-        <div class="créationevent">
-    <div class="input">
+      <div class="créationevent">
+        <!-- <div class="input">
       <label for="start" style="margin-top: 30px">Début:</label>
       <input
         style="margin-top: 30px"
@@ -67,16 +83,16 @@ fetch("http://127.0.0.1:8000/api/rendezvous/74?title=test modifié&description=e
     <div class="input">
       <label for="end">Fin:</label>
       <input v-model="evenement.end" type="datetime-local" id="end" name="end" />
-    </div>
-    <div class="input">
-      <label for="title">Evenement:</label>
-      <input v-model="evenement.title" class="input" type="text" />
-    </div>
-    <div class="input">
-      <label for="description">Contenus:</label>
-      <textarea v-model="evenement.description" class="input" type="text" />
-    </div>
-    <div class="input">
+    </div> -->
+        <div class="input">
+          <label for="title">Evenement:</label>
+          <input v-model="evenement.title" class="input" type="text" />
+        </div>
+        <div class="input">
+          <label for="description">Contenus:</label>
+          <textarea v-model="evenement.description" class="input" type="text" />
+        </div>
+        <!-- <div class="input">
       <label for="backgroundcolor">Type de rendez-vous :</label>
       <select
         v-model="evenement.backgroundcolor"
@@ -92,23 +108,21 @@ fetch("http://127.0.0.1:8000/api/rendezvous/74?title=test modifié&description=e
         <option value="#F2BF0F">Halloween</option>
         <option value="#16AF0B">Carnaval</option>
       </select>
-    </div>
-    <br />
-    <div>
-   
-      <div class="add">
-        <button @click="updateEvent()" class="button rounded-lg button-disabled">
-         Modification du rendez-vous
-        </button>
+    </div> -->
+        <br />
+        <div>
+          <div class="add">
+            <button
+              @click="updateEvent(evenement)"
+              class="button rounded-lg button-disabled"
+            >
+              Modification du rendez-vous
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-      </div>
-      </div>
-
-
-     
-    
 </template>
 <style>
 .updaterendezvous {
@@ -116,5 +130,4 @@ fetch("http://127.0.0.1:8000/api/rendezvous/74?title=test modifié&description=e
   width: 90%;
   margin: auto;
 }
-
 </style>

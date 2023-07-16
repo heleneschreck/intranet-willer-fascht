@@ -102,7 +102,6 @@ export default {
 };
 </script>
 <template>
- 
   <h1>Liste des rendez-vous organisés</h1>
   <div class="action">
     <router-link :to="`/planning`">
@@ -144,7 +143,11 @@ export default {
             <router-link :to="`/rendezvous/${evenement.id}`">
               {{ evenement.title }}
               <div v-show="user.niveau == '1'">
-                <div class="modiferevenement" v-if="mode == 'displaymodif'" title="Modifier le rendez-vous">
+                <div
+                  class="modiferevenement"
+                  v-if="mode == 'displaymodif'"
+                  title="Modifier le rendez-vous"
+                >
                   <router-link
                     :to="`/updaterendezvous/${evenement.id}`"
                     style="border: none"
@@ -159,8 +162,11 @@ export default {
             </router-link>
           </td>
 
-          <td @mouseover="sortir()">
-            {{ evenement.description }}
+          <td @mouseover="sortir()" style="width: 30% !important">
+         
+         
+                {{ evenement.description.substring(0, 50) }}
+         
           </td>
 
           <div v-for="participant in participants">
