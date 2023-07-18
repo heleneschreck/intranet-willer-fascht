@@ -29,10 +29,12 @@ class ProjectController extends Controller
     {
         $this->validate($request, [
             'title' => 'required',
+            'end' => 'required',
             'user_id' => 'required',         
         ]);
         $project = Project::create([
             'title'=> $request->title,
+            'end'=> $request->end,
             'user_id' => $request->user_id
         ]);
         return response()->json($project, 201);

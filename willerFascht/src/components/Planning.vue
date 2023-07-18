@@ -83,6 +83,7 @@ export default {
       
       console.table(this.evenements);
       this.calendarOptions.events = this.evenements;
+      this.calendarOptions.editable = true,
       console.log(this.calendarOptions.events);
       let backgroundcolor = this.calendarOptions.events.background
       backgroundcolor = this.evenements.backgroundcolor
@@ -91,7 +92,12 @@ export default {
   },
 
   methods: {
-    handleDateClick: function (arg) {},
+    handleDateClick: function (arg) {
+    },
+    editable:function(evenements){
+      console.log(evenements);
+
+    }
   },
 };
 </script>

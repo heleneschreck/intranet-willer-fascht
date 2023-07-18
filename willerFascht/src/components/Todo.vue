@@ -1,5 +1,6 @@
 <script>
 import { mapState } from "vuex";
+import moment from "moment";
 
 export default {
   data() {
@@ -14,6 +15,8 @@ export default {
     ...mapState(["userInfos"]),
   },
   async created() {
+    this.moment = moment;
+
     this.user = JSON.parse(localStorage.getItem("user") || "[]");
     console.log(this.user);
     // if (localStorage.getItem("user") != null) {
@@ -111,8 +114,8 @@ export default {
         <router-link :to="`projet/${project.id}`">
           <!-- <div class="grid grid-cols-1 gap-3 mb-3 lg:grid-cols-3 "> -->
             <div class="w-full px-9 py-3 bg-white rounded-lg shadow  titleproject">
-              <div class="text-sm font-medium text-gray-500 truncate">
-                {{ project.title }}
+              <div class="text-sm font-medium text-gray-500 truncate" >
+                {{ project.title }}  - {{ moment(project.end).format("DD/MM/YYYY") }}
               </div>
             <!-- </div> -->
           </div>

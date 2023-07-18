@@ -132,6 +132,10 @@ export default {
     nodisplay: function () {
       this.mode = "nodisplay";
     },
+    // attentions: function () {
+    //   console.log("attention");
+    //   this.mode = "attentions";
+    // }
   },
 };
 </script>
@@ -219,6 +223,25 @@ export default {
             class="encours rounded-lg shadow"
           >
             <router-link :to="`/tache/${tache.id}`">
+              <div
+                v-show="moment() > moment(tache.end)"
+                style="
+                  display: flex;
+                  justify-content: space-around;
+                  margin-left: 15%;
+                  margin-right: 15%;
+                "
+              >
+                <img
+                  src="https://cdn-icons-png.flaticon.com/128/10099/10099006.png"
+                  alt="attention"
+                  class="urgence"
+                 
+                />
+                <span class="attention" >
+                  Attention à finir de toute urgence</span
+                >
+              </div>
               {{ tache.title }}
             </router-link>
             <hr />
@@ -273,6 +296,25 @@ export default {
             class="enattente rounded-lg shadow"
           >
             <router-link :to="`/tache/${tache.id}`">
+              <div
+                v-show="moment() > moment(tache.end)"
+                style="
+                  display: flex;
+                  justify-content: space-around;
+                  margin-left: 15%;
+                  margin-right: 15%;
+                "
+              >
+                <img
+                  src="https://cdn-icons-png.flaticon.com/128/10099/10099006.png"
+                  alt="attention"
+                  class="urgence"
+                 
+                />
+                <span class="attention" >
+                  Attention à finir de toute urgence</span
+                >
+              </div>
               {{ tache.title }}
             </router-link>
             <hr />
@@ -417,6 +459,13 @@ export default {
   </div>
 </template>
 <style>
+.urgence {
+  width: 25px;
+}
+.attention {
+  color: red;
+  font-size: 15px;
+}
 .display {
   margin-left: 40%;
 }

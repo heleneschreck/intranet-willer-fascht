@@ -36,6 +36,7 @@ export default {
     createProject: function () {
       var urlencoded = new URLSearchParams();
       urlencoded.append("title", this.title);
+      urlencoded.append("end", this.end);
       urlencoded.append("user.id", this.user.id)
     
       var requestOptions = {
@@ -98,14 +99,21 @@ let url= "http://127.0.0.1:8000/api/project/"
         </div>
       </div>
     </div>
-    <div class="container mx-auto mt-12">
+    <div class="container mx-auto mt-12" style="margin-left:5%" >
         
       <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-3">
         <div class="w-full px-4 py-5 bg-white rounded-lg shadow">
           <div class="text-sm font-medium text-gray-500 truncate"></div>
           <label for="title">Nom du projet :</label>
-          <input v-model="title" class="input" type="text" />
+          <input v-model="title"  type="text" />
           <br />
+          <br />
+    
+      <label for="end">Fin:</label>
+      <input v-model="end" type="datetime-local" id="end" name="end" />
+      <br/>
+      <br/>
+    
           <button
             @click="createProject()"
             class="button rounded-lg button-disabled connexions"

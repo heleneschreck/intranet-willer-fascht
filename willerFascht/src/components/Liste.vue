@@ -166,7 +166,12 @@ export default {
          
          
                 {{ evenement.description.substring(0, 50) }}
-         
+                <!-- <div v-if= "evenement.description.substring > (0,50) " >
+                  exeterat
+
+
+                </div>
+          -->
           </td>
 
           <div v-for="participant in participants">
