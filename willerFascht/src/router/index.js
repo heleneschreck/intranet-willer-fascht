@@ -5,6 +5,7 @@ import NavbarsView from '../views/NavbarsView.vue'
 import ConnexionView from '../views/ConnexionView.vue'
 import AccueilintraView from '../views/AccueilintraView.vue'
 import CompteRenduView from '../views/CompteRenduView.vue'
+import DetailView from '../views/DetailView.vue'
 import AddCompteRenduView from '../views/AddCompteRenduView.vue'
 import TodoView from '../views/TodoView.vue'
 import CreateprojectView from '../views/CreateprojectView.vue'
@@ -54,6 +55,11 @@ const router = createRouter({
       path: '/compterendu',
       name: 'compterendu',
       component: CompteRenduView
+    },
+    {
+      path: '/detail/:compterendu',
+      name: 'detail',
+      component: DetailView
     },
     {
       path: '/addcompterendu',
