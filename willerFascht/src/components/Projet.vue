@@ -4,9 +4,10 @@ import { useRoute } from "vue-router";
 import moment from "moment";
 import { VueDraggableNext } from "vue-draggable-next";
 const route = useRoute();
-import { Draggable } from "@fullcalendar/interaction";
+
 export default {
   data() {
+    
     return {
       enabled: true,
       dragging: false,
@@ -18,6 +19,7 @@ export default {
       taches: [],
       mode: "nodisplay",
       tache: "",
+      
     };
   },
   computed: {
@@ -25,7 +27,7 @@ export default {
   },
   async created() {
     this.moment = moment;
-
+    
     this.user = JSON.parse(localStorage.getItem("user") || "[]");
     console.log(this.user);
     // if (localStorage.getItem("user") != null) {
@@ -118,12 +120,37 @@ export default {
       };
       let url = "http://127.0.0.1:8000/api/taches/" + tache.id;
       fetch(url, requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
+      .then((response) => response.text())
+      .then((result) => console.log(result))
         .catch((error) => console.log("error", error));
       setTimeout(() => {
         this.$router.go(this.$router.currentRoute);
       }, "2000");
+    },
+    onDragging: function (ev) {
+        console.log(ev);
+        ev.dataTransfer.setData("text", ev.target.id);
+        
+        
+      },
+    allowDrop: function (ev) {
+      // return false;
+      ev.preventDefault();
+      // console.log(statut.id);
+    },
+
+    drop(ev) {
+      let data = ev.dataTransfer.getData("text");
+      console.log(data);
+
+      
+      var target = ev.currentTarget;
+      console.log(target );
+     
+
+      // ev.dataTransfer.setData("text", ev.target.id);
+      // console.log(ev);
+      // ev.target.appendChild(document.getElementById(data));
     },
 
     display: function () {
@@ -137,6 +164,23 @@ export default {
     //   this.mode = "attentions";
     // }
   },
+  // setup() {
+  //   const onDragging = (ev) => {
+  //       console.log(ev);
+  //       ev.dataTransfer.setData("text", ev.target.id);
+  //   };
+  //   const allowDrop = (ev) => {
+  //       ev.preventDefault();
+  //   };
+  //   const drag = (ev) => {
+  //       ev.dataTransfer.setData("text", ev.target.id);
+  //   };
+  //   const drop = (ev) => {
+  //       ev.preventDefault();
+  //       let data = ev.dataTransfer.getData("text");
+  //       console.log(data);
+  //       ev.target.appendChild(document.getElementById(data));
+  //   },
 };
 </script>
 <template>
@@ -146,10 +190,16 @@ export default {
 
   <div v-for="project in projects" v-show="$route.params.projet == project.id">
     <h1>{{ project.title }}</h1>
-
+    
     <div class="tableau">
-      <div v-for="statut in statuts" class="statut">
+      <div
+        v-for="statut in statuts"
+        class="statut"
+        @drop="drop"
+        @dragover="allowDrop"
+      >
         {{ statut.statut }}
+
         <router-link :to="`/ajoutTache/${$route.params.projet}/${statut.id}`">
           <button style="width: 30px; border: none">
             <img
@@ -168,6 +218,8 @@ export default {
             tache.user_id == user.id &&
             tache.project_id == project.id
           "
+          draggable="true"
+          @dragstart="onDragging"
         >
           <div
             v-if="tache.status_id == 3"
@@ -178,6 +230,7 @@ export default {
             "
             class="rounded-lg shadow termine"
           >
+            >
             <router-link :to="`/tache/${tache.id}`">
               {{ tache.title }}
             </router-link>
@@ -221,6 +274,7 @@ export default {
             v-else-if="tache.status_id == 2"
             style="color: green"
             class="encours rounded-lg shadow"
+            draggable="true"
           >
             <router-link :to="`/tache/${tache.id}`">
               <div
@@ -236,9 +290,8 @@ export default {
                   src="https://cdn-icons-png.flaticon.com/128/10099/10099006.png"
                   alt="attention"
                   class="urgence"
-                 
                 />
-                <span class="attention" >
+                <span class="attention">
                   Attention à finir de toute urgence</span
                 >
               </div>
@@ -309,9 +362,8 @@ export default {
                   src="https://cdn-icons-png.flaticon.com/128/10099/10099006.png"
                   alt="attention"
                   class="urgence"
-                 
                 />
-                <span class="attention" >
+                <span class="attention">
                   Attention à finir de toute urgence</span
                 >
               </div>

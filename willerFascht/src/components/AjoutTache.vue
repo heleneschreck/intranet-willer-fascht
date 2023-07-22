@@ -55,44 +55,41 @@ export default {
 
       var requestOptions = {
         method: "POST",
-        body:urlencoded,
+        body: urlencoded,
         redirect: "follow",
       };
-let url ="http://127.0.0.1:8000/api/taches/"
-      fetch(
-       url, requestOptions)
+      let url = "http://127.0.0.1:8000/api/taches/";
+      fetch(url, requestOptions)
         .then((response) => response.text())
         .then((result) => console.log(result))
         .catch((error) => console.log("error", error));
-        setTimeout(() => {
-        this.$router.push({ path: "/projet/"+this.$route.params.projet });
+      setTimeout(() => {
+        this.$router.push({ path: "/projet/" + this.$route.params.projet });
       }, "2000");
     },
   },
 };
 </script>
 <template>
-     <router-link :to="`/projet/${this.$route.params.projet}`">
-<button  class="button rounded-lg updateTache">Retour</button>
-</router-link>
+  <router-link :to="`/projet/${this.$route.params.projet}`">
+    <button class="button rounded-lg updateTache">Retour</button>
+  </router-link>
   <div class="formulaire">
     <h1>Tache à ajouter</h1>
-    
+
     <label for="title">Tache :</label>
     <input v-model="title" class="input" type="text" />
-   
+
     <label for="end">Date buttoir :</label>
     <input v-model="end" class="input" type="date" />
 
-
-
-    <label for="user_id">Je confie cette tache à :</label> 
+    <label for="user_id">Je confie cette tache à :</label>
     <select v-model="user_id" name="user_id" id="user_id">
-      <option v-for="membre in membres"  :value ="membre.id" >
+      <option v-for="membre in membres" :value="membre.id">
         {{ membre.prenom }}
       </option>
     </select>
-    <br>
+    <br />
     <button
       @click="createTache()"
       class="button rounded-lg button-disabled connexions"

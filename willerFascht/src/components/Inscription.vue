@@ -101,7 +101,7 @@ export default {
                 v-model="participantid"
               />
 
-              <label style="margin-left: 5px" for="particpants">{{
+              <label style="margin-left: 5px" for="participants">{{
                 membre.prenom
               }}</label>
             </div>
