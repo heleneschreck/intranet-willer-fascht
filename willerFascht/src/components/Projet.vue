@@ -7,7 +7,6 @@ const route = useRoute();
 
 export default {
   data() {
-    
     return {
       enabled: true,
       dragging: false,
@@ -19,7 +18,7 @@ export default {
       taches: [],
       mode: "nodisplay",
       tache: "",
-      
+      dragtache: null,
     };
   },
   computed: {
@@ -27,7 +26,7 @@ export default {
   },
   async created() {
     this.moment = moment;
-    
+
     this.user = JSON.parse(localStorage.getItem("user") || "[]");
     console.log(this.user);
     // if (localStorage.getItem("user") != null) {
@@ -120,38 +119,49 @@ export default {
       };
       let url = "http://127.0.0.1:8000/api/taches/" + tache.id;
       fetch(url, requestOptions)
-      .then((response) => response.text())
-      .then((result) => console.log(result))
+        .then((response) => response.text())
+        .then((result) => console.log(result))
         .catch((error) => console.log("error", error));
       setTimeout(() => {
         this.$router.go(this.$router.currentRoute);
       }, "2000");
     },
-    onDragging: function (ev) {
-        console.log(ev);
-        ev.dataTransfer.setData("text", ev.target.id);
-        
-        
-      },
-    allowDrop: function (ev) {
-      // return false;
-      ev.preventDefault();
-      // console.log(statut.id);
-    },
+    // onDragging: function (statut, tache) {
+    //   this.dragtache = tache.id;
+    //   // console.log(statut);
+    //   // console.log(this.dragtache);
 
-    drop(ev) {
-      let data = ev.dataTransfer.getData("text");
-      console.log(data);
+    //   return dragtache;
+    // },
+    //     drop: function (ev) {
+    //   // return false;
+    //   ev.preventDefault();
+    //   // console.log(statut.id);
+    // },
+    // allowDrop: function (statut, dragtache) {
+    //   console.log(this.dragtache);
 
-      
-      var target = ev.currentTarget;
-      console.log(target );
-     
+    //   console.log(statut);
 
-      // ev.dataTransfer.setData("text", ev.target.id);
-      // console.log(ev);
-      // ev.target.appendChild(document.getElementById(data));
-    },
+    //   var urlencoded = new URLSearchParams();
+    //   urlencoded.append("status_id", statut);
+
+    //   var requestOptions = {
+    //     method: "PUT",
+    //     body: urlencoded,
+    //     redirect: "follow",
+    //   };
+    //   let url = "http://127.0.0.1:8000/api/taches/" + this.dragtache;
+    //   fetch(url, requestOptions)
+    //     .then((response) => response.text())
+    //     .then((result) => console.log(result))
+    //     .catch((error) => console.log("error", error));
+    //   // setTimeout(() => {
+    //   //   this.$router.go(this.$router.currentRoute);
+    //   // }, "5000");
+    // },
+
+
 
     display: function () {
       this.mode = "display";
@@ -159,28 +169,9 @@ export default {
     nodisplay: function () {
       this.mode = "nodisplay";
     },
-    // attentions: function () {
-    //   console.log("attention");
-    //   this.mode = "attentions";
-    // }
+
   },
-  // setup() {
-  //   const onDragging = (ev) => {
-  //       console.log(ev);
-  //       ev.dataTransfer.setData("text", ev.target.id);
-  //   };
-  //   const allowDrop = (ev) => {
-  //       ev.preventDefault();
-  //   };
-  //   const drag = (ev) => {
-  //       ev.dataTransfer.setData("text", ev.target.id);
-  //   };
-  //   const drop = (ev) => {
-  //       ev.preventDefault();
-  //       let data = ev.dataTransfer.getData("text");
-  //       console.log(data);
-  //       ev.target.appendChild(document.getElementById(data));
-  //   },
+
 };
 </script>
 <template>
@@ -188,16 +179,19 @@ export default {
     <button class="button rounded-lg retourtodo">Retour</button>
   </router-link>
 
+  <br />
+  <!-- La tache a changé est {{ dragtache }} -->
   <div v-for="project in projects" v-show="$route.params.projet == project.id">
     <h1>{{ project.title }}</h1>
-    
+
     <div class="tableau">
       <div
         v-for="statut in statuts"
         class="statut"
         @drop="drop"
-        @dragover="allowDrop"
+        @dragover="allowDrop(statut.id, dragtache.id)"
       >
+        >
         {{ statut.statut }}
 
         <router-link :to="`/ajoutTache/${$route.params.projet}/${statut.id}`">
@@ -219,7 +213,7 @@ export default {
             tache.project_id == project.id
           "
           draggable="true"
-          @dragstart="onDragging"
+          @dragstart="onDragging(statut, tache)"
         >
           <div
             v-if="tache.status_id == 3"
@@ -434,13 +428,14 @@ export default {
               {{ tache.title }}
             </router-link>
             <hr />
+
             A faire avant le: <br />
             {{ moment(tache.end).format("DD/MM/YYYY") }}
             <hr />
             <div
               class="prenom"
               v-for="membre in membres"
-              v-show="membre.id == tache.user_id"
+              v-show="membre.id == tache.user_id" 
             >
               {{ membre.prenom }}
             </div>
@@ -562,6 +557,7 @@ h1 {
 }
 .statut {
   font-size: 20px;
+  margin-right: 10px;
 }
 .ajout {
   width: 110px;
