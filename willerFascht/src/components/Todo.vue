@@ -30,6 +30,9 @@ export default {
     let fetched_projects = await fetch("http://127.0.0.1:8000/api/project");
     this.projects = await fetched_projects.json();
     console.table(this.projects);
+    this.projects.sort((a, b) => a.end.localeCompare(b.end));
+
+    console.table(this.projects);
   },
   methods: {
     logout: function () {
@@ -80,13 +83,12 @@ export default {
                     />
                     créer un projet</span
                   >
-    
                 </router-link>
               </a>
-              <hr/>
+              <hr />
             </li>
           </ul>
-          <ul class="pt-2 pb-4 space-y-1 text-sm" v-for="project in projects" >
+          <ul class="pt-2 pb-4 space-y-1 text-sm" v-for="project in projects">
             <li class="rounded-sm">
               <div class="flex items-center p-2 space-x-1 rounded-md">
                 <path
@@ -110,13 +112,14 @@ export default {
       </div>
     </div>
     <div class="projets">
-      <div class="container mx-auto mt-5 " v-for="project in projects">
+      <div class="container mx-auto mt-5" v-for="project in projects">
         <router-link :to="`projet/${project.id}`">
           <!-- <div class="grid grid-cols-1 gap-3 mb-3 lg:grid-cols-3 "> -->
-            <div class="w-full px-9 py-3 bg-white rounded-lg shadow  titleproject">
-              <div class="text-sm font-medium text-gray-500 truncate" >
-                {{ project.title }}  - {{ moment(project.end).format("DD/MM/YYYY") }}
-              </div>
+          <div class="w-full px-9 py-3 bg-white rounded-lg shadow titleproject">
+            <div class="text-sm font-medium text-gray-500 truncate">
+              {{ project.title }} -
+              {{ moment(project.end).format("DD/MM/YYYY") }}
+            </div>
             <!-- </div> -->
           </div>
         </router-link>
@@ -134,19 +137,17 @@ export default {
   flex-wrap: wrap;
   flex-direction: row;
 }
-.projectrelative{
+.projectrelative {
   position: relative;
   margin-bottom: -40px !important;
   padding-left: 30%;
 }
-.deleteproject{
+.deleteproject {
   position: absolute;
   left: 172px;
-  
 }
 .delete {
   width: 25px;
-  
 }
 .ajouter {
   width: 25px;
@@ -158,12 +159,10 @@ export default {
   width: 219px !important;
   margin-top: 14%;
 }
-.indexproject{
-  
+.indexproject {
   text-align: center;
 }
-.titleproject{
+.titleproject {
   margin-bottom: -5px !important;
 }
-
 </style>

@@ -51,18 +51,19 @@ export default {
     inscription: function (participant) {
       console.log(participant.rendezvous_id);
 
-      var tableparticipants =[this.participantid]
-      console.log(tableparticipants);
+      // Use the participantid array directly instead of putting it inside another array
       var urlencoded = new URLSearchParams();
-      urlencoded.append("participants_id", tableparticipants );
-      urlencoded.append("noparticipants_id", participant.noparticipants_id + " " + this.noparticipant);
+      urlencoded.append("participants_id[]", this.participantid);
+
+      // Join the noparticipant array with a space to create a string of participant names
+      urlencoded.append("noparticipants_id", this.noparticipant.join(" "));
+
       var requestOptions = {
         method: "PUT",
         body: urlencoded,
         redirect: "follow",
       };
-      let url =
-        "http://127.0.0.1:8000/api/participants/"+participant.id;
+      let url = "http://127.0.0.1:8000/api/participants/" + participant.id;
 
       fetch(url, requestOptions)
         .then((response) => response.text())
@@ -96,7 +97,7 @@ export default {
               <input
                 type="checkbox"
                 id="particpants_id"
-                :value="membre.prenom"
+                :value="membre.id"
                 name="particpantid[]"
                 v-model="participantid"
               />
@@ -115,7 +116,7 @@ export default {
               <input
                 type="checkbox"
                 id="noparticpants_id"
-                :value="membre.prenom"
+                :value="membre.id"
                 v-model="noparticipant"
               />
 

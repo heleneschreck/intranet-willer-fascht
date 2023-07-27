@@ -28,6 +28,7 @@ Route::apiResource("users", UserController::class); // Les routes "users.*" de l
 Route::apiResource("rendezvous", RendezvousController::class);
 Route::apiResource("participants", ParticipantsController::class);
 Route::apiResource("image", ImageController::class);
+Route::get('/images/{path}', 'App\Http\Controllers\Api\ImageController@index');
 
 Route::post('image',[ImageController::class, 'imageStore']);
 Route::get('/image/{id}', 'ImageController@show');

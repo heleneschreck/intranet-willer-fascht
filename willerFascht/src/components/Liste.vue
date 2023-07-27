@@ -33,13 +33,14 @@ export default {
     let fetched_evenements = await fetch(
       "http://127.0.0.1:8000/api/rendezvous"
     );
-
     let lListe = await fetched_evenements.json();
     lListe = lListe.sort((a, b) => b.start.localeCompare(a.start));
-    console.log(lListe);
-    //this.evenements = await fetched_evenements.json();
     this.evenements = lListe;
     console.table(this.evenements);
+
+    lListe = lListe.sort((a, b) => b.start.localeCompare(a.start));
+
+
 
     let fetched_participants = await fetch(
       "http://127.0.0.1:8000/api/participants"
@@ -163,16 +164,13 @@ export default {
           </td>
 
           <td @mouseover="sortir()" style="width: 30% !important">
-         
-         
-                {{ evenement.description.substring(0, 50) }}
-                <!-- <div v-if= "evenement.description.substring > (0,50) " >
+            {{ evenement.description.substring(0, 50) }}
+            <!-- <div v-if= "evenement.description.substring > (0,50) " >
                   exeterat
 
 
                 </div>
-          -->
-          </td>
+          --></td>
 
           <div v-for="participant in participants">
             <div v-if="evenement.id == participant.rendezvous_id">

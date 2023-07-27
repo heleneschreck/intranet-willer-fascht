@@ -85,12 +85,7 @@ export default {
               href="#"
               class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
+            
                 <path
                   class="fill-current text-gray-300 group-hover:text-cyan-300"
                   fill-rule="evenodd"
@@ -101,8 +96,16 @@ export default {
                   class="fill-current text-gray-600 group-hover:text-cyan-600"
                   d="M6 12a2 2 0 012-2h8a2 2 0 012 2v2a2 2 0 01-2 2H2h2a2 2 0 002-2v-2z"
                 />
-              </svg>
-              <span class="group-hover:text-gray-700">A faire</span>
+           
+              <span class="group-hover:text-gray-700 compte" style="margin-left: -15px;">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/128/3286/3286693.png"
+                  style="width: 30px; height: 30px; margin-right: 18%"
+                  alt="compte rendu"
+                  />
+                
+                
+                Projets</span>
             </a>
           </router-link>
 </li>
@@ -117,15 +120,27 @@ export default {
                   src="https://cdn-icons-png.flaticon.com/128/7322/7322825.png"
                   style="width: 30px; height: 30px; margin-right: 18%"
                   alt="compte rendu"
-                />
-                Compte rendu des reunions
-              </span>
-            </a>
-            
-          </li>
-        </router-link>
+                  />
+                  Compte rendu des reunions
+                </span>
+              </a>
+              
+            </li>
+          </router-link>
+          <router-link :to="`affiches`">
 
+            <li>
+              <a href="#" class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group">
+                
+                <span class="group-hover:text-gray-700 compte">
+                  <img src="https://cdn-icons-png.flaticon.com/128/902/902723.png" 
+                  style="width: 30px; height: 30px; margin-right: 18%" alt="">
+                  Supports publicitaires</span>
+                </a>
+              </li>
+            </router-link>
         <li>
+          <hr>
           <router-link :to="`accueil`">
             <a
               href="#"
@@ -152,15 +167,7 @@ export default {
             </a>
           </router-link>
         </li>
-        <!-- <li>
-                <a href="#" class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path class="fill-current text-gray-600 group-hover:text-cyan-600" d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z" />
-                        <path class="fill-current text-gray-300 group-hover:text-cyan-300" d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z" />
-                    </svg>
-                    <span class="group-hover:text-gray-700">Other data</span>
-                </a>
-            </li> -->
+     
         <!-- <li>
                 <a href="#" class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

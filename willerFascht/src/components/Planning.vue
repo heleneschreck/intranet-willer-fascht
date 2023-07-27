@@ -23,6 +23,7 @@ export default {
       taches: [],
       membres: [],
       evenements: [],
+      eventClick: this.editable,
 
       //
       calendarOptions: {
@@ -81,10 +82,10 @@ export default {
       );
       this.evenements = await fetched_evenements.json();
       
-      console.table(this.evenements);
+      // console.table(this.evenements);
       this.calendarOptions.events = this.evenements;
-      this.calendarOptions.editable = true,
-      console.log(this.calendarOptions.events);
+      this.calendarOptions.editable = true;
+      // console.log(this.calendarOptions.events);
       let backgroundcolor = this.calendarOptions.events.background
       backgroundcolor = this.evenements.backgroundcolor
 
@@ -94,10 +95,31 @@ export default {
   methods: {
     handleDateClick: function (arg) {
     },
-    editable:function(evenements){
-      console.log(evenements);
+    async editable(event) {
+    // Assuming the event object has an 'id' property for identification
+    const eventId = event.id;
+    console.log(eventId);
+    // Modify the event data as needed
+    event.title = "Updated Title";
+    event.start = "2023-07-30"; // Change to the new start date
 
+    try {
+      // Make a PUT request to your API to update the event
+      await fetch(`http://127.0.0.1:8000/api/rendezvous/${eventId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(event),
+      });
+
+      // Event successfully updated, you may want to display a message or perform any additional actions
+      console.log("Event updated successfully!");
+    } catch (error) {
+      console.error("Error updating event:", error);
+      // Handle the error appropriately (e.g., show an error message to the user)
     }
+  },
   },
 };
 </script>

@@ -19,6 +19,7 @@ export default {
       mode: "nodisplay",
       tache: "",
       dragtache: null,
+      changementutilisateur: null,
     };
   },
   computed: {
@@ -43,6 +44,10 @@ export default {
     console.table(this.statuts);
     let fetched_taches = await fetch("http://127.0.0.1:8000/api/taches");
     this.taches = await fetched_taches.json();
+    console.table(this.taches);
+
+    this.taches.sort((a, b) => a.end.localeCompare(b.end));
+
     console.table(this.taches);
 
     // Vue.filter("formatDate", function (taches) {
@@ -126,42 +131,42 @@ export default {
         this.$router.go(this.$router.currentRoute);
       }, "2000");
     },
-    // onDragging: function (statut, tache) {
-    //   this.dragtache = tache.id;
-    //   // console.log(statut);
-    //   // console.log(this.dragtache);
+    onDragStart: function (statut, tache) {
+      // Store the data being dragged (e.g., task ID) in the dataTransfer object
+      event.dataTransfer.setData("text/plain", tache.id);
+    },
+    onDragOver: function () {
+      // Prevent default behavior to allow dropping
+      window.event.preventDefault();
+    },
+    onDrop: function (statut, tache) {
+      // Get the data being dragged (e.g., task ID) from the dataTransfer object
+      const taskId = event.dataTransfer.getData("text/plain");
 
-    //   return dragtache;
-    // },
-    //     drop: function (ev) {
-    //   // return false;
-    //   ev.preventDefault();
-    //   // console.log(statut.id);
-    // },
-    // allowDrop: function (statut, dragtache) {
-    //   console.log(this.dragtache);
-
-    //   console.log(statut);
-
-    //   var urlencoded = new URLSearchParams();
-    //   urlencoded.append("status_id", statut);
-
-    //   var requestOptions = {
-    //     method: "PUT",
-    //     body: urlencoded,
-    //     redirect: "follow",
-    //   };
-    //   let url = "http://127.0.0.1:8000/api/taches/" + this.dragtache;
-    //   fetch(url, requestOptions)
-    //     .then((response) => response.text())
-    //     .then((result) => console.log(result))
-    //     .catch((error) => console.log("error", error));
-    //   // setTimeout(() => {
-    //   //   this.$router.go(this.$router.currentRoute);
-    //   // }, "5000");
-    // },
-
-
+      // Assuming you have a method to update the status of a task based on its ID
+      this.updateTaskStatus(taskId, statut.id);
+    },
+    updateTaskStatus: function (taskId, newStatusId) {
+      // Make a PUT request to your API to update the status of the task
+      // Example code for updating the status using fetch:
+      var url = `http://127.0.0.1:8000/api/taches/${taskId}`;
+      var myHeaders = new Headers();
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("status_id", newStatusId);
+      var requestOptions = {
+        method: "PUT",
+        headers: myHeaders,
+        body: urlencoded,
+        redirect: "follow",
+      };
+      fetch(url, requestOptions)
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error", error));
+      setTimeout(() => {
+        this.$router.go(this.$router.currentRoute);
+      }, 2000);
+    },
 
     display: function () {
       this.mode = "display";
@@ -169,9 +174,36 @@ export default {
     nodisplay: function () {
       this.mode = "nodisplay";
     },
+    reacffectation: function (tache) {
+      // console.log(tache.id);
+      this.changementutilisateur = tache.id;
+      console.log(this.changementutilisateur);
+      this.mode = "reacffectation";
+      // return changementutilisateur
+    },
+    updateTache: function () {
+      console.log(this.changementutilisateur);
+      var myHeaders = new Headers();
 
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("user_id", this.user_id);
+
+
+      var requestOptions = {
+        method: "PUT",
+        body: urlencoded,
+        redirect: "follow",
+      };
+      let url = "http://127.0.0.1:8000/api/taches/" + this.changementutilisateur;
+      fetch(url, requestOptions)
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error", error));
+      setTimeout(() => {
+        this.$router.go(this.$router.currentRoute);
+      }, 2000);
+    },
   },
-
 };
 </script>
 <template>
@@ -185,12 +217,7 @@ export default {
     <h1>{{ project.title }}</h1>
 
     <div class="tableau">
-      <div
-        v-for="statut in statuts"
-        class="statut"
-        @drop="drop"
-        @dragover="allowDrop(statut.id, dragtache.id)"
-      >
+      <div v-for="statut in statuts" class="statut">
         >
         {{ statut.statut }}
 
@@ -212,8 +239,10 @@ export default {
             tache.user_id == user.id &&
             tache.project_id == project.id
           "
-          draggable="true"
-          @dragstart="onDragging(statut, tache)"
+          :draggable="true"
+          @dragstart="onDragStart(statut, tache)"
+          @dragover="onDragOver"
+          @drop="onDrop(statut, tache)"
         >
           <div
             v-if="tache.status_id == 3"
@@ -435,9 +464,11 @@ export default {
             <div
               class="prenom"
               v-for="membre in membres"
-              v-show="membre.id == tache.user_id" 
+              v-show="membre.id == tache.user_id"
             >
-              {{ membre.prenom }}
+              <span @click="reacffectation(tache)" class="reaffectation">
+                {{ membre.prenom }}</span
+              >
             </div>
           </div>
           <div
@@ -452,23 +483,16 @@ export default {
 
             A faire avant le: <br />
             {{ moment(tache.end).format("DD/MM/YYYY") }}
-            <div class="incremente">
-              <button @click="updateStatut1(tache)" title="Changer le statut">
-                <img
-                  class="boutonincremente"
-                  src="https://cdn-icons-png.flaticon.com/128/2252/2252536.png"
-                  style="width: 30px"
-                  alt=""
-                />
-              </button>
-            </div>
+
             <hr />
             <div
               class="prenom"
               v-for="membre in membres"
               v-show="membre.id == tache.user_id"
             >
-              {{ membre.prenom }}
+              <span @click="reacffectation(tache)" class="reaffectation">{{
+                membre.prenom
+              }}</span>
             </div>
           </div>
           <div v-else style="color: goldenrod" class="enattente">
@@ -484,10 +508,28 @@ export default {
               v-for="membre in membres"
               v-show="membre.id == tache.user_id"
             >
-              {{ membre.prenom }}
+              <span @click="reacffectation(tache)" class="reaffectation">{{
+                membre.prenom
+              }}</span>
             </div>
           </div>
         </div>
+      </div>
+      <div class="changementutilisateur" v-if="mode == 'reacffectation'">
+        <label for="user_id">Je confie cette tache à :</label>
+        <select v-model="user_id" name="user_id" id="user_id">
+          <option v-for="membre in membres" :value="membre.id">
+            {{ membre.prenom }}
+          </option>
+        </select>
+        <br />
+        <br />
+        <button
+          @click="updateTache(tache)"
+          class="button rounded-lg button-disabled connexions"
+        >
+          Ajouter la tache
+        </button>
       </div>
     </div>
   </div>
@@ -506,6 +548,18 @@ export default {
   </div>
 </template>
 <style>
+.changementutilisateur {
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 15px;
+  position: absolute;
+  left: 641px;
+  top: 116px;
+  background-color: white;
+}
+.reaffectation:hover {
+  cursor: pointer;
+}
 .urgence {
   width: 25px;
 }

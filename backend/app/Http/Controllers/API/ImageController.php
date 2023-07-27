@@ -16,8 +16,18 @@ class ImageController extends Controller
      */
     public function index()
     {
-        $image = Image::all();
-        return response()->json($image);
+        $images = Image::all();
+        $imageData = [];
+        
+        foreach ($images as $image) {
+            $imageUrl = asset('storage/' . $image->image);
+            $imageData[] = [
+                'id' => $image->id,
+                'url' => $imageUrl,
+            ];
+        }
+    
+        return response()->json($imageData);
     }
 
     /**
@@ -48,7 +58,7 @@ public function show($id)
         return response()->json(['message' => 'Image not found'], 404);
     }
 
-    return response()->json(['image_url' => asset('storage/' . $image->path)], 200);
+    return response()->json(['image_url' => asset('storage/'.$image->path)], 200);
 }
 /**
      * Remove the specified resource from storage.
