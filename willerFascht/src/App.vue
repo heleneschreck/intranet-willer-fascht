@@ -171,15 +171,17 @@ export default {
                 href="#"
                 class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                 >Projets</a
-              >
+              >    
+            </router-link>
+          </li>
+          <li>
 
-
-
-
-
-
-
-              
+            <router-link :to="`/affiches`">
+              <a
+              href="#"
+              class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+              >Supports publicitaires</a
+              >    
             </router-link>
           </li>
         </ul>
@@ -221,9 +223,7 @@ nav {
 nav a:first-of-type {
   border: 0;
 }
-.flex-col {
-  margin-left: -16%;
-}
+
 @media (min-width: 1024px) {
   header {
     display: flex;

@@ -112,7 +112,10 @@ export default {
       </div>
     </div>
     <div class="projets">
-      <div class="container mx-auto mt-5" v-for="project in projects">
+      <div
+        class="container mx-auto mt-5 listeproject"
+        v-for="project in projects"
+      >
         <router-link :to="`projet/${project.id}`">
           <!-- <div class="grid grid-cols-1 gap-3 mb-3 lg:grid-cols-3 "> -->
           <div class="w-full px-9 py-3 bg-white rounded-lg shadow titleproject">
@@ -136,6 +139,13 @@ export default {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
+  height: 220px;
+  width: 100%;
+}
+.listeproject {
+  margin-top: 5px !important;
+  margin-bottom: 5px !important;
+  text-align: center;
 }
 .projectrelative {
   position: relative;

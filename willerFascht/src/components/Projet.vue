@@ -50,12 +50,7 @@ export default {
 
     console.table(this.taches);
 
-    // Vue.filter("formatDate", function (taches) {
-    //   const dateObj = new Date(taches.end);
-    //   const formattedDate =`${dateObj.getDate()}/${dateObj.getMonth() + 1}/${dateObj.getFullYear()}`;
-    //   return formattedDate;
-    // });
-    // console.log(this.user.id);
+    
   },
   methods: {
     logout: function () {

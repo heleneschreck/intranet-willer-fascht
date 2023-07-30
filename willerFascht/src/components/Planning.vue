@@ -23,8 +23,7 @@ export default {
       taches: [],
       membres: [],
       evenements: [],
-      eventClick: this.editable,
-
+      
       //
       calendarOptions: {
         plugins: [
@@ -48,12 +47,13 @@ export default {
           month: "Mois",
           week: "Semaine",
           day: "Jour",
-       
+          
         },
         editable: true,
         selectable: true,
         dateClick: this.handleDateClick,
         eventColor: '#378006',
+        eventClick: this.handleEventClick,
         
         selectMirror: true, 
         nowIndicator: true,
@@ -69,9 +69,7 @@ export default {
             allDay: true,
           });
         },
-        eventClick: (arg) => {
-          console.log(arg.event.title);
-        },
+   
       },
     };
   },
@@ -93,8 +91,12 @@ export default {
   },
 
   methods: {
-    handleDateClick: function (arg) {
-    },
+    handleEventClick(info) {
+
+  const eventId = info.event.id; // ou tout autre identifiant unique de l'évènement
+
+  this.$router.push({ name: "rendezvous", params: { evenement: eventId } });
+},
     async editable(event) {
     // Assuming the event object has an 'id' property for identification
     const eventId = event.id;

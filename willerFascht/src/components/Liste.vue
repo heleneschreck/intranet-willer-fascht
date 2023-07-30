@@ -24,6 +24,9 @@ export default {
   },
   computed: {
     ...mapState(["userInfos"]),
+    // eventBackgroundColor() {
+    //   return (evenement) => evenement.backgroundcolor;
+    // },
   },
   async created() {
     this.user = JSON.parse(localStorage.getItem("user") || "[]");
@@ -39,8 +42,6 @@ export default {
     console.table(this.evenements);
 
     lListe = lListe.sort((a, b) => b.start.localeCompare(a.start));
-
-
 
     let fetched_participants = await fetch(
       "http://127.0.0.1:8000/api/participants"
@@ -64,6 +65,9 @@ export default {
   // },
 
   methods: {
+    getBackgroundColor(evenement) {
+    return evenement.backgroundcolor;
+  },
     delete_rendezvous: function (evenement, participant) {
       console.log(evenement.id);
 
@@ -131,73 +135,80 @@ export default {
          <th >Inscription</th> -->
       </thead>
       <tbody>
-        <tr v-for="evenement in evenements">
+        <tr
+        v-for="evenement in evenements"
+        v-show="moment(evenement.end) > moment() "
+        :style="{ color: getBackgroundColor(evenement) }"
+        >
+      
+          <!--    v-bind:src="affiche.url" -->
           <td>
             {{ moment(evenement.start).format(" DD/MM/YYYY [à] HH[h]mm ") }}
           </td>
-
+          
           <td @mouseover="sortir()">
             {{ moment(evenement.end).format("DD/MM/YYYY [à] HH[h]mm ") }}
           </td>
-
+          
           <td @mouseover="display()">
             <router-link :to="`/rendezvous/${evenement.id}`">
               {{ evenement.title }}
               <div v-show="user.niveau == '1'">
                 <div
-                  class="modiferevenement"
-                  v-if="mode == 'displaymodif'"
-                  title="Modifier le rendez-vous"
+                class="modiferevenement"
+                v-if="mode == 'displaymodif'"
+                title="Modifier le rendez-vous"
                 >
-                  <router-link
-                    :to="`/updaterendezvous/${evenement.id}`"
-                    style="border: none"
-                  >
-                    <img
-                      src="https://cdn-icons-png.flaticon.com/128/8497/8497914.png"
-                      alt=""
-                    />
+                <router-link
+                :to="`/updaterendezvous/${evenement.id}`"
+                style="border: none"
+                >
+                  <img
+                  src="https://cdn-icons-png.flaticon.com/128/8497/8497914.png"
+                  alt=""
+                  />
                   </router-link>
                 </div>
               </div>
             </router-link>
           </td>
-
+          
           <td @mouseover="sortir()" style="width: 30% !important">
             {{ evenement.description.substring(0, 50) }}
             <!-- <div v-if= "evenement.description.substring > (0,50) " >
-                  exeterat
-
-
-                </div>
+              exeterat
+              
+              
+            </div>
           --></td>
-
+          
           <div v-for="participant in participants">
             <div v-if="evenement.id == participant.rendezvous_id">
               <td>
                 <button
-                  style="border: none"
-                  @click="delete_rendezvous(evenement, participant)"
-                  title="Bon à effacer?"
+                style="border: none"
+                @click="delete_rendezvous(evenement, participant)"
+                title="Bon à effacer?"
                 >
-                  <img
-                    src="https://cdn-icons-png.flaticon.com/128/216/216658.png"
+                <img
+                src="https://cdn-icons-png.flaticon.com/128/216/216658.png"
+                style="width: 39px; margin: auto"
+                alt=""
+                />
+              </button>
+            </td>
+            <td>
+              <router-link :to="`/inscription/${participant.id}`">
+                <img
+                src="https://cdn-icons-png.flaticon.com/512/1634/1634406.png"
                     style="width: 39px; margin: auto"
                     alt=""
-                  />
-                </button>
-              </td>
-              <td>
-                <router-link :to="`/inscription/${participant.id}`">
-                  <img
-                    src="https://cdn-icons-png.flaticon.com/512/1634/1634406.png"
-                    style="width: 39px; margin: auto"
-                    alt=""
-                  />
-                </router-link>
+                    />
+                  </router-link>
               </td>
             </div>
           </div>
+   
         </tr>
       </tbody>
     </table>

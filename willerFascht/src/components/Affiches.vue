@@ -112,7 +112,7 @@ export default {
           title="Supprimer définitivement"
         >
           <img
-            src="https://cdn-icons-png.flaticon.com/128/216/216658.png"
+            src="https://cdn-icons-png.flaticon.com/512/3182/3182136.png"
             class="corbeille"
             alt="deleteimage"
           />
