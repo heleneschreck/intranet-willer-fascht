@@ -46,16 +46,6 @@ class RendezvousController extends Controller
             'backgroundcolor'=> $request->backgroundcolor,
 
         ]);
-
-        $participants = Participants::create([
-            'participants_id' => '',
-            'noparticipants_id' =>'',
-            'rendezvous_id' =>$rendezvous->id,
-            ]);
-        return response()->json([
-            'id' => $rendezvous->id,
-            'id_participants' => $participants->id,
-        ], 201);
     }
 
     /**

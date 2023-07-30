@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Participants;
+use App\Models\Noparticipants;
 use Illuminate\Http\Request;
 
-class ParticipantsController extends Controller
+class NoparticpantsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,8 @@ class ParticipantsController extends Controller
      */
     public function index()
     {
-        $participants = Participants::all();
-        return response()->json($participants);
+        $noparticipants = Noparticipants::all();
+        return response()->json($noparticipants);
     }
 
     /**
@@ -28,55 +28,56 @@ class ParticipantsController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'participants_id' =>'required',
+            'noparticipants_id' =>'required',
             'user_id' =>'required',
             'rendezvous_id' =>'required',
 
         ]);
-            $participants = Participants::create([
-            'participants_id' => $request['participants_id'],
+            $noparticipants = Noparticipants::create([
+            'noparticipants_id' => $request['participants_id'],
             'user_id' =>$request->noparticipants_id,
             'rendezvous_id' =>$request-> rendezvous_id,
             ]);
-            return response()->json($participants, 201);
+            return response()->json($noparticipants, 201);
+    
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Participants  $participants
+     * @param  \App\Models\Noparticipants  $noparticipants
      * @return \Illuminate\Http\Response
      */
-    public function show(Participants $participants)
+    public function show(Noparticipants $noparticipants)
     {
-        return response()->json($participants);
+        return response()->json($noparticipants);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Participants  $participants
+     * @param  \App\Models\Noparticipants  $noparticipants
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        $participants = Participants::find($id);
-        $participants->update($request->all());
-        return $participants;
+        $noparticipants = Noparticipants::find($id);
+        $noparticipants->update($request->all());
+        return $noparticipants;
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Participants  $participants
+     * @param  \App\Models\Noparticipants  $noparticipants
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $participants = Participants::findOrFail($id);
-        if($participants)
-        $participants->delete();
+        $noparticipants = Noparticipants::findOrFail($id);
+        if($noparticipants)
+        $noparticipants->delete();
         else
         return response()->json('error');
         return response()->json(null);

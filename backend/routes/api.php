@@ -11,6 +11,7 @@ use App\Http\Controllers\API\ProjectController;
 use App\Http\Controllers\API\RendezvousController;
 use App\Http\Controllers\API\SoustachesController;
 use App\Http\Controllers\API\CompterendusController;
+use App\Http\Controllers\API\NoparticpantsController;
 use App\Http\Controllers\API\ParticipantsController;
 
 
@@ -27,6 +28,7 @@ use App\Http\Controllers\API\ParticipantsController;
 Route::apiResource("users", UserController::class); // Les routes "users.*" de l'API
 Route::apiResource("rendezvous", RendezvousController::class);
 Route::apiResource("participants", ParticipantsController::class);
+Route::apiResource("noparticipants", NoparticpantsController::class);
 Route::apiResource("image", ImageController::class);
 Route::get('/images/{path}', 'App\Http\Controllers\Api\ImageController@index');
 

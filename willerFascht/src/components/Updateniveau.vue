@@ -71,7 +71,7 @@ let url ="http://127.0.0.1:8000/api/users/"+this.$route.params.membre
         @click="updateniveau(membre)"
         class="button rounded-lg button-disabled updateniveau"
       >
-        Ajouter le membre
+        Modifier le statut de {{ membre.prenom }}
       </button>
     </div>
   </div>

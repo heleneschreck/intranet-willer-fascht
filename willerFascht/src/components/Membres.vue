@@ -83,7 +83,8 @@ export default {
 <button  class="button rounded-lg retourtodo">Retour</button>
 </router-link> -->
           <td @mouseover="display()">
-            {{ membre.niveau }}
+            <div v-if="membre.niveau == 1">Administrateur</div>
+            <div v-else>Utilisateur</div>
             <div
               class="updatenvx"
               v-if="mode == 'display'"
@@ -102,7 +103,11 @@ export default {
             </div>
           </td>
           <td @mouseover="survol()" v-show="user.niveau == '1'">
-            <button class="deletemembre" @click="delete_membres(membre)" title="Quitte l'association ?">
+            <button
+              class="deletemembre"
+              @click="delete_membres(membre)"
+              title="Quitte l'association ?"
+            >
               <img
                 src="https://cdn-icons-png.flaticon.com/128/216/216658.png"
                 alt=""
@@ -131,7 +136,7 @@ nav {
   margin-left: 1%;
   margin-right: 1%;
 }
-.deletemembre{
+.deletemembre {
   width: 30px;
   border: none;
 }
