@@ -72,10 +72,8 @@ export default {
   </router-link>
   <div v-for="evenement in evenements">
     <div v-if="evenement.id == $route.params.evenement">
-      <div class="date">{{moment( evenement.start).format("DD/MM/YYYY")   }}</div>
-      <!-- <h1>{{ $route.params.evenement }}</h1> -->
+      <div class="date">{{ moment(evenement.start).format("DD/MM/YYYY") }}</div>
       <h1>{{ evenement.title }} :</h1>
-
       <div class="presentationevenement">
         <div class="description">
           Objet du rendez-vous :
@@ -84,56 +82,59 @@ export default {
         </div>
         <hr />
         <div class="participantsrendezvous">
-          <div v-for="participant in participants">
-            <div v-show="participant.rendezvous_id == evenement.id">
-              <div v-if="participant.participants_id == ''" style="text-align: center;">
-                
-                <p class="personneinscrits">
-                  Personne n'est encore inscrit à l'évènement :
-                <router-link :to="`/inscription/${participant.id}`">
-                  <button class="button rounded-lg"> <img src="https://cdn-icons-png.flaticon.com/128/2620/2620163.png" style="width:60px ;" alt=""></button>
+          <!-- <div v-for="participant in participants"> -->
+            <!-- </div> -->
+            
+            <div v-show="participants.length === 0">
+              <p class="personneinscrits">
+                Personne n'est encore inscrit à l'évènement :
+                <router-link :to="`/inscription/${$route.params.evenement}`">
+                  <button class="button rounded-lg">
+                    <img
+                    src="https://cdn-icons-png.flaticon.com/128/2620/2620163.png"
+                    style="width: 60px"
+                    alt=""
+                    />
+                  </button>
                 </router-link>
               </p>
-              
-              
             </div>
-            
-            
-            <div v-else>
-              Les membres de l'association présents à l'évènement:
-                <span>"{{ evenement.title }}"</span> :
-
-                <ul
-                  class="participantsaurendezvous"
-                  v-for="participant in participants"
+            <div v-if="participants.length > 0">
+              Les membres de l'association présents à l'évènement "{{
+                evenement.title
+              }}" :
+            <ul class="participantsaurendezvous">
+              <div
+              v-for="participant in participants"
+              :key="participant.id"
+                class="list"
+              >
+                <div
+                  v-if="
+                    participant.rendezvous_id == $route.params.evenement &&
+                    participant.participants_id == '1'
+                  "
                 >
-                  <div
-                  v-show="
-                      participant.rendezvous_id == $route.params.evenement
-                    "
-                  >
-                  <li class="list">{{ participant.participants_id }}</li>
-                  <div v-if="user.prenom != participant.participants_id" style="text-align: center;">
-                 
-                    <p class="personneinscrits personnel">
-                      Je m'inscris: <br>
-                    <router-link :to="`/inscription/${participant.id}`">
-                      <button class="button rounded-lg"> <img src="https://cdn-icons-png.flaticon.com/128/2620/2620163.png" style="width:60px ;" alt=""></button>
-                    </router-link>
-                  </p>
-                    
+                <li>
+                  <div v-for="membre in membres" :key="membre.id">
+                    <div v-if="membre.id == participant.user_id">
+                      {{ membre.prenom }}: "{{ participant.complement }}"
                     </div>
                   </div>
+               
+                   
                 
-                </ul>
+                </li>
               </div>
             </div>
-          </div>
+          </ul>
         </div>
       </div>
     </div>
   </div>
+</div>
 </template>
+
 <style>
 h1 {
   font-weight: bolder !important;
@@ -144,11 +145,10 @@ h1 {
   margin: auto;
   font-size: large;
 }
-.personnel{
+.personnel {
   margin-left: 570px !important;
-
 }
-.personneinscrits{
+.personneinscrits {
   font-size: 35px;
   padding-top: 18px;
   margin-left: 270px;

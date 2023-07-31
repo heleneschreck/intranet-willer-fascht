@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('start');
             $table->string('end');
             $table->string('title');
-            $table->string('description');
+            $table->text('description');
             $table->string('backgroundcolor');
             $table->timestamps();
         });

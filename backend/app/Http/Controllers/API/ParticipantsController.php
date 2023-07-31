@@ -30,12 +30,14 @@ class ParticipantsController extends Controller
         $this->validate($request, [
             'participants_id' =>'required',
             'user_id' =>'required',
+            'complement' =>'required',
             'rendezvous_id' =>'required',
 
         ]);
             $participants = Participants::create([
-            'participants_id' => $request['participants_id'],
-            'user_id' =>$request->noparticipants_id,
+            'participants_id' => $request ->participants_id,
+            'user_id' =>$request->user_id,
+            'complement' =>$request->complement,
             'rendezvous_id' =>$request-> rendezvous_id,
             ]);
             return response()->json($participants, 201);

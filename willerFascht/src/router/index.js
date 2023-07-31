@@ -129,7 +129,7 @@ const router = createRouter({
       component: UpdateRendezvousView
     },
     {
-      path: '/inscription/:participant',
+      path: '/inscription/:evenement',
       name: 'inscription',
       component: InscriptionView
     },

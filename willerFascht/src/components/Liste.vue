@@ -68,28 +68,16 @@ export default {
     getBackgroundColor(evenement) {
     return evenement.backgroundcolor;
   },
-    delete_rendezvous: function (evenement, participant) {
+    delete_rendezvous: function (evenement) {
       console.log(evenement.id);
 
-      console.log(participant.rendezvous_id);
-      console.log(participant.id);
-
+     
       var requestOptions = {
         method: "DELETE",
         redirect: "follow",
       };
       let url = "http://127.0.0.1:8000/api/rendezvous/" + evenement.id;
       fetch(url, requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .catch((error) => console.log("error", error));
-
-      var requestOptions = {
-        method: "DELETE",
-        redirect: "follow",
-      };
-      let url2 = "http://127.0.0.1:8000/api/participants/" + participant.id;
-      fetch(url2, requestOptions)
         .then((response) => response.text())
         .then((result) => console.log(result))
         .catch((error) => console.log("error", error));
@@ -131,8 +119,8 @@ export default {
         <th>Fin</th>
         <th>Evènement</th>
         <th>Description</th>
-        <!-- <th>Supprimer</th> 
-         <th >Inscription</th> -->
+        <th>Supprimer</th> 
+         <th >Inscription</th>
       </thead>
       <tbody>
         <tr
@@ -182,12 +170,11 @@ export default {
             </div>
           --></td>
           
-          <div v-for="participant in participants">
-            <div v-if="evenement.id == participant.rendezvous_id">
+        
               <td>
                 <button
                 style="border: none"
-                @click="delete_rendezvous(evenement, participant)"
+                @click="delete_rendezvous(evenement)"
                 title="Bon à effacer?"
                 >
                 <img
@@ -198,7 +185,7 @@ export default {
               </button>
             </td>
             <td>
-              <router-link :to="`/inscription/${participant.id}`">
+              <router-link :to="`/inscription/${evenement.id}`">
                 <img
                 src="https://cdn-icons-png.flaticon.com/512/1634/1634406.png"
                     style="width: 39px; margin: auto"
@@ -206,8 +193,7 @@ export default {
                     />
                   </router-link>
               </td>
-            </div>
-          </div>
+       
    
         </tr>
       </tbody>

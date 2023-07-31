@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('participants_id');
             $table->string('user_id');
+            $table->string('complement');
             $table->foreignId('rendezvous_id')->constrained()->oneDelete('cascade');
        
 
