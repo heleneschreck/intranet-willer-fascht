@@ -35,6 +35,8 @@ export default {
       var myHeaders = new Headers();
 
       var urlencoded = new URLSearchParams();
+      urlencoded.append("start", evenement.start);
+      urlencoded.append("end", evenement.end);
       urlencoded.append("title", evenement.title);
       urlencoded.append("description", evenement.description);
 
@@ -69,12 +71,11 @@ export default {
       </h1>
 
       <div class="créationevent">
-        <!-- <div class="input">
+        <div class="input">
       <label for="start" style="margin-top: 30px">Début:</label>
       <input
         style="margin-top: 30px"
         v-model="evenement.start"
-        
         type="datetime-local"
         id="start"
         name="start"
@@ -83,7 +84,7 @@ export default {
     <div class="input">
       <label for="end">Fin:</label>
       <input v-model="evenement.end" type="datetime-local" id="end" name="end" />
-    </div> -->
+    </div>
         <div class="input">
           <label for="title">Evenement:</label>
           <input v-model="evenement.title" class="input" type="text" />

@@ -66,12 +66,11 @@ export default {
 
   methods: {
     getBackgroundColor(evenement) {
-    return evenement.backgroundcolor;
-  },
+      return evenement.backgroundcolor;
+    },
     delete_rendezvous: function (evenement) {
       console.log(evenement.id);
 
-     
       var requestOptions = {
         method: "DELETE",
         redirect: "follow",
@@ -115,88 +114,131 @@ export default {
   <div class="listDeRendezVous">
     <table>
       <thead>
+        <th>Evènement</th>
         <th>Début</th>
         <th>Fin</th>
-        <th>Evènement</th>
         <th>Description</th>
-        <th>Supprimer</th> 
-         <th >Inscription</th>
+        <th>Type d'évènement</th>
+        <th>Inscription</th>
+        <th>Supprimer</th>
       </thead>
       <tbody>
         <tr
-        v-for="evenement in evenements"
-        v-show="moment(evenement.end) > moment() "
-        :style="{ color: getBackgroundColor(evenement) }"
+          v-for="evenement in evenements"
+          v-show="moment(evenement.end) > moment()"
         >
-      
           <!--    v-bind:src="affiche.url" -->
-          <td>
-            {{ moment(evenement.start).format(" DD/MM/YYYY [à] HH[h]mm ") }}
-          </td>
-          
-          <td @mouseover="sortir()">
-            {{ moment(evenement.end).format("DD/MM/YYYY [à] HH[h]mm ") }}
-          </td>
-          
           <td @mouseover="display()">
             <router-link :to="`/rendezvous/${evenement.id}`">
               {{ evenement.title }}
               <div v-show="user.niveau == '1'">
                 <div
-                class="modiferevenement"
-                v-if="mode == 'displaymodif'"
-                title="Modifier le rendez-vous"
+                  class="modiferevenement"
+                  v-if="mode == 'displaymodif'"
+                  title="Modifier le rendez-vous"
                 >
-                <router-link
-                :to="`/updaterendezvous/${evenement.id}`"
-                style="border: none"
-                >
-                  <img
-                  src="https://cdn-icons-png.flaticon.com/128/8497/8497914.png"
-                  alt=""
-                  />
+                  <router-link
+                    :to="`/updaterendezvous/${evenement.id}`"
+                    style="border: none"
+                  >
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/128/8497/8497914.png"
+                      alt=""
+                    />
                   </router-link>
                 </div>
               </div>
             </router-link>
           </td>
-          
+          <td>
+            {{ moment(evenement.start).format(" DD/MM/YYYY [à] HH[h]mm ") }}
+          </td>
+
+          <td @mouseover="sortir()">
+            {{ moment(evenement.end).format("DD/MM/YYYY [à] HH[h]mm ") }}
+          </td>
+
           <td @mouseover="sortir()" style="width: 30% !important">
-            {{ evenement.description.substring(0, 50) }}
+            <span v-if="evenement.description.length > 50" style="display: flex;margin-left: 25px;">
+              {{ evenement.description.substring(0, 50)}}
+              <router-link :to="`/rendezvous/${evenement.id}`">
+              <img
+                src="https://t3.ftcdn.net/jpg/00/21/91/78/240_F_21917862_Td1omsXyzb3ESogD4cIBsgCpsPvN5dTP.jpg"
+                alt="Image"
+                style="vertical-align: middle; width: 25px; "
+            
+              />
+              </router-link>
+            </span>
+            <span v-else>
+              {{ evenement.description }}
+            </span>
             <!-- <div v-if= "evenement.description.substring > (0,50) " >
               exeterat
               
               
             </div>
           --></td>
-          
-        
-              <td>
-                <button
-                style="border: none"
-                @click="delete_rendezvous(evenement)"
-                title="Bon à effacer?"
-                >
-                <img
+          <td
+            :style="{ 'background-color': getBackgroundColor(evenement) }"
+            style="width: 10% !important"
+          ></td>
+
+          <td style="width: 7% !important">
+            <router-link :to="`/inscription/${evenement.id}`">
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/1634/1634406.png"
+                style="width: 39px; margin: auto"
+                alt=""
+              />
+            </router-link>
+          </td>
+          <td style="width: 10% !important">
+            <button
+              style="border: none"
+              @click="delete_rendezvous(evenement)"
+              title="Bon à effacer?"
+            >
+              <img
                 src="https://cdn-icons-png.flaticon.com/128/216/216658.png"
                 style="width: 39px; margin: auto"
                 alt=""
-                />
-              </button>
-            </td>
-            <td>
-              <router-link :to="`/inscription/${evenement.id}`">
-                <img
-                src="https://cdn-icons-png.flaticon.com/512/1634/1634406.png"
-                    style="width: 39px; margin: auto"
-                    alt=""
-                    />
-                  </router-link>
-              </td>
-       
-   
+              />
+            </button>
+          </td>
         </tr>
       </tbody>
+    </table>
+    <br />
+
+    <table class="legende">
+      <th>Légende</th>
+      <th>Couleur</th>
+
+      <tr>
+        <td>Réunion</td>
+        <td style="background-color: #f9e9bd"></td>
+      </tr>
+      <tr>
+        <td>Evènement</td>
+        <td style="background-color: #eb380d"></td>
+      </tr>
+      <tr>
+        <td>Préparation</td>
+        <td style="background-color: #0debc5"></td>
+      </tr>
+      <tr>
+        <td>Action pour l'association (quête, vente de ticket de tombola )</td>
+        <td style="background-color: #6a0baf"></td>
+      </tr>
+      <tr>
+        <td>Halloween</td>
+        <td style="background-color: #f2bf0f"></td>
+      </tr>
+      <tr>
+        <td>Carnaval</td>
+        <td style="background-color: #16af0b"></td>
+      </tr>
     </table>
   </div>
 </template>
@@ -210,9 +252,17 @@ td {
   text-align: center;
   align-content: center;
   width: 15% !important;
+
   /* padding: -15px !important; */
 }
 .modiferevenement {
   width: 11%;
+}
+.legende {
+  width: 20%;
+  font-size: 10px;
+  position: absolute;
+  /* bottom: -455px; */
+  right: 1px;
 }
 </style>

@@ -57,17 +57,10 @@ export default {
         
         selectMirror: true, 
         nowIndicator: true,
+       
         select: (arg) => {
-          id.value = id.value + 1;
-          const cal = arg.view.calendar;
-          cal.unselect();
-          cal.addEvent({
-            id: `${id.value}`,
-            title: title,
-            start: arg.start,
-            end: arg.end,
-            allDay: true,
-          });
+         
+          this.$router.push({ name: "addEvent" });
         },
    
       },
@@ -91,13 +84,18 @@ export default {
   },
 
   methods: {
+
+   
+    
+    
     handleEventClick(info) {
-
-  const eventId = info.event.id; // ou tout autre identifiant unique de l'évènement
-
-  this.$router.push({ name: "rendezvous", params: { evenement: eventId } });
-},
+      
+      const eventId = info.event.id; // ou tout autre identifiant unique de l'évènement
+      
+      this.$router.push({ name: "rendezvous", params: { evenement: eventId } });
+    },
     async editable(event) {
+      console.log('coucou');
     // Assuming the event object has an 'id' property for identification
     const eventId = event.id;
     console.log(eventId);
@@ -128,14 +126,14 @@ export default {
 <template>
   <!-- <h1>{{ evenements }} </h1> -->
   <div class="action">
-    <router-link :to="`/addEvent`">
+    <!-- <router-link :to="`/addEvent`">
       <button
         href="#"
         class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
       >
         Ajouter un évènement
       </button></router-link
-    >
+    > -->
 
     <router-link :to="`/liste`">
       <button

@@ -160,7 +160,7 @@ export default {
         <option value="#EB380D">Evenèment</option>
         <option value="#0DEBC5">Préparation</option>
         <option value="#6A0BAF">
-          Action pour l'assofetchciation (quête, vente de ticket de tombola )
+          Action pour l'association (quête, vente de ticket de tombola )
         </option>
         <option value="#F2BF0F">Halloween</option>
         <option value="#16AF0B">Carnaval</option>

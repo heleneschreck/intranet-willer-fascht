@@ -19,21 +19,17 @@ export default {
       participants: [],
       membres: [],
       creation: "",
+      notparticipant: "",
     };
   },
   computed: {
     ...mapState(["userInfos"]),
-    formatDate() {
-      return this.formatDate(this.tache.end);
-    },
   },
   async created() {
-    this.moment = moment;
     this.user = JSON.parse(localStorage.getItem("user") || "[]");
     console.log(this.user);
-    // if (localStorage.getItem("user") != null) {
-    //   this.mode = true;
-    // }
+    this.moment = moment;
+  
     let fetched_evenements = await fetch(
       "http://127.0.0.1:8000/api/rendezvous"
     );
@@ -50,13 +46,9 @@ export default {
     );
     this.participants = await fetched_participants.json();
     console.table(this.participants);
+    this.isMessageShown = this.isEventEmpty;
 
-    //  if (this.participants.rendezvous_id != this.evenements.id) {
-    //    result = "Personne n'est encore inscrit à cet évènement. Voules vous vous inscrire ?"
-    //  } return result;
-    // let creation = this.participants.rendezvous_id != this.evenements.id
-
-    // console.log(this.user.id);
+    this.notparticipant = participant.rendezvous_id != $route.params.evenement;
   },
   methods: {
     logout: function () {
@@ -73,66 +65,58 @@ export default {
   <div v-for="evenement in evenements">
     <div v-if="evenement.id == $route.params.evenement">
       <div class="date">{{ moment(evenement.start).format("DD/MM/YYYY") }}</div>
-      <h1>{{ evenement.title }} :</h1>
+      <h1 class="titreevenement">{{ evenement.title }} :</h1>
       <div class="presentationevenement">
         <div class="description">
-          Objet du rendez-vous :
+      <p class="titreobject">Objet du rendez-vous : </p>    
           <br />
-          <li class="list">{{ evenement.description }}</li>
+          <li class="listdescription">{{ evenement.description }}</li>
         </div>
         <hr />
         <div class="participantsrendezvous">
-          <!-- <div v-for="participant in participants"> -->
-            <!-- </div> -->
-            
-            <div v-show="participants.length === 0">
-              <p class="personneinscrits">
-                Personne n'est encore inscrit à l'évènement :
-                <router-link :to="`/inscription/${$route.params.evenement}`">
-                  <button class="button rounded-lg">
-                    <img
-                    src="https://cdn-icons-png.flaticon.com/128/2620/2620163.png"
-                    style="width: 60px"
-                    alt=""
-                    />
-                  </button>
-                </router-link>
-              </p>
-            </div>
-            <div v-if="participants.length > 0">
-              Les membres de l'association présents à l'évènement "{{
-                evenement.title
-              }}" :
-            <ul class="participantsaurendezvous">
+          <div v-if="participants.length > 0">
+            Les membres de l'association présents à l'évènement "{{
+              evenement.title
+            }}" :
+            <ul class="participantsaurendezvous" style="margin-top: -42px;">
               <div
-              v-for="participant in participants"
-              :key="participant.id"
+                v-for="participant in participants"
+                :key="participant.id"
                 class="list"
               >
-                <div
+                <div 
                   v-if="
                     participant.rendezvous_id == $route.params.evenement &&
                     participant.participants_id == '1'
                   "
                 >
-                <li>
-                  <div v-for="membre in membres" :key="membre.id">
-                    <div v-if="membre.id == participant.user_id">
-                      {{ membre.prenom }}: "{{ participant.complement }}"
+                  <li >
+                    <div v-for="membre in membres" :key="membre.id">
+                      <div v-if="membre.id == participant.user_id">
+                        {{ membre.prenom }}: "{{ participant.complement }}"
+                        <div v-if="participant.user_id== user.id">
+                          <router-link
+                    :to="`/updateinscription/${user.id}`"
+                    style="border: none; width: 20px;"
+                    >
+                    <img
+                    src="https://cdn-icons-png.flaticon.com/128/8497/8497914.png"
+                    style="width: 20px;"
+                    alt=""
+                    />
+                  </router-link></div>
+                      </div>
                     </div>
-                  </div>
-               
-                   
-                
-                </li>
+                  </li>
+                </div>
+          
               </div>
-            </div>
-          </ul>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </template>
 
 <style>
@@ -166,8 +150,14 @@ h1 {
 
 .list {
   list-style-type: "\1F44D";
+  
+  
   margin-left: 680px;
   margin-top: 15px !important;
+}
+.listdescription{
+  list-style-type: "\1F44D";
+
 }
 span {
   font-weight: bold;
@@ -183,6 +173,10 @@ span {
   /* display: flex; 
 } */
 
+.titreobject{
+  width: 85% !important;
+  margin-right: 150px;
+}
 .description {
   border: 1px solid;
   border-radius: 10px;
