@@ -5,6 +5,7 @@ export default {
     return {
       mode: false,
       user: [],
+      profils: [],
     };
   },
   computed: {
@@ -16,11 +17,89 @@ export default {
     // if (localStorage.getItem("user") != null) {
     //   this.mode = true;
     // }
+
+    let fetched_profils = await fetch("http://127.0.0.1:8000/api/profils");
+    this.profils = await fetched_profils.json();
+    console.table(this.profils);
   },
   methods: {
     logout: function () {
       this.$store.commit("logout");
       this.$router.push("/");
+    },
+
+    deleteimage: function (profil) {
+      console.log(profil.id);
+      //       var myHeaders = new Headers();
+      //       myHeaders.append("Accept", "application/json");
+
+      //       var formdata = new FormData();
+      //       formdata.append(
+      //         "image",
+      //         fileInput.files[0],
+      //         "/C:/Users/helen/projets/heleneschreck.github.io/cv.jpg"
+      //       );
+      //       formdata.append("user_id", "4");
+
+      //       var requestOptions = {
+      //         method: "DELETE",
+      //         headers: myHeaders,
+      //         body: formdata,
+      //         redirect: "follow",
+      //       };
+      // let url="http://localhost:8000/api/profils/"+profil.id
+      //       fetch(url, requestOptions)
+      //         .then((response) => response.text())
+      //         .then((result) => console.log(result))
+      //         .catch((error) => console.log("error", error));
+      console.log(profil.id);
+      var myHeaders = new Headers();
+      myHeaders.append("Accept", "application/json");
+
+      var requestOptions = {
+        method: "DELETE",
+        headers: myHeaders,
+        redirect: "follow",
+      };
+
+      let url = "http://localhost:8000/api/profils/" + profil.id;
+      fetch(url, requestOptions)
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result);
+          this.profils = this.profils.filter((p) => p.id !== profil.id);
+        })
+        .catch((error) => console.log("error", error));
+      this.mode = "uploadphoto";
+    },
+    onFileSelected(event) {
+      // Récupérer le fichier sélectionné par l'utilisateur
+      const selectedFile = event.target.files[0];
+
+      // Mettre à jour les données ou faire ce que vous voulez avec le fichier
+      // par exemple, vous pouvez l'assigner à une variable du modèle
+      this.fileData = selectedFile;
+
+      var myHeaders = new Headers();
+      myHeaders.append("Accept", "application/json");
+
+      var formdata = new FormData();
+      formdata.append("image", selectedFile); // Utilisez directement "selectedFile" ici
+      formdata.append("user_id", this.user.id);
+      var requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: formdata,
+        redirect: "follow",
+      };
+
+      fetch("http://localhost:8000/api/profils", requestOptions)
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error", error));
+      setTimeout(() => {
+        this.$router.go(this.$router.currentRoute);
+      }, "2000");
     },
   },
 };
@@ -40,18 +119,31 @@ export default {
         </a>
       </div>
 
-      <div class="mt-8 text-center">
-        <img
-          src="https://tailus.io/sources/blocks/stats-cards/preview/images/second_user.webp"
-          alt=""
-          class="w-10 h-10 m-auto rounded-full object-cover lg:w-28 lg:h-28"
-        />
-        <h5 class="hidden mt-4 text-xl font-semibold text-gray-600 lg:block">
-          {{ user.prenom }} {{ user.name }}
-        </h5>
-        <span class="hidden text-gray-400 lg:block"></span>
+      <div class="mt-8 text-center" v-for="profil in profils">
+        <div v-if="profil.user_id == user.id">
+          <img
+            v-bind:src="profil.url"
+            alt=""
+            class="m-auto rounded-full object-cover  lg:w-40 lg:h-40"
+          />
+          <div class="deletephotoprofil">
+            <img
+              src="https://cdn-icons-png.flaticon.com/128/9925/9925691.png"
+              class="updateimage"
+              @click="deleteimage(profil)"
+              alt=""
+            />
+          </div>
+          <h5 class="hidden mt-4 text-xl font-semibold text-gray-600 lg:block">
+            {{ user.prenom }} {{ user.name }}
+          </h5>
+          <span class="hidden text-gray-400 lg:block"></span>
+        </div>
       </div>
-
+      
+      <div class="uploadphoto profil" v-if="mode == 'uploadphoto'">
+        <input type="file" @change="onFileSelected" name="image" id="" />
+      </div>
       <ul class="space-y-2 tracking-wide mt-8">
         <li>
           <router-link :to="`mesinfos`">
@@ -85,32 +177,34 @@ export default {
               href="#"
               class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
             >
-            
-                <path
-                  class="fill-current text-gray-300 group-hover:text-cyan-300"
-                  fill-rule="evenodd"
-                  d="M2 6a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1H8a3 3 0 00-3 3v1.5a1.5 1.5 0 01-3 0V6z"
-                  clip-rule="evenodd"
-                />
-                <path
-                  class="fill-current text-gray-600 group-hover:text-cyan-600"
-                  d="M6 12a2 2 0 012-2h8a2 2 0 012 2v2a2 2 0 01-2 2H2h2a2 2 0 002-2v-2z"
-                />
-           
-              <span class="group-hover:text-gray-700 compte" style="margin-left: -15px;">
+              <path
+                class="fill-current text-gray-300 group-hover:text-cyan-300"
+                fill-rule="evenodd"
+                d="M2 6a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1H8a3 3 0 00-3 3v1.5a1.5 1.5 0 01-3 0V6z"
+                clip-rule="evenodd"
+              />
+              <path
+                class="fill-current text-gray-600 group-hover:text-cyan-600"
+                d="M6 12a2 2 0 012-2h8a2 2 0 012 2v2a2 2 0 01-2 2H2h2a2 2 0 002-2v-2z"
+              />
+
+              <span
+                class="group-hover:text-gray-700 compte"
+                style="margin-left: -15px"
+              >
                 <img
                   src="https://cdn-icons-png.flaticon.com/128/3286/3286693.png"
                   style="width: 30px; height: 30px; margin-right: 18%"
                   alt="compte rendu"
-                  />
-                
-                
-                Projets</span>
+                />
+
+                Projets</span
+              >
             </a>
           </router-link>
-</li>
-<router-link :to="`compterendu`">
-<li>
+        </li>
+        <router-link :to="`compterendu`">
+          <li>
             <a
               href="#"
               class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
@@ -120,27 +214,31 @@ export default {
                   src="https://cdn-icons-png.flaticon.com/128/7322/7322825.png"
                   style="width: 30px; height: 30px; margin-right: 18%"
                   alt="compte rendu"
-                  />
-                  Compte rendu des reunions
-                </span>
-              </a>
-              
-            </li>
-          </router-link>
-          <router-link :to="`affiches`">
-
-            <li>
-              <a href="#" class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group">
-                
-                <span class="group-hover:text-gray-700 compte">
-                  <img src="https://cdn-icons-png.flaticon.com/128/902/902723.png" 
-                  style="width: 30px; height: 30px; margin-right: 18%" alt="">
-                  Supports publicitaires</span>
-                </a>
-              </li>
-            </router-link>
+                />
+                Compte rendu des reunions
+              </span>
+            </a>
+          </li>
+        </router-link>
+        <router-link :to="`affiches`">
+          <li>
+            <a
+              href="#"
+              class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
+            >
+              <span class="group-hover:text-gray-700 compte">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/128/902/902723.png"
+                  style="width: 30px; height: 30px; margin-right: 18%"
+                  alt=""
+                />
+                Supports publicitaires</span
+              >
+            </a>
+          </li>
+        </router-link>
         <li>
-          <hr>
+          <hr />
           <router-link :to="`accueil`">
             <a
               href="#"
@@ -167,7 +265,7 @@ export default {
             </a>
           </router-link>
         </li>
-     
+
         <!-- <li>
                 <a href="#" class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -268,15 +366,11 @@ export default {
           <div
             class="h-full py-8 px-6 space-y-6 rounded-xl border border-gray-200 bg-white"
           >
-   
             <div>
               <h5 class="text-xl text-gray-600 text-center">
-               Projets en cours :
+                Projets en cours :
               </h5>
-    
-       
             </div>
-         
           </div>
         </div>
         <div>
@@ -284,18 +378,13 @@ export default {
             class="h-full py-6 px-6 rounded-xl border border-gray-200 bg-white"
           >
             <h5 class="text-xl text-gray-700">Prochains rendez-vous :</h5>
-            
-            
-            
           </div>
         </div>
         <div>
           <div
-          class="lg:h-full py-8 px-6 text-gray-600 rounded-xl border border-gray-200 bg-white"
+            class="lg:h-full py-8 px-6 text-gray-600 rounded-xl border border-gray-200 bg-white"
           >
-          <h5 class="text-xl text-gray-700">Dernières affiches :</h5>
-      
-       
+            <h5 class="text-xl text-gray-700">Dernières affiches :</h5>
           </div>
         </div>
       </div>
@@ -304,9 +393,26 @@ export default {
 </template>
 <style>
 .accueilintra {
-  margin-top: 8% !important;
+  margin-top: 10% !important;
 }
 .compte {
   display: flex;
+}
+.deletephotoprofil {
+  background-color: #ccd0d5;
+  padding: 3px;
+  width: 40px;
+  border-radius: 19px;
+  margin-left: 131px;
+  margin-top: -13px;
+}
+.updateimage {
+  width: 25px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.uploadphoto {
+  background: white;
 }
 </style>

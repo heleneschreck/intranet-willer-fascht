@@ -13,7 +13,7 @@ use App\Http\Controllers\API\SoustachesController;
 use App\Http\Controllers\API\CompterendusController;
 use App\Http\Controllers\API\NoparticpantsController;
 use App\Http\Controllers\API\ParticipantsController;
-
+use App\Http\Controllers\API\ProfilsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +26,7 @@ use App\Http\Controllers\API\ParticipantsController;
 |
 */
 Route::apiResource("users", UserController::class); // Les routes "users.*" de l'API
+Route::apiResource("profils", ProfilsController::class); 
 Route::apiResource("rendezvous", RendezvousController::class);
 Route::apiResource("participants", ParticipantsController::class);
 Route::apiResource("noparticipants", NoparticpantsController::class);

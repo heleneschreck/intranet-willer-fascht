@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 use App\Models\User;
+use App\Models\Profils;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -47,7 +48,12 @@ class AuthController extends Controller
                 'niveau' => $request->niveau
             ]);
 
-
+   $profils = Profils::create([
+            'image' => 'https://images.unsplash.com/photo-1605136292546-36994b3f5b59?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80',
+            'user_id' => $user->id
+        ]);
+     
+   
             return response()->json([
                 'status' => true,
                 'message' => 'User Created Successfully',
@@ -58,7 +64,8 @@ class AuthController extends Controller
                 'telephone' => $user->telephone,
                 'email' => $user->email,
                 'password' => $user->password,
-                'niveau' => $user->niveau,
+                'niveau' => $user->niveau,  
+                'id' => $profils->id, 
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([

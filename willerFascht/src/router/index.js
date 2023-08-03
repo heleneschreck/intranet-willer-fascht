@@ -27,7 +27,7 @@ import RendezvousView from '../views/RendezvousView.vue'
 import UpdateRendezvousView from '../views/UpdateRendezVousView.vue'
 import UpdateniveauView from '../views/UpdateniveauView.vue'
 import InscriptionView from '../views/InscriptionView.vue'
-import CreateInscriptionView from '../views/CreateInscriptionView.vue'
+import UpdateInscriptionView from '../views/UpdateInscriptionView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -133,10 +133,11 @@ const router = createRouter({
       name: 'inscription',
       component: InscriptionView
     },
+   
     {
-      path: '/createinscription/:evenement',
-      name: 'createinscription',
-      component: CreateInscriptionView
+      path: '/updateinscription/:participant',
+      name: 'updateinscription',
+      component: UpdateInscriptionView
     },
     {
       path: '/rendezvous/:evenement',

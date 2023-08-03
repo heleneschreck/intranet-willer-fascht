@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Participants;
 use Illuminate\Http\Request;
-
+use App\Models\User;
 class ParticipantsController extends Controller
 {
     /**

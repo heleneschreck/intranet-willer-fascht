@@ -25,38 +25,35 @@ export default {
       this.$router.push("/");
     },
     createMember: function () {
-
-        var urlencoded = new URLSearchParams();
-urlencoded.append("name", this.name );
-urlencoded.append("prenom", this.prenom );
-urlencoded.append("telephone", this.telephone );
-urlencoded.append("email", this.email );
-urlencoded.append("password", this.password );
-urlencoded.append("niveau", this.niveau );
-
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("name", this.name);
+      urlencoded.append("prenom", this.prenom);
+      urlencoded.append("telephone", this.telephone);
+      urlencoded.append("email", this.email);
+      urlencoded.append("password", this.password);
+      urlencoded.append("niveau", this.niveau);
 
       var requestOptions = {
         method: "POST",
         body: urlencoded,
         redirect: "follow",
       };
-      let url = "http://127.0.0.1:8000/api/auth/register/" 
-      fetch(
-       url, requestOptions )
+      let url = "http://127.0.0.1:8000/api/auth/register/";
+      fetch(url, requestOptions)
         .then((response) => response.text())
         .then((result) => console.log(result))
         .catch((error) => console.log("error", error));
-        setTimeout(() => {
-        this.$router.push({ name: "membres" });
-      }, "2000");
+
+      // setTimeout(() => {
+      //   this.$router.push({ name: "membres" });
+      // }, "2000");
     },
   },
 };
 </script>
 <template>
-
   <div class="addmembres">
-  <h1>Ajouter un membre</h1>
+    <h1>Ajouter un membre</h1>
     <label for="name">Nom:</label>
     <input v-model="name" class="input" type="text" />
     <label for="prenom">Prénom:</label>
@@ -78,7 +75,7 @@ urlencoded.append("niveau", this.niveau );
     </button>
   </div>
 </template>
-<style> 
+<style>
 h1 {
   font-size: large;
 }

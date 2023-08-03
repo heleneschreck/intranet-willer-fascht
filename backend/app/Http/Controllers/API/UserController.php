@@ -4,6 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+
+use App\Models\Profils;
+
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -49,7 +52,7 @@ class UserController extends Controller
             'password' => bcrypt($request->password),
             'niveau' => $request->niveau,
         ]);
-
+       
         // On retourne les informations du nouvel utilisateur en JSON
         return response()->json($user, 201);
     }
