@@ -12,7 +12,6 @@ export default {
       participantsrendezvous: [],
       evenements: [],
       membres: [],
-      isUserAbsent: false,
     };
   },
   computed: {
@@ -38,10 +37,6 @@ export default {
     );
     this.participantsrendezvous = await fetched_participantsrendezvous.json();
     console.table(this.participantsrendezvous);
-
-    this.isUserAbsent = !this.participantsrendezvous.some(
-      (participant) => participant.user_id == this.membres.id
-    );
   },
   methods: {
     logout: function () {
@@ -108,7 +103,17 @@ export default {
     </div>
   </div>
  <br>
- 
+
+
+ <ul>
+  <li v-for="membre in membres" :key="membre.id">
+    <div class="participantsrendezvous">
+      {{ membre.prenom }}
+      <div v-if="membre.id == userInfos.id"> ok</div>
+    </div>
+  </li>
+</ul>
+
 </template>
 <style>
 .participant {
