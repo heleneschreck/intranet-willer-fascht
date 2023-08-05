@@ -30,28 +30,7 @@ export default {
 
     deleteimage: function (profil) {
       console.log(profil.id);
-      //       var myHeaders = new Headers();
-      //       myHeaders.append("Accept", "application/json");
 
-      //       var formdata = new FormData();
-      //       formdata.append(
-      //         "image",
-      //         fileInput.files[0],
-      //         "/C:/Users/helen/projets/heleneschreck.github.io/cv.jpg"
-      //       );
-      //       formdata.append("user_id", "4");
-
-      //       var requestOptions = {
-      //         method: "DELETE",
-      //         headers: myHeaders,
-      //         body: formdata,
-      //         redirect: "follow",
-      //       };
-      // let url="http://localhost:8000/api/profils/"+profil.id
-      //       fetch(url, requestOptions)
-      //         .then((response) => response.text())
-      //         .then((result) => console.log(result))
-      //         .catch((error) => console.log("error", error));
       console.log(profil.id);
       var myHeaders = new Headers();
       myHeaders.append("Accept", "application/json");

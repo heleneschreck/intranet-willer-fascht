@@ -10,6 +10,8 @@ export default {
       user: [],
       mode: "nodisplay",
       affiches: [],
+      title: "",
+      fileData:""
     };
   },
   computed: {
@@ -36,18 +38,11 @@ export default {
       console.log(affiche.id);
       var myHeaders = new Headers();
       myHeaders.append("Accept", "application/json");
-
-      // var formdata = new FormData();
-      // formdata.append(
-      //   "image",
-      //   fileInput.files[0],
-      //   "/C:/Users/helen/Desktop/270575913_1397258274028263_2860223166769289827_n.jpg"
-      // );
-
+    
       var requestOptions = {
         method: "DELETE",
         headers: myHeaders,
-        // body: formdata,
+   
         redirect: "follow",
       };
       let url = "http://localhost:8000/api/image/" + affiche.id;
@@ -67,27 +62,34 @@ export default {
       // par exemple, vous pouvez l'assigner à une variable du modèle
       this.fileData = selectedFile;
 
-      var myHeaders = new Headers();
+     
+      },
+      add_support: function(){
+
+console.log(this.user.id);
+console.log(this.fileData);
+console.log(this.title);
+        var myHeaders = new Headers();
       myHeaders.append("Accept", "application/json");
 
       var formdata = new FormData();
-      formdata.append("image", selectedFile); // Utilisez directement "selectedFile" ici
-
+      formdata.append("image", this.fileData ); // Utilisez directement "selectedFile" ici
+      formdata.append("user_id", this.user.id);
+      formdata.append("title", this.title);
       var requestOptions = {
         method: "POST",
         headers: myHeaders,
         body: formdata,
         redirect: "follow",
-      };
+      }
 
       fetch("http://localhost:8000/api/image", requestOptions)
         .then((response) => response.text())
         .then((result) => console.log(result))
         .catch((error) => console.log("error", error));
-        setTimeout(() => {
+      setTimeout(() => {
         this.$router.go(this.$router.currentRoute);
       }, "2000");
-        
     },
   },
 };
@@ -96,6 +98,7 @@ export default {
   <h1>Supports publicitaires</h1>
   <div class="supportpublicitaires">
     <div v-for="affiche in affiches">
+      <div class="affichetitle">{{ affiche.title }}</div>
       <img
         v-bind:src="affiche.url"
         style="
@@ -105,7 +108,7 @@ export default {
           margin-bottom: 15px;
         "
       />
-      <div class="deleteimage">
+      <div class="deleteimage" v-if="user.id == affiche.user_id">
         <button
           class="deleteaffiche"
           @click="delete_affiche(affiche)"
@@ -123,7 +126,17 @@ export default {
   <hr />
   <br />
   <div class="uploadaffiche">
-    <input type="file" @change="onFileSelected" name="image" id="" />
+    <div class="center-content">
+
+      
+      <div class="ajoutdaffiche">
+        
+        <input v-model="title" placeholder="titre" class="inputtitle" type="text" /> <br>
+        <input type="file" @change="onFileSelected" name="image" id="" />
+        <button @click="add_support()" class="addaffiche">Ajouter un nouveau support publicitaire</button>
+          
+      </div>
+  </div>
   </div>
 </template>
 <style>
@@ -131,11 +144,24 @@ export default {
   margin-top: 8% !important;
   margin-left: 1%;
 }
+.inputtitle {
+  margin-bottom: 13px
+}
+.affichetitle {
+  font-size: 20px;
+  text-align: center;
+}
 .supportpublicitaires {
   display: flex;
   margin-top: 20px;
   flex-wrap: wrap;
   position: relative;
+}
+.addaffiche {
+  margin-left: 30px;
+}
+.ajoutdaffiche{
+  margin-left: auto;
 }
 .corbeille {
   width: 25px;
@@ -155,6 +181,14 @@ export default {
   height: auto;
 }
 .uploadaffiche {
-  margin-left: 34%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Ajoutez d'autres styles si nécessaire */
 }
 </style>

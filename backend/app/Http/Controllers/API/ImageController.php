@@ -25,6 +25,8 @@ class ImageController extends Controller
             $imageData[] = [
                 'id' => $image->id,
                 'url' => $imageUrl,
+                'title' => $image->title,
+                'user_id' => $image->user_id,
             ];
         }
     
@@ -41,11 +43,15 @@ class ImageController extends Controller
     {
         $this->validate($request, [
             'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:7000',
+            'title' => 'required',
+            'user_id' => 'required'
         ]);
         $image_path = $request->file('image')->store('image', 'public');
 
         $data = Image::create([
             'image' => $image_path,
+            'title' => $request->title,
+            'user_id' => $request->user_id,
         ]);
 
         return response($data, Response::HTTP_CREATED);
