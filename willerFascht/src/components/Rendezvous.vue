@@ -17,6 +17,8 @@ export default {
       tache: "",
       evenements: [],
       participants: [],
+      participantsrendezvous: [],
+      participantsusers: [],
       membres: [],
       creation: "",
       notparticipant: "",
@@ -34,7 +36,6 @@ export default {
     let fetched_evenements = await fetch(
       "http://127.0.0.1:8000/api/rendezvous"
     );
-
     this.evenements = await fetched_evenements.json();
     // console.table(this.evenements);
 
@@ -48,15 +49,18 @@ export default {
     this.participants = await fetched_participants.json();
     console.table(this.participants);
 
-    const isUserParticipating = this.participants.some(
-      (participant) => participant.user_id === this.user.id
+    let fetched_participantsrendezvous = await fetch(
+      "http://127.0.0.1:8000/api/participants/rendezvous/"+this.$route.params.evenement
     );
-    if (isUserParticipating) {
-      console.log("Tu es déjà inscrit.");
-    } else {
-      console.log("Tu n'es pas inscrit.");
-      this.notparticipant = true;
-    }
+    this.participantsrendezvous = await fetched_participantsrendezvous.json();
+    console.table(this.participantsrendezvous);
+
+
+    let fetched_participantsusers = await fetch(
+      "http://127.0.0.1:8000/api/participants/user/"+this.user.id
+    );
+    this.participantsusers= await fetched_participantsusers.json();
+    console.table(this.participantsusers);
   },
   methods: {
     logout: function () {
@@ -128,29 +132,45 @@ export default {
   </div>
   <hr />
 
-  <div v-for="participant in participants">
+  <div v-for="participantsuser in participantsusers">
     <div
-    v-if="
-        participant.user_id == user.id && participant.participants_id == '0'
+      v-if="
+        participantsuser.rendezvous_id == this.$route.params.evenement 
       "
     >
-    <div class="pasinscritchangementavis">
-    je souhaite m'inscrire :
-      <br />
-      
-      <router-link
-      :to="`/updateinscription/${participant.id}`"
-      style="border: none"
-      >
-      <button class="button rounded-lg button-disabled">
-        Je m'inscris
-      </button>
-    </router-link>
+    <div v-show="participantsuser.participants_id === '0'">
+      <!-- {{ participantsuser }} -->
+      <div class="pasinscritchangementavis">
+          je souhaite m'inscrire :
+          <br />
+          
+          <router-link
+            :to="`/updateinscription/${participantsuser.id}`"
+            style="border: none"
+          >
+            <button class="button rounded-lg button-disabled">
+              Je m'inscris
+            </button>
+          </router-link>
+        </div>
+    </div>
+    
+    </div>
   </div>
+<br>
+<div v-if="participantsrendezvous.length===0">
+Personne n'est encore inscrit 
+  </div>
+
+<div v-for="participantrendezvous in participantsrendezvous">
+<div v-show="participantrendezvous.user_id == user.id">
+<div v-if="participantrendezvous.length === 0">
+  
+  coucou
 </div>
 </div>
-
-
+</div>
+  
 </template>
 
 <style>

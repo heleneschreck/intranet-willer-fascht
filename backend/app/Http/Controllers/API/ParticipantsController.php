@@ -53,6 +53,28 @@ class ParticipantsController extends Controller
     {
         return response()->json($participants);
     }
+      /**
+     * Get the participants by rendezvous_id.
+     *
+     * @param  int  $rendezvous_id
+     * @return \Illuminate\Http\Response
+     */
+    public function getParticipantsByRendezvous($rendezvous_id)
+    {
+        $participants = Participants::where('rendezvous_id', $rendezvous_id)->get();
+        return response()->json($participants);
+    }
+      /**
+     * Get the participants by user_id.
+     *
+     * @param  int  $user_id
+     * @return \Illuminate\Http\Response
+     */
+    public function getUserByRendezvous($user_id)
+    {
+        $participants = Participants::where('user_id', $user_id)->get();
+        return response()->json($participants);
+    }
 
     /**
      * Update the specified resource in storage.

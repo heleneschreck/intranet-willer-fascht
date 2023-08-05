@@ -29,6 +29,9 @@ Route::apiResource("users", UserController::class); // Les routes "users.*" de l
 Route::apiResource("profils", ProfilsController::class); 
 Route::apiResource("rendezvous", RendezvousController::class);
 Route::apiResource("participants", ParticipantsController::class);
+Route::get('/participants/rendezvous/{rendezvous_id}', [ParticipantsController::class, 'getParticipantsByRendezvous']);
+Route::get('/participants/user/{user_id}', [ParticipantsController::class, 'getUserByRendezvous']);
+
 Route::apiResource("noparticipants", NoparticpantsController::class);
 Route::apiResource("image", ImageController::class);
 Route::get('/images/{path}', 'App\Http\Controllers\Api\ImageController@index');
