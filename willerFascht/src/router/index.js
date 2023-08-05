@@ -24,6 +24,7 @@ import MessagerieView from '../views/MessagerieView.vue'
 import AddEventView from '../views/AddEventView.vue'
 import ListeView from '../views/ListeView.vue'
 import RendezvousView from '../views/RendezvousView.vue'
+import ParticipantsView from '../views/ParticipantsView.vue'
 import UpdateRendezvousView from '../views/UpdateRendezVousView.vue'
 import UpdateniveauView from '../views/UpdateniveauView.vue'
 import InscriptionView from '../views/InscriptionView.vue'
@@ -132,6 +133,11 @@ const router = createRouter({
       path: '/inscription/:evenement',
       name: 'inscription',
       component: InscriptionView
+    },
+    {
+      path: '/participants/:evenement',
+      name: 'participants',
+      component: ParticipantsView
     },
    
     {

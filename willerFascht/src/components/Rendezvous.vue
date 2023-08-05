@@ -23,6 +23,7 @@ export default {
       creation: "",
       notparticipant: "",
       pasparticiper: "",
+      isUserAbsent: false,
     };
   },
   computed: {
@@ -50,16 +51,20 @@ export default {
     console.table(this.participants);
 
     let fetched_participantsrendezvous = await fetch(
-      "http://127.0.0.1:8000/api/participants/rendezvous/"+this.$route.params.evenement
+      "http://127.0.0.1:8000/api/participants/rendezvous/" +
+        this.$route.params.evenement
     );
     this.participantsrendezvous = await fetched_participantsrendezvous.json();
     console.table(this.participantsrendezvous);
 
+    this.isUserAbsent = !this.participantsrendezvous.some(
+      (participant) => participant.user_id == this.user.id
+    );
 
     let fetched_participantsusers = await fetch(
-      "http://127.0.0.1:8000/api/participants/user/"+this.user.id
+      "http://127.0.0.1:8000/api/participants/user/" + this.user.id
     );
-    this.participantsusers= await fetched_participantsusers.json();
+    this.participantsusers = await fetched_participantsusers.json();
     console.table(this.participantsusers);
   },
   methods: {
@@ -133,44 +138,53 @@ export default {
   <hr />
 
   <div v-for="participantsuser in participantsusers">
-    <div
-      v-if="
-        participantsuser.rendezvous_id == this.$route.params.evenement 
-      "
-    >
-    <div v-show="participantsuser.participants_id === '0'">
-      <!-- {{ participantsuser }} -->
-      <div class="pasinscritchangementavis">
-          je souhaite m'inscrire :
+    <div v-if="participantsuser.rendezvous_id == this.$route.params.evenement">
+      <div v-show="participantsuser.participants_id === '0'">
+        <!-- {{ participantsuser }} -->
+        <div class="pasinscritchangementavis">
+          j'ai reussi à me libéré :
           <br />
-          
+
           <router-link
             :to="`/updateinscription/${participantsuser.id}`"
             style="border: none"
           >
-            <button class="button rounded-lg button-disabled">
+            <button class="button rounded-lg button-disabled buttoninscription">
               Je m'inscris
             </button>
           </router-link>
         </div>
-    </div>
-    
+      </div>
     </div>
   </div>
-<br>
-<div v-if="participantsrendezvous.length===0">
-Personne n'est encore inscrit 
-  </div>
+  <br />
+  <div>
+    <div v-if="participantsrendezvous.length === membres.length">
+    <div class="personneinscrits" style=" padding: 25px;">
+      Tous le monde a donné sa réponse
+      <img
+        src="https://cdn-icons-png.flaticon.com/128/7444/7444392.png"
+        class="ok"
+        alt=""
+      />
 
-<div v-for="participantrendezvous in participantsrendezvous">
-<div v-show="participantrendezvous.user_id == user.id">
-<div v-if="participantrendezvous.length === 0">
-  
-  coucou
-</div>
-</div>
-</div>
-  
+      </div>
+    </div>
+    <div v-if="isUserAbsent">
+      <div class="personneinscrits">
+        Je n'ai pas encore donnée ma réponse :
+        <br />
+        <router-link
+          :to="`/inscription/${$route.params.evenement}`"
+          style="border: none"
+        >
+          <button class="button rounded-lg button-disabled buttoninscription">
+            Je m'inscris
+          </button>
+        </router-link>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style>
@@ -189,7 +203,13 @@ h1 {
 .personneinscrits {
   font-size: 35px;
   padding-top: 18px;
-  margin-left: 270px;
+  text-align: center;
+  border: 1px solid;
+}
+
+.buttoninscription {
+  font-size: 30px;
+  margin-left: auto;
 }
 .date {
   border: 1px solid;
@@ -242,5 +262,11 @@ span {
   margin-top: 25px;
   font-size: 20px;
   width: 100%;
+}
+.ok {
+  position: absolute;
+  right: 357px;
+  width: 69px;
+  top: 2px;
 }
 </style>

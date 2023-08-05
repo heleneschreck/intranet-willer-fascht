@@ -94,6 +94,7 @@ export default {
 };
 </script>
 <template>
+
   <h1>Liste des rendez-vous organisés</h1>
   <div class="action">
     <router-link :to="`/planning`">
@@ -119,7 +120,7 @@ export default {
         <th>Fin</th>
         <th>Description</th>
         <th>Type d'évènement</th>
-        <th>Inscription</th>
+        <th v-if="user.niveau == '1'" >Participants</th>
         <th>Supprimer</th>
       </thead>
       <tbody>
@@ -184,14 +185,17 @@ export default {
             style="width: 10% !important"
           ></td>
 
-          <td style="width: 7% !important">
-            <router-link :to="`/inscription/${evenement.id}`">
-              <img
+          <td style="width: 7% !important" v-if="user.niveau == '1'">
+            <div >
+
+              <router-link :to="`/participants/${evenement.id}`">
+                <img
                 src="https://cdn-icons-png.flaticon.com/512/1634/1634406.png"
                 style="width: 39px; margin: auto"
                 alt=""
-              />
-            </router-link>
+                />
+              </router-link>
+            </div>
           </td>
           <td style="width: 10% !important">
             <button
