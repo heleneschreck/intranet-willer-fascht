@@ -51,6 +51,22 @@ class CommentairesController extends Controller
         return response()->json($commentaires);
     }
 
+
+
+      /**
+     * Get the participants by image_id.
+     *
+     * @param  int  $image_id
+     * @return \Illuminate\Http\Response
+     */
+    public function getCommentairesByImage($image_id)
+    {
+        $commentaires = Commentaires::where('image_id', $image_id)->get();
+        return response()->json($commentaires);
+    }
+
+
+
     /**
      * Update the specified resource in storage.
      *

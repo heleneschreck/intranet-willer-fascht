@@ -53,6 +53,8 @@ class ParticipantsController extends Controller
     {
         return response()->json($participants);
     }
+
+    
       /**
      * Get the participants by rendezvous_id.
      *

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\CommentairesController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\API\TacheController;
@@ -38,6 +39,8 @@ Route::get('/images/{path}', 'App\Http\Controllers\Api\ImageController@index');
 
 Route::post('image',[ImageController::class, 'imageStore']);
 Route::get('/image/{id}', 'ImageController@show');
+Route::apiResource("commentaires", CommentairesController::class);
+Route::get('/commentaires/image/{image_id}', [CommentairesController::class, 'getCommentairesByImage']);
 Route::apiResource("compterendu", CompterendusController::class);
 Route::apiResource("taches", TacheController::class);
 Route::apiResource("soustaches", SoustachesController::class);

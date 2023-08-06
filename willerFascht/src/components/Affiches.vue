@@ -1,5 +1,6 @@
 <script>
 import { mapState } from "vuex";
+import moment from "moment";
 
 export default {
   data() {
@@ -10,14 +11,19 @@ export default {
       user: [],
       mode: "nodisplay",
       affiches: [],
+      comments: [],
+      membres: [],
       title: "",
-      fileData:""
+      fileData: "",
+      affiche: [],
+      commentaires: [],
     };
   },
   computed: {
     ...mapState(["userInfos"]),
   },
   async created() {
+    this.moment = moment;
     this.user = JSON.parse(localStorage.getItem("user") || "[]");
     console.log(this.user);
 
@@ -28,21 +34,36 @@ export default {
     let fetched_affiches = await fetch("http://localhost:8000/api/image");
     this.affiches = await fetched_affiches.json();
     console.table(this.affiches);
+
+    let fetched_commentaires = await fetch(
+      "http://localhost:8000/api/commentaires"
+    );
+    this.commentaires = await fetched_commentaires.json();
   },
   methods: {
     logout: function () {
       this.$store.commit("logout");
       this.$router.push("/");
     },
+    displayComments: async function (affiche) {
+      console.log(affiche.id);
+
+      let fetched_comments = await fetch(
+        "http://localhost:8000/api/commentaires/image/" + affiche.id
+      );
+      this.comments = await fetched_comments.json();
+      console.log(this.comments);
+      console.table(this.comments.length);
+    },
     delete_affiche: function (affiche) {
       console.log(affiche.id);
       var myHeaders = new Headers();
       myHeaders.append("Accept", "application/json");
-    
+
       var requestOptions = {
         method: "DELETE",
         headers: myHeaders,
-   
+
         redirect: "follow",
       };
       let url = "http://localhost:8000/api/image/" + affiche.id;
@@ -61,19 +82,40 @@ export default {
       // Mettre à jour les données ou faire ce que vous voulez avec le fichier
       // par exemple, vous pouvez l'assigner à une variable du modèle
       this.fileData = selectedFile;
+    },
+    Add_comment: function (affiche) {
+      console.log(affiche.id);
+      console.log(this.user.id);
+      console.log(this.commentaire);
 
-     
-      },
-      add_support: function(){
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("user_id", this.user.id);
+      urlencoded.append("image_id", affiche.id);
+      urlencoded.append("commentaire", this.commentaire);
 
-console.log(this.user.id);
-console.log(this.fileData);
-console.log(this.title);
-        var myHeaders = new Headers();
+      var requestOptions = {
+        method: "POST",
+        body: urlencoded,
+        redirect: "follow",
+      };
+      let url = "http://localhost:8000/api/commentaires";
+      fetch(url, requestOptions)
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error", error));
+      setTimeout(() => {
+        this.$router.go(this.$router.currentRoute);
+      }, "1000");
+    },
+    add_support: function () {
+      console.log(this.user.id);
+      console.log(this.fileData);
+      console.log(this.title);
+      var myHeaders = new Headers();
       myHeaders.append("Accept", "application/json");
 
       var formdata = new FormData();
-      formdata.append("image", this.fileData ); // Utilisez directement "selectedFile" ici
+      formdata.append("image", this.fileData); // Utilisez directement "selectedFile" ici
       formdata.append("user_id", this.user.id);
       formdata.append("title", this.title);
       var requestOptions = {
@@ -81,7 +123,7 @@ console.log(this.title);
         headers: myHeaders,
         body: formdata,
         redirect: "follow",
-      }
+      };
 
       fetch("http://localhost:8000/api/image", requestOptions)
         .then((response) => response.text())
@@ -91,6 +133,34 @@ console.log(this.title);
         this.$router.go(this.$router.currentRoute);
       }, "2000");
     },
+    display_deleteComment: function () {
+      this.mode = "display";
+    },
+
+    not_display: function () {
+      this.mode = "notdisplay";
+    },
+
+    delete_commentaire: function(comment){
+      console.log(comment.id);
+      var myHeaders = new Headers();
+      myHeaders.append("Accept", "application/json");
+
+      var requestOptions = {
+        method: "DELETE",
+        headers: myHeaders,
+
+        redirect: "follow",
+      };
+      let url = "http://localhost:8000/api/commentaires/" + comment.id;
+      fetch(url, requestOptions)
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error", error));
+      setTimeout(() => {
+        this.$router.go(this.$router.currentRoute);
+      }, "2000");
+    }
   },
 };
 </script>
@@ -98,78 +168,177 @@ console.log(this.title);
   <h1>Supports publicitaires</h1>
   <div class="supportpublicitaires">
     <div v-for="affiche in affiches">
-      <div class="affichetitle">{{ affiche.title }}</div>
-      <img
-        v-bind:src="affiche.url"
-        style="
-          width: 400px;
-          height: 460px;
-          margin-left: 23px;
-          margin-bottom: 15px;
-        "
-      />
-      <div class="deleteimage" v-if="user.id == affiche.user_id">
-        <button
-          class="deleteaffiche"
-          @click="delete_affiche(affiche)"
-          title="Supprimer définitivement"
-        >
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/3182/3182136.png"
-            class="corbeille"
-            alt="deleteimage"
+      <div class="supportpublicitaire">
+        <div class="affichetitle">{{ affiche.title }} :</div>
+        <img
+          v-bind:src="affiche.url"
+          style="
+            width: 400px;
+            height: 460px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 15px;
+          "
+        />
+        <div class="jaimeCommentaires" @mouseover="not_display()">
+          <div classe="jaime" style="display: flex">
+            <img
+              src="https://cdn-icons-png.flaticon.com/128/1533/1533908.png"
+              class="likes"
+              alt="likes"
+            />
+            <p class="nbjaime">0 j'aime</p>
+          </div>
+
+          <div class="commentaires">
+            <img
+              src="https://cdn-icons-png.flaticon.com/128/2190/2190552.png"
+              class="comments"
+              alt="comments"
+            />
+            <p class="nbcommentaire" @click="displayComments(affiche)">
+              Commentaires
+            </p>
+          </div>
+        </div>
+        <hr />
+        <br />
+        <div v-for="comment in comments" class="listedescommentaires">
+          <div v-if="comment.image_id == affiche.id">
+            <div class="commentaire" @mouseover="display_deleteComment">
+              <div v-for="membre in membres">
+                <div v-if="membre.id == comment.user_id">
+                  <div
+                    class="delete_comments"
+                    v-if="mode == 'display'"
+                    >
+                    <img
+                    src="https://cdn-icons-png.flaticon.com/128/190/190406.png"
+                    class="delete_comment"
+                    alt="delete_comments"
+                    @click="delete_commentaire(comment)"
+                    />
+                  </div>
+                  <div class="prenomcommentaire">{{ membre.prenom }}</div>
+                </div>
+              </div>
+              <div class="commentairecontent">{{ comment.commentaire }}</div>
+              <div class="commentairedate">
+                {{ moment(comment.created_at).format("DD/MM/YYYY") }}
+              </div>
+              <!-- <div v-if="comments.length == 0">
+                <div class="commentaire">
+                  <div class="pasdecommentaire"> Il n'y a pas encore de commentaire  </div>
+                </div>
+            </div> -->
+            </div>
+          </div>
+        </div>
+
+        <div class="ajoutcommentaire" @mouseover="not_display()">
+          <input
+            type="text"
+            v-model="commentaire"
+            placeholder="Ajouter un commentaire "
+            class="inputcommentaire"
           />
-        </button>
+          <div class="envoiecommentaire" @click="Add_comment(affiche)">
+            <img
+              src="https://cdn-icons-png.flaticon.com/128/2161/2161491.png"
+              class="illustrationenvoiecommentaire"
+              alt="illustrationenvoiecommentaires"
+            />
+          </div>
+        </div>
+
+        <div class="deleteimage" v-if="user.id == affiche.user_id">
+          <button
+            class="deleteaffiche"
+            @click="delete_affiche(affiche)"
+            title="Supprimer définitivement"
+          >
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/3182/3182136.png"
+              class="corbeille"
+              alt="deleteimage"
+            />
+          </button>
+        </div>
       </div>
     </div>
   </div>
   <hr />
   <br />
   <div class="uploadaffiche">
-    <div class="center-content">
-
-      
-      <div class="ajoutdaffiche">
-        
-        <input v-model="title" placeholder="titre" class="inputtitle" type="text" /> <br>
-        <input type="file" @change="onFileSelected" name="image" id="" />
-        <button @click="add_support()" class="addaffiche">Ajouter un nouveau support publicitaire</button>
-          
-      </div>
-  </div>
+    <div class="ajoutdaffiche">
+      <input
+        v-model="title"
+        placeholder="titre"
+        class="inputtitle"
+        type="text"
+      />
+      <br />
+      <input
+        type="file"
+        @change="onFileSelected"
+        name="image"
+        accept=".jpg, .jpeg, .png"
+        id=""
+      />
+      <button @click="add_support()" class="addaffiche">
+        Ajouter un nouveau support publicitaire
+      </button>
+    </div>
   </div>
 </template>
 <style>
+h1 {
+  background-color: white;
+}
 .affiches {
-  margin-top: 8% !important;
-  margin-left: 1%;
+  padding-top: 8% !important;
+  background-color: hsla(0, 0%, 84%, 0.3);
 }
 .inputtitle {
-  margin-bottom: 13px
+  margin-bottom: 13px;
 }
 .affichetitle {
-  font-size: 20px;
+  font-size: 30px;
   text-align: center;
 }
+
 .supportpublicitaires {
   display: flex;
-  margin-top: 20px;
+  margin-top: 45px;
+  margin-bottom: 45px;
+  margin-left: 40px;
+  margin-right: 40px;
+
   flex-wrap: wrap;
   position: relative;
+}
+.supportpublicitaire {
+  margin-left: 15px;
+  margin-right: 20px;
+  padding-bottom: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 3px;
+  background-color: white;
 }
 .addaffiche {
   margin-left: 30px;
 }
-.ajoutdaffiche{
-  margin-left: auto;
+.ajoutdaffiche {
+  margin-left: 24%;
 }
 .corbeille {
   width: 25px;
 }
 .deleteimage {
   position: absolute;
-  left: 392px;
-  top: 5px;
+  left: 370px;
+  top: 60px;
   background-color: hsla(0, 0%, 84%, 0.3);
   /* height: 31px; */
   border-radius: 5px;
@@ -180,15 +349,109 @@ console.log(this.title);
   border: none;
   height: auto;
 }
+.jaime {
+  display: flex;
+  border: 1px solid;
+}
+.likes {
+  width: 35px;
+  height: 34px;
+  margin-right: 9px;
+  padding: 3px;
+  border: 1px solid hsla(0, 0%, 84%, 0.3);
+  border-radius: 3px;
+}
+.nbjaime {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.nbjaime:hover {
+  cursor: pointer;
+}
+.nbcommentaire {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.nbcommentaire:hover {
+  cursor: pointer;
+}
+.commentaires {
+  display: flex;
+}
+.jaimeCommentaires {
+  display: flex;
+  
+  height: 41px;
+  padding-left: 11px;
+  padding-right: 11px;
+  justify-content: space-between;
+
+  margin-bottom: 15px;
+}
+.comments {
+  width: 30px;
+  height: 34px;
+  margin-right: 9px;
+  padding: 3px;
+  border: 1px solid hsla(0, 0%, 84%, 0.3);
+  border-radius: 3px;
+}
+.prenomcommentaire{
+  width: 142px;
+}
+.commentairecontent {
+  text-align: center;
+}
+.commentairedate {
+  text-align: end;
+  font-size: 10px;
+  color: hsl(0, 1%, 38%);
+}
+.commentaire {
+  background-color: hsla(0, 0%, 84%, 0.3);
+  padding-left: 13px;
+  padding-right: 13px;
+  padding-bottom: 10px;
+  border-radius: 15px;
+  margin-bottom: 10px;
+}
+.delete_comments:hover {
+  cursor: pointer;
+}
+.delete_comments {
+  position: absolute;
+  right: 0px;
+  top: 3px;
+}
+.delete_comment {
+  width: 20px;
+}
+.ajoutcommentaire {
+  display: flex;
+}
+.inputcommentaire {
+  border: none;
+  background-color: rgba(132, 132, 132, 0.169) !important;
+  border-radius: 10px !important ;
+  height: 30px !important;
+  margin-right: 3px;
+}
+.envoiecommentaire:hover {
+  cursor: pointer;
+}
+.envoiecommentaire {
+  background-color: rgba(132, 132, 132, 0.169);
+  width: 35px;
+  border-radius: 25px 25px 25px 25px !important;
+  padding: 3px;
+}
+
+.illustrationenvoiecommentaire {
+  width: 25px;
+}
 .uploadaffiche {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.center-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  /* Ajoutez d'autres styles si nécessaire */
 }
 </style>

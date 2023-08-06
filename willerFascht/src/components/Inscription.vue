@@ -257,7 +257,7 @@ export default {
 .validationhoraire {
   width: 40px;
 }
-.validatehoraire :hover {
+.validatehoraire:hover {
   cursor: pointer;
 }
 .questionnaireinscription {

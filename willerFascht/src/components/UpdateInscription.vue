@@ -211,4 +211,7 @@ export default {
   margin: auto;
   font-size: large;
 }
+.validatehoraire:hover {
+  cursor: pointer;
+}
 </style>
