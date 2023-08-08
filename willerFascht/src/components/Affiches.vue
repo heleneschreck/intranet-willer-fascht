@@ -5,42 +5,121 @@ import moment from "moment";
 export default {
   data() {
     return {
-      enabled: true,
-      dragging: false,
       mode: false,
-      user: [],
       mode: "nodisplay",
+      user: [],
       affiches: [],
       comments: [],
       membres: [],
-      title: "",
-      fileData: "",
       affiche: [],
       commentaires: [],
+      likes: [],
+      isUserAbsent: false,
+      title: "",
+      fileData: "",
+      isUserAbsent: false,
     };
   },
   computed: {
     ...mapState(["userInfos"]),
   },
   async created() {
+    function delay(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
     this.moment = moment;
     this.user = JSON.parse(localStorage.getItem("user") || "[]");
-    console.log(this.user);
+    function delay(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
 
     let fetched_membres = await fetch("http://127.0.0.1:8000/api/users");
     this.membres = await fetched_membres.json();
-    console.table(this.membres);
+    function delay(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
 
     let fetched_affiches = await fetch("http://localhost:8000/api/image");
     this.affiches = await fetched_affiches.json();
-    console.table(this.affiches);
+    // console.table(this.affiches);
+    function delay(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
 
     let fetched_commentaires = await fetch(
       "http://localhost:8000/api/commentaires"
     );
     this.commentaires = await fetched_commentaires.json();
+    function delay(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    for (let i = 0; i < this.affiches.length; i++) {
+      const affiche = this.affiches[i];
+    }
+
+    let fetched_likes = await fetch("http://localhost:8000/api/like/");
+
+    this.likes = await fetched_likes.json();
+    console.table(this.likes);
+
+    function delay(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    // Récupérer les likes pour chaque affiche
+    for (let i = 0; i < this.affiches.length; i++) {
+      const affiche = this.affiches[i];
+      await this.fetchLikesForAffiche(affiche);
+
+      await this.fetchCommentsForAffiche(affiche);
+      let fetched_comments = await fetch(
+        "http://localhost:8000/api/commentaires/image/" + affiche.id
+      );
+    }
+    function delay(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    this.isUserAbsent = !this.likes.some(
+      (like) => like.user_id == this.user.id
+    );
   },
   methods: {
+    async makeRequestsWithBackoff(requestCount, delay) {
+      for (let i = 0; i < requestCount; i++) {
+        try {
+          await makeRequest();
+        } catch (error) {
+          console.error("Erreur lors de la requête :", error);
+        }
+        await delay(delay); // Introduire le délai après chaque requête
+        delay *= 2; // Augmenter le délai pour la prochaine requête (facultatif)
+      }
+    },
+
+    async fetchLikesForAffiche(affiche) {
+      let fetched_likes = await fetch(
+        "http://localhost:8000/api/like/image/" + affiche.id
+      );
+      let likesData = await fetched_likes.json();
+      affiche.likes = {
+        count: likesData.count || 0, // Utilisez la valeur de likesData.count ou 0 si elle n'est pas définie
+      };
+      // console.log(affiche.affiches);
+    },
+    async fetchCommentsForAffiche(affiche) {
+      let fetched_comments = await fetch(
+        "http://localhost:8000/api/commentaires/image/" + affiche.id
+      );
+      let CommentData = await fetched_comments.json();
+      affiche.comment = {
+        count: CommentData.count || 0, // Utilisez la valeur de likesData.count ou 0 si elle n'est pas définie
+      };
+      // console.log(affiche.comment.count);
+    },
+
     logout: function () {
       this.$store.commit("logout");
       this.$router.push("/");
@@ -141,8 +220,7 @@ export default {
       this.mode = "notdisplay";
     },
 
-    delete_commentaire: function(comment){
-      console.log(comment.id);
+    delete_commentaire: function (comment) {
       var myHeaders = new Headers();
       myHeaders.append("Accept", "application/json");
 
@@ -160,7 +238,45 @@ export default {
       setTimeout(() => {
         this.$router.go(this.$router.currentRoute);
       }, "2000");
-    }
+    },
+    create_like: function (affiche) {
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("user_id", this.user.id);
+      urlencoded.append("image_id", affiche.id);
+      var requestOptions = {
+        method: "POST",
+        body: urlencoded,
+        redirect: "follow",
+      };
+
+      fetch(
+        "http://localhost:8000/api/like?user_id=4&image_id=9",
+        requestOptions
+      )
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error", error));
+      setTimeout(() => {
+        this.$router.go(this.$router.currentRoute);
+      }, "1000");
+    },
+
+    delete_like: function (like) {
+      console.log(like.id);
+      var requestOptions = {
+        method: "DELETE",
+        redirect: "follow",
+      };
+      let url = "http://localhost:8000/api/likes/" + like.id;
+
+      fetch(url, requestOptions)
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error", error));
+      setTimeout(() => {
+        this.$router.go(this.$router.currentRoute);
+      }, "2000");
+    },
   },
 };
 </script>
@@ -169,7 +285,8 @@ export default {
   <div class="supportpublicitaires">
     <div v-for="affiche in affiches">
       <div class="supportpublicitaire">
-        <div class="affichetitle">{{ affiche.title }} :</div>
+        <div class="affichetitle">{{ affiche.title }}:</div>
+
         <img
           v-bind:src="affiche.url"
           style="
@@ -181,13 +298,34 @@ export default {
           "
         />
         <div class="jaimeCommentaires" @mouseover="not_display()">
-          <div classe="jaime" style="display: flex">
-            <img
-              src="https://cdn-icons-png.flaticon.com/128/1533/1533908.png"
-              class="likes"
-              alt="likes"
-            />
-            <p class="nbjaime">0 j'aime</p>
+          <div class="jaime" style="display: flex">
+            <div v-for="like in likes">
+              <div
+                v-if="like.image_id == affiche.id && like.user_id == user.id"
+              >
+                <img
+                  src="https://cdn-icons-png.flaticon.com/128/1533/1533908.png"
+                  class="likes"
+                  @click="delete_like(like)"
+                  title="Delete"
+                  alt="likes"
+                />
+              </div>
+            </div>
+
+            <div>
+              <img
+                src="https://cdn-icons-png.flaticon.com/128/1533/1533908.png"
+                class="likes"
+                title="like"
+                @click="create_like(affiche)"
+                alt="likes"
+              />
+            </div>
+
+            <p class="nbjaime" v-if="affiche.likes">
+              {{ affiche.likes.count }} j'aime
+            </p>
           </div>
 
           <div class="commentaires">
@@ -196,28 +334,39 @@ export default {
               class="comments"
               alt="comments"
             />
-            <p class="nbcommentaire" @click="displayComments(affiche)">
-              Commentaires
+            <p
+              class="nbcommentaire"
+              @click="displayComments(affiche)"
+              v-if="affiche.comment"
+            >
+              {{ affiche.comment.count }} Commentaires
             </p>
           </div>
         </div>
         <hr />
         <br />
-        <div v-for="comment in comments" class="listedescommentaires">
+        <div v-if="affiche.comment">
+          <div v-if="affiche.comment.count == '0'">
+            <div class="commentaire">Il n'y a pas encore de commentaires .</div>
+          </div>
+        </div>
+        <div
+          v-for="comment in comments.commentaires"
+          class="listedescommentaires"
+        >
           <div v-if="comment.image_id == affiche.id">
             <div class="commentaire" @mouseover="display_deleteComment">
               <div v-for="membre in membres">
                 <div v-if="membre.id == comment.user_id">
-                  <div
-                    class="delete_comments"
-                    v-if="mode == 'display'"
-                    >
-                    <img
-                    src="https://cdn-icons-png.flaticon.com/128/190/190406.png"
-                    class="delete_comment"
-                    alt="delete_comments"
-                    @click="delete_commentaire(comment)"
-                    />
+                  <div class="delete_comments" v-if="mode == 'display'">
+                    <div v-if="comment.user_id == user.id">
+                      <img
+                        src="https://cdn-icons-png.flaticon.com/128/190/190406.png"
+                        class="delete_comment"
+                        alt="delete_comments"
+                        @click="delete_commentaire(comment)"
+                      />
+                    </div>
                   </div>
                   <div class="prenomcommentaire">{{ membre.prenom }}</div>
                 </div>
@@ -226,11 +375,6 @@ export default {
               <div class="commentairedate">
                 {{ moment(comment.created_at).format("DD/MM/YYYY") }}
               </div>
-              <!-- <div v-if="comments.length == 0">
-                <div class="commentaire">
-                  <div class="pasdecommentaire"> Il n'y a pas encore de commentaire  </div>
-                </div>
-            </div> -->
             </div>
           </div>
         </div>
@@ -351,7 +495,6 @@ h1 {
 }
 .jaime {
   display: flex;
-  border: 1px solid;
 }
 .likes {
   width: 35px;
@@ -360,6 +503,9 @@ h1 {
   padding: 3px;
   border: 1px solid hsla(0, 0%, 84%, 0.3);
   border-radius: 3px;
+}
+.likes:hover {
+  cursor: pointer;
 }
 .nbjaime {
   margin-top: auto;
@@ -380,7 +526,7 @@ h1 {
 }
 .jaimeCommentaires {
   display: flex;
-  
+
   height: 41px;
   padding-left: 11px;
   padding-right: 11px;
@@ -396,7 +542,7 @@ h1 {
   border: 1px solid hsla(0, 0%, 84%, 0.3);
   border-radius: 3px;
 }
-.prenomcommentaire{
+.prenomcommentaire {
   width: 142px;
 }
 .commentairecontent {

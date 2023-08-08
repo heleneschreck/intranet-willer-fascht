@@ -18,7 +18,7 @@ class LikesController extends Controller
         $likes = Likes::all();
         return response()->json($likes);
     }
-  /**
+    /**
      * Get the participants by image_id.
      *
      * @param  int  $image_id
@@ -27,6 +27,19 @@ class LikesController extends Controller
     public function getLikesByImage($image_id)
     {
         $likes = Likes::where('image_id', $image_id)->get();
+        $count = $likes->count();
+
+        $likesData = [
+            'likes' => $likes,
+            'count' => $count,
+        ];
+
+        return response()->json($likesData);
+    }
+    public function getLikesByUserAndImage($user_id, $image_id)
+    {
+        $likes = Likes::where('user_id', $user_id)->where('image_id', $image_id)->get();
+
         return response()->json($likes);
     }
     /**
@@ -40,12 +53,12 @@ class LikesController extends Controller
         $this->validate($request, [
             'user_id' => 'required',
             'image_id' => 'required',
-           
-        ]);  
+
+        ]);
         $likes = Likes::create([
             'user_id' => $request->user_id,
             'image_id' => $request->image_id,
-           
+
         ]);
         return response()->json($likes, 201);
     }
@@ -79,8 +92,14 @@ class LikesController extends Controller
      * @param  \App\Models\Likes  $likes
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Likes $likes)
+    public function destroy($id)
     {
-        //
+        $likes = Likes::findOrFail($id);
+        if ($likes)
+            $likes->delete();
+
+        else
+            return response()->json('error');
+        return response()->json(null);
     }
 }

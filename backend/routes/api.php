@@ -12,6 +12,7 @@ use App\Http\Controllers\API\ProjectController;
 use App\Http\Controllers\API\RendezvousController;
 use App\Http\Controllers\API\SoustachesController;
 use App\Http\Controllers\API\CompterendusController;
+use App\Http\Controllers\API\LikesController;
 use App\Http\Controllers\API\NoparticpantsController;
 use App\Http\Controllers\API\ParticipantsController;
 use App\Http\Controllers\API\ProfilsController;
@@ -36,6 +37,11 @@ Route::get('/participants/user/{user_id}', [ParticipantsController::class, 'getU
 Route::apiResource("noparticipants", NoparticpantsController::class);
 Route::apiResource("image", ImageController::class);
 Route::get('/images/{path}', 'App\Http\Controllers\Api\ImageController@index');
+
+Route::apiResource("like", LikesController::class);
+Route::get('/like/image/{image_id}', [LikesController::class, 'getLikesByImage']);
+Route::get('/likes/{user_id}/{image_id}', [LikesController::class, 'getLikesByUserAndImage']);
+Route::delete('/likes/{id}',[LikesController::class, 'destroy']);
 
 Route::post('image',[ImageController::class, 'imageStore']);
 Route::get('/image/{id}', 'ImageController@show');

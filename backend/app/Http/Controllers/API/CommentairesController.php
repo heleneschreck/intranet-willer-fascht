@@ -31,7 +31,7 @@ class CommentairesController extends Controller
             'user_id' => 'required',
             'image_id' => 'required',
             'commentaire' => 'required',
-        ]);  
+        ]);
         $commentaires = Commentaires::create([
             'user_id' => $request->user_id,
             'image_id' => $request->image_id,
@@ -53,7 +53,7 @@ class CommentairesController extends Controller
 
 
 
-      /**
+    /**
      * Get the participants by image_id.
      *
      * @param  int  $image_id
@@ -62,7 +62,12 @@ class CommentairesController extends Controller
     public function getCommentairesByImage($image_id)
     {
         $commentaires = Commentaires::where('image_id', $image_id)->get();
-        return response()->json($commentaires);
+        $count = $commentaires->count();
+        $commentairesData = [
+            'commentaires' => $commentaires,
+            'count' => $count
+        ];
+        return response()->json($commentairesData);
     }
 
 
@@ -78,7 +83,7 @@ class CommentairesController extends Controller
     {
         $commentaires = Commentaires::find($id);
         $commentaires->update($request->all());
-        return $commentaires; 
+        return $commentaires;
     }
 
     /**
