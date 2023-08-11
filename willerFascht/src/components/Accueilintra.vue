@@ -1,17 +1,26 @@
 <script>
 import { mapState } from "vuex";
+import moment from "moment";
+
 export default {
   data() {
     return {
       mode: false,
       user: [],
       profils: [],
+      affiches: [],
+      projects: [],
+      statuts: [],
+      evenements: [],
+
+      taches: [],
     };
   },
   computed: {
     ...mapState(["userInfos"]),
   },
   async created() {
+    this.moment = moment;
     this.user = JSON.parse(localStorage.getItem("user") || "[]");
     console.log(this.user);
     // if (localStorage.getItem("user") != null) {
@@ -21,6 +30,29 @@ export default {
     let fetched_profils = await fetch("http://127.0.0.1:8000/api/profils");
     this.profils = await fetched_profils.json();
     console.table(this.profils);
+
+    let fetched_evenements = await fetch(
+      "http://127.0.0.1:8000/api/rendezvous"
+    );
+    let lListe = await fetched_evenements.json();
+    lListe = lListe.sort((a, b) => b.start.localeCompare(a.start));
+    this.evenements = lListe;
+    console.table(this.evenements);
+
+    lListe = lListe.sort((a, b) => b.start.localeCompare(a.start));
+
+    let fetched_projects = await fetch("http://127.0.0.1:8000/api/project");
+    this.projects = await fetched_projects.json();
+    console.table(this.projects);
+    let fetched_statuts = await fetch("http://127.0.0.1:8000/api/statut");
+    this.statuts = await fetched_statuts.json();
+    console.table(this.statuts);
+    let fetched_taches = await fetch("http://127.0.0.1:8000/api/taches");
+    this.taches = await fetched_taches.json();
+    console.table(this.taches);
+
+    let fetched_affiches = await fetch("http://localhost:8000/api/image");
+    this.affiches = await fetched_affiches.json();
   },
   methods: {
     logout: function () {
@@ -103,7 +135,7 @@ export default {
           <img
             v-bind:src="profil.url"
             alt=""
-            class="m-auto rounded-full object-cover  lg:w-40 lg:h-40"
+            class="m-auto rounded-full object-cover lg:w-40 lg:h-40"
           />
           <div class="deletephotoprofil">
             <img
@@ -119,7 +151,7 @@ export default {
           <span class="hidden text-gray-400 lg:block"></span>
         </div>
       </div>
-      
+
       <div class="uploadphoto profil" v-if="mode == 'uploadphoto'">
         <input type="file" @change="onFileSelected" name="image" id="" />
       </div>
@@ -260,9 +292,9 @@ export default {
   <div class="ml-auto mb-6 lg:w-[75%] xl:w-[80%] 2xl:w-[85%]">
     <div class="sticky z-10 top-0 h-16 border-b bg-white lg:py-2.5">
       <div
-        class="px-6 flex items-center justify-between space-x-4 2xl:container"
+        class="px-6 flex items-center justify-between space-x-1 2xl:container"
       >
-        <h5 hidden class="text-2xl text-gray-600 font-medium lg:block">
+        <h5 hidden class="text-3xl text-gray-600 font-medium lg:block">
           Les actualités de l'association
         </h5>
         <button class="w-12 h-16 -mr-2 border-r lg:hidden">
@@ -340,30 +372,85 @@ export default {
     </div>
 
     <div class="px-6 pt-6 2xl:container">
-      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <div class="md:col-span-2 lg:col-span-1">
+      <div class="grid gap-6 md:grid-cols-5 lg:grid-cols-3">
+        <div class="md:col-span-3 lg:col-span-1 ">
           <div
-            class="h-full py-8 px-6 space-y-6 rounded-xl border border-gray-200 bg-white"
+            class="h-full py-8 px-6  space-y-6 rounded-xl border border-gray-200 bg-white onglets"
           >
             <div>
-              <h5 class="text-xl text-gray-600 text-center">
+              <h5 class="text-xl text-gray-600 text-center rubrique">
                 Projets en cours :
               </h5>
+              <div v-for="project in projects">
+                <div class="titreprojectsencours">
+                  {{ project.title }} -
+                  {{ moment(project.end).format("DD/MM/YYYY") }}
+                </div>
+                <div v-for="statut in statuts">
+                  <!-- {{ statut }} -->
+                  <div v-for="tache in taches">
+                    <div
+                      v-if="
+                        tache.status_id == '1' && tache.project_id == project.id
+                      "
+                    >
+                      <div v-if="tache.user_id == user.id">
+                        <div v-show="moment(tache.end) > moment()">
+                          <div class="tacheafaire">
+                            {{ tache.title }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="projetencours"></div>
             </div>
           </div>
         </div>
         <div>
           <div
-            class="h-full py-6 px-6 rounded-xl border border-gray-200 bg-white"
+            class="h-full py-6 px-6 rounded-xl border border-gray-200 bg-white onglets"
           >
-            <h5 class="text-xl text-gray-700">Prochains rendez-vous :</h5>
+            <h5 class="text-xl text-gray-700 rubrique">Prochains rendez-vous :</h5>
           </div>
         </div>
         <div>
           <div
-            class="lg:h-full py-8 px-6 text-gray-600 rounded-xl border border-gray-200 bg-white"
+            class="h-full py-6 px-6 rounded-xl border border-gray-200 bg-white onglets"
           >
-            <h5 class="text-xl text-gray-700">Dernières affiches :</h5>
+            <h5 class="text-xl text-gray-700 rubrique">Prochains rendez-vous :</h5>
+          </div>
+        </div>
+        <div></div>
+      </div>
+      <div
+        class="lg:h-full py-8 px-6 text-gray-600 rounded-xl border border-gray-200 bg-white listderniereaffiches"
+      >
+        <h5 class="text-xl text-gray-700 rubrique">Dernières affiches :</h5>
+        <div class="dernieresAffiche">
+          <div v-for="affiche in affiches">
+            <div class="derniereAffiche">
+              <div class="titleDerniereaffiches">
+                {{ affiche.title }}
+              </div>
+              <div class="imageDerniereAffiche">
+                <img
+                  v-bind:src="affiche.url"
+                  style="
+                    width: 400px;
+                    height: 460px;
+                    margin-left: auto;
+                    margin-right: auto;
+                    margin-bottom: 15px;
+                  "
+                />
+              </div>
+              <div class="creea">
+                {{ moment(affiche.created_at).format("DD/MM/YYYY") }}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -372,7 +459,8 @@ export default {
 </template>
 <style>
 .accueilintra {
-  margin-top: 10% !important;
+  margin-top: 4% !important;
+  background-color: hsla(0, 0%, 84%, 0.3);
 }
 .compte {
   display: flex;
@@ -382,8 +470,11 @@ export default {
   padding: 3px;
   width: 40px;
   border-radius: 19px;
-  margin-left: 131px;
-  margin-top: -13px;
+  margin-left: 176px;
+  margin-top: -19px;
+}
+.deletephotoprofil:hover {
+  cursor: pointer;
 }
 .updateimage {
   width: 25px;
@@ -391,7 +482,31 @@ export default {
   margin-left: auto;
   margin-right: auto;
 }
+.rubrique{
+font-size: 30px !important;
+margin-bottom: 20px;
+}
 .uploadphoto {
   background: white;
+}
+.titreprojectsencours {
+  font-weight: bold;
+}
+.dernieresAffiche {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: flex-start;
+}
+.derniereAffiche {
+  margin-right: 3%;
+}
+.listderniereaffiches {
+  width: 123% !important;
+}
+.onglets{
+  margin-right: 68px;
+    margin-left: 0px;
+    width: 123%;
+
 }
 </style>

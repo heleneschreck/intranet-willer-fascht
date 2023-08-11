@@ -13,10 +13,17 @@ export default {
     return {
       mode: false,
       user: [],
+      currentPage: "", // Gardera le nom de la page actuelle
+      showMenu: false,
     };
   },
   computed: {
     ...mapState(["userInfos"]),
+  },
+  watch: {
+    "$route.name"(newRouteName) {
+      this.currentPage = newRouteName;
+    },
   },
   async beforeMount() {
     this.user = JSON.parse(localStorage.getItem("user") || "[]");
@@ -80,12 +87,11 @@ export default {
         <button
           data-collapse-toggle="navbar-sticky"
           type="button"
+          @click="showMenu = !showMenu"
           class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
           aria-controls="navbar-sticky"
           aria-expanded="false"
-          
         >
-   
           <svg
             class="w-6 h-6"
             aria-hidden="true"
@@ -106,13 +112,22 @@ export default {
         id="navbar-sticky"
       >
         <ul
+          :class="showMenu ? 'flex' : 'hidden'"
           class="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700"
         >
           <li>
-            <router-link :to="`/accueilintra`">
+            <router-link
+              :to="`/accueilintra`"
+              exact
+              @update:current-page="currentPage = $event"
+            >
               <a
+                :class="{
+                  'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
+                    currentPage === 'accueilintra',
+                }"
                 href="#"
-                class="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white"
+                class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                 aria-current="page"
                 >Accueil</a
               >
@@ -120,8 +135,16 @@ export default {
           </li>
 
           <li>
-            <router-link :to="`/mesinfos`">
+            <router-link
+              :to="`/mesinfos`"
+              exact
+              @update:current-page="currentPage = $event"
+            >
               <a
+                :class="{
+                  'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
+                    currentPage === 'mesinfos',
+                }"
                 href="#"
                 class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                 >Mes informations</a
@@ -130,8 +153,16 @@ export default {
           </li>
 
           <li>
-            <router-link :to="`/planning`">
+            <router-link
+              :to="`/planning`"
+              exact
+              @update:current-page="currentPage = $event"
+            >
               <a
+                :class="{
+                  'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
+                    currentPage === 'planning',
+                }"
                 href="#"
                 class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                 >Planning</a
@@ -139,8 +170,16 @@ export default {
             >
           </li>
           <li>
-            <router-link :to="`/membres`">
+            <router-link
+              :to="`/membres`"
+              exact
+              @update:current-page="currentPage = $event"
+            >
               <a
+                :class="{
+                  'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
+                    currentPage === 'membres',
+                }"
                 href="#"
                 class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                 >Membres
@@ -148,8 +187,16 @@ export default {
             </router-link>
           </li>
           <li v-show="user.niveau == '1'">
-            <router-link :to="`/createmembres`">
+            <router-link
+              :to="`/createmembres`"
+              exact
+              @update:current-page="currentPage = $event"
+            >
               <a
+                :class="{
+                  'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
+                    currentPage === 'createmembres',
+                }"
                 href="#"
                 class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                 >Ajouter un membre à l'équipe</a
@@ -157,31 +204,54 @@ export default {
             </router-link>
           </li>
           <li>
-            <router-link :to="`/messagerie`">
+            <router-link
+              :to="`/messagerie`"
+              exact
+              @update:current-page="currentPage = $event"
+            >
               <a
                 href="#"
+                :class="{
+                  'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
+                    currentPage === 'messagerie',
+                }"
                 class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                 >Messagerie</a
               >
             </router-link>
           </li>
           <li>
-            <router-link :to="`/todo`">
+            <router-link
+              :to="`/todo`"
+              exact
+              @update:current-page="currentPage = $event"
+            >
               <a
                 href="#"
+                :class="{
+                  'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
+                    currentPage === 'todo',
+                }"
                 class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                 >Projets</a
-              >    
+              >
             </router-link>
           </li>
           <li>
-
-            <router-link :to="`/affiches`">
+            <router-link
+              :to="`/affiches`"
+              exact
+              @update:current-page="currentPage = $event"
+            >
               <a
-              href="#"
-              class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-              >Supports publicitaires</a
-              >    
+                href="#"
+                :class="{
+                  'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
+                    currentPage === 'affiches',
+                }"
+                class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                >Supports publicitaires</a
+              >
             </router-link>
           </li>
         </ul>

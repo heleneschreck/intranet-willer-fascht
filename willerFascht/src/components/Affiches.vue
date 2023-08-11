@@ -85,6 +85,7 @@ export default {
     this.isUserAbsent = !this.likes.some(
       (like) => like.user_id == this.user.id
     );
+    console.log(this.isUserAbsent);
   },
   methods: {
     async makeRequestsWithBackoff(requestCount, delay) {
@@ -212,6 +213,10 @@ export default {
         this.$router.go(this.$router.currentRoute);
       }, "2000");
     },
+    display_prenomlike:function(){
+      this.mode = "displayPrenom";
+
+    },
     display_deleteComment: function () {
       this.mode = "display";
     },
@@ -311,9 +316,16 @@ export default {
                   alt="likes"
                 />
               </div>
+              <div class="membreslike" v-if="mode=='displayPrenom'">
+                <div class="membrelike" v-for="membre in membres">
+                  <div v-if="membre.id == like.user_id" class="prenomlike">
+                    {{ membre.prenom }}
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div>
+            <div v-if="isUserAbsent">
               <img
                 src="https://cdn-icons-png.flaticon.com/128/1533/1533908.png"
                 class="likes"
@@ -323,7 +335,7 @@ export default {
               />
             </div>
 
-            <p class="nbjaime" v-if="affiche.likes">
+            <p class="nbjaime" v-if="affiche.likes" @mouseover="display_prenomlike()">
               {{ affiche.likes.count }} j'aime
             </p>
           </div>
@@ -450,7 +462,21 @@ h1 {
   font-size: 30px;
   text-align: center;
 }
+.membreslike {
+  background-color: hsl(0deg 0% 84%);
+  opacity: 1;
+  position: absolute;
+  width: 162px;
+  margin-top: 30px;
+  left: 91px;
+}
+.membrelike {
+  opacity: 1;
+  display: flex;
+  margin-top: 3px;
 
+  flex-direction: column;
+}
 .supportpublicitaires {
   display: flex;
   margin-top: 45px;
