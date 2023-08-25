@@ -1,21 +1,24 @@
 <?php
 
+use App\Models\Conversation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\API\CommentairesController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\Api\ImageController;
+use App\Http\Controllers\API\LikesController;
 use App\Http\Controllers\API\TacheController;
 use App\Http\Controllers\API\StatusController;
+use App\Http\Controllers\API\ProfilsController;
 use App\Http\Controllers\API\ProjectController;
+use App\Http\Controllers\API\MessagesController;
 use App\Http\Controllers\API\RendezvousController;
 use App\Http\Controllers\API\SoustachesController;
+use App\Http\Controllers\API\CommentairesController;
 use App\Http\Controllers\API\CompterendusController;
-use App\Http\Controllers\API\LikesController;
-use App\Http\Controllers\API\NoparticpantsController;
+use App\Http\Controllers\API\ConversationController;
 use App\Http\Controllers\API\ParticipantsController;
-use App\Http\Controllers\API\ProfilsController;
+use App\Http\Controllers\API\NoparticpantsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +31,9 @@ use App\Http\Controllers\API\ProfilsController;
 |
 */
 Route::apiResource("users", UserController::class); // Les routes "users.*" de l'API
+Route::apiResource("messages", MessagesController::class); // Les routes "messages
+Route::apiResource("conversations", ConversationController::class); // Les routes "conversations
+Route::apiResource("conversation_users", Conversation_UsersController::class); // Les routes "convers
 Route::apiResource("profils", ProfilsController::class); 
 Route::apiResource("rendezvous", RendezvousController::class);
 Route::apiResource("participants", ParticipantsController::class);

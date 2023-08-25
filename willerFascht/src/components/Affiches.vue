@@ -78,14 +78,14 @@ export default {
         "http://localhost:8000/api/commentaires/image/" + affiche.id
       );
     }
-    function delay(ms) {
-      return new Promise((resolve) => setTimeout(resolve, ms));
-    }
-
     this.isUserAbsent = !this.likes.some(
       (like) => like.user_id == this.user.id
     );
     console.log(this.isUserAbsent);
+    function delay(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
   },
   methods: {
     async makeRequestsWithBackoff(requestCount, delay) {

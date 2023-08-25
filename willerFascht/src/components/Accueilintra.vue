@@ -44,6 +44,7 @@ export default {
     let fetched_projects = await fetch("http://127.0.0.1:8000/api/project");
     this.projects = await fetched_projects.json();
     console.table(this.projects);
+
     let fetched_statuts = await fetch("http://127.0.0.1:8000/api/statut");
     this.statuts = await fetched_statuts.json();
     console.table(this.statuts);
@@ -371,11 +372,11 @@ export default {
       </div>
     </div>
 
-    <div class="px-6 pt-6 2xl:container">
-      <div class="grid gap-6 md:grid-cols-5 lg:grid-cols-3">
-        <div class="md:col-span-3 lg:col-span-1 ">
+    <div class="px-6 pt-6 3xl:container">
+      <div class="onglets">
+        
           <div
-            class="h-full py-8 px-6  space-y-6 rounded-xl border border-gray-200 bg-white onglets"
+            class="h-full py-8 px-6 space-y-6 rounded-xl border border-gray-200 bg-white onglet"
           >
             <div>
               <h5 class="text-xl text-gray-600 text-center rubrique">
@@ -384,43 +385,55 @@ export default {
               <div v-for="project in projects">
                 <div class="titreprojectsencours">
                   {{ project.title }} -
-                  {{ moment(project.end).format("DD/MM/YYYY") }}
+                  {{ moment(project.end).format("DD/MM/YYYY") }} :
                 </div>
-                <div v-for="statut in statuts">
-                  <!-- {{ statut }} -->
-                  <div v-for="tache in taches">
-                    <div
-                      v-if="
-                        tache.status_id == '1' && tache.project_id == project.id
-                      "
-                    >
-                      <div v-if="tache.user_id == user.id">
-                        <div v-show="moment(tache.end) > moment()">
-                          <div class="tacheafaire">
-                            {{ tache.title }}
-                          </div>
+                <div v-for="tache in taches">
+                  <div
+                    v-if ="
+                      tache.status_id == '2' 
+                      && tache.project_id == project.id
+                    "
+                  >
+                    <div v-if="tache.user_id == user.id">
+                     
+                        <div class="tacheafaire">
+                          {{ tache.title }}
                         </div>
-                      </div>
+                      
                     </div>
                   </div>
-                </div>
+              <div>
               </div>
-              <div class="projetencours"></div>
+         
+            </div>
+              </div>
+             
+            </div>
+          </div>
+       
+        <div class="onglet">
+          <div
+            class="h-full py-6 px-6 rounded-xl border border-gray-200 bg-white "
+          >
+            <h5 class="text-xl text-gray-700 rubrique">
+              Prochains rendez-vous :
+            </h5>
+            <div class="EvenementTitleAccueilIntra">
+
+              <div v-for="evenement in evenements">
+             <li>{{ evenement.title }} - Du {{ moment(evenement.start).format("DD/MM/YYYY [à] HH[h]mm")}} au {{ moment(evenement.start).format("DD/MM/YYYY [à] HH[h]mm")  }} </li>
+              </div>
+            
             </div>
           </div>
         </div>
-        <div>
+        <div class="onglet">
           <div
             class="h-full py-6 px-6 rounded-xl border border-gray-200 bg-white onglets"
           >
-            <h5 class="text-xl text-gray-700 rubrique">Prochains rendez-vous :</h5>
-          </div>
-        </div>
-        <div>
-          <div
-            class="h-full py-6 px-6 rounded-xl border border-gray-200 bg-white onglets"
-          >
-            <h5 class="text-xl text-gray-700 rubrique">Prochains rendez-vous :</h5>
+            <h5 class="text-xl text-gray-700 rubrique">
+           Nouveaux membres de l'association  :
+            </h5>
           </div>
         </div>
         <div></div>
@@ -433,7 +446,7 @@ export default {
           <div v-for="affiche in affiches">
             <div class="derniereAffiche">
               <div class="titleDerniereaffiches">
-                {{ affiche.title }}
+                {{ affiche.title }} :
               </div>
               <div class="imageDerniereAffiche">
                 <img
@@ -482,15 +495,18 @@ export default {
   margin-left: auto;
   margin-right: auto;
 }
-.rubrique{
-font-size: 30px !important;
-margin-bottom: 20px;
+.rubrique {
+  font-size: 30px !important;
+  margin-bottom: 20px;
 }
 .uploadphoto {
   background: white;
 }
 .titreprojectsencours {
   font-weight: bold;
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 20px;
 }
 .dernieresAffiche {
   display: flex !important;
@@ -501,12 +517,21 @@ margin-bottom: 20px;
   margin-right: 3%;
 }
 .listderniereaffiches {
-  width: 123% !important;
+  /* width: 123% !important; */
 }
-.onglets{
-  margin-right: 68px;
-    margin-left: 0px;
-    width: 123%;
+.titleDerniereaffiches{
+  text-align: center;
+  margin-bottom: 10px;
+}
+.onglets {
+ 
+  display: flex;
+  margin-bottom: 7px;
+}
+.onglet {
+    width: 40%;
+    margin-right: 7px;
+}
 
-}
+
 </style>
