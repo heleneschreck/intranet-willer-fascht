@@ -15,7 +15,19 @@ class ConversationController extends Controller
      */
     public function index()
     {
-        //
+        $conversation = Conversation::all();
+        return response()->json($conversation);
+    }
+     /**
+     * Get the participants by user_id.
+     *
+     * @param  int  $user_id
+     * @return \Illuminate\Http\Response
+     */
+    public function getConversationByCreateur($user_id)
+    {
+        $conversation = Conversation::where('user_id', $user_id)->get();
+        return response()->json($conversation);
     }
 
     /**
@@ -26,7 +38,14 @@ class ConversationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'user_id' => 'required',
+
+        ]);
+        $conversation = Conversation::create([
+            'user_id' => $request->user_id,
+        ]);
+        return response()->json($conversation, 201);
     }
 
     /**
@@ -37,19 +56,7 @@ class ConversationController extends Controller
      */
     public function show(Conversation $conversation)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Conversation  $conversation
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Conversation $conversation)
-    {
-        //
+        return response()->json($conversation);
     }
 
     /**
@@ -60,6 +67,7 @@ class ConversationController extends Controller
      */
     public function destroy(Conversation $conversation)
     {
-        //
+        $conversation->delete();
+        return response()->json();
     }
 }

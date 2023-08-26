@@ -4,7 +4,7 @@
     </script>
     
     <template>
-      <div class="mesinfos" >
+      <div class="messagerie" >
       <Messagerie />
       </div >
     </template>

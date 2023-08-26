@@ -19,6 +19,7 @@ use App\Http\Controllers\API\CompterendusController;
 use App\Http\Controllers\API\ConversationController;
 use App\Http\Controllers\API\ParticipantsController;
 use App\Http\Controllers\API\NoparticpantsController;
+use App\Http\Controllers\API\ConversationUsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,8 +33,15 @@ use App\Http\Controllers\API\NoparticpantsController;
 */
 Route::apiResource("users", UserController::class); // Les routes "users.*" de l'API
 Route::apiResource("messages", MessagesController::class); // Les routes "messages
+Route::get('/messages/conversation/{conversation_id}', [MessagesController::class, 'getMessageByConversation']);
+
+
 Route::apiResource("conversations", ConversationController::class); // Les routes "conversations
-Route::apiResource("conversation_users", Conversation_UsersController::class); // Les routes "convers
+Route::get('/conversations/user/{user_id}', [ConversationController::class, 'getConversationByCreateur']);
+
+Route::apiResource("conversation_users", ConversationUsersController::class); // Les routes "convers
+Route::get('/conversation_users/conversation/{conversation_id}', [ConversationUsersController::class, 'getMessagesByConversations']);
+Route::get('/conversation_users/user/{users_id}', [ConversationUsersController::class, 'getMessagesByUser']);
 Route::apiResource("profils", ProfilsController::class); 
 Route::apiResource("rendezvous", RendezvousController::class);
 Route::apiResource("participants", ParticipantsController::class);

@@ -15,7 +15,21 @@ class MessagesController extends Controller
      */
     public function index()
     {
-        //
+        $messages = Messages::all();
+        return response()->json($messages);
+    }
+
+
+    /**
+     * Get the participants by user_id.
+     *
+     * @param  int  $user_id
+     * @return \Illuminate\Http\Response
+     */
+    public function getMessageByConversation($conversation_id)
+    {
+        $messages = Messages::where('conversation_id', $conversation_id)->get();
+        return response()->json($messages);
     }
 
     /**
@@ -26,7 +40,20 @@ class MessagesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'user_id' => 'required',
+            'conversation_id' => 'required',
+            'message' => 'required',
+            'Lu' => 'required',
+
+        ]);
+        $conversation = Messages::create([
+            'user_id' => $request->user_id,
+            'conversation_id' => $request->conversation_id,
+            'message' => $request->message,
+            'Lu' => $request->Lu,
+        ]);
+        return response()->json($conversation, 201);
     }
 
     /**
@@ -37,7 +64,7 @@ class MessagesController extends Controller
      */
     public function show(Messages $messages)
     {
-        //
+        return response()->json($messages);
     }
 
     /**
@@ -58,8 +85,16 @@ class MessagesController extends Controller
      * @param  \App\Models\Messages  $messages
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Messages $messages)
+    public function destroy($id)
     {
-        //
+        
+
+        $messages = Messages::findOrFail($id);
+        if ($messages)
+            $messages->delete();
+
+        else
+            return response()->json('error');
+        return response()->json(null);
     }
 }

@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('conversations', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->oneDelete('cascade');
             $table->timestamps();
         });
     }
