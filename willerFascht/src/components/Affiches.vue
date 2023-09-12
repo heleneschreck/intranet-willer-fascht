@@ -105,10 +105,11 @@ export default {
         "http://localhost:8000/api/like/image/" + affiche.id
       );
       let likesData = await fetched_likes.json();
+      console.log(likesData);
       affiche.likes = {
         count: likesData.count || 0, // Utilisez la valeur de likesData.count ou 0 si elle n'est pas définie
       };
-      // console.log(affiche.affiches);
+      console.log(affiche);
     },
     async fetchCommentsForAffiche(affiche) {
       let fetched_comments = await fetch(
@@ -118,7 +119,7 @@ export default {
       affiche.comment = {
         count: CommentData.count || 0, // Utilisez la valeur de likesData.count ou 0 si elle n'est pas définie
       };
-      // console.log(affiche.comment.count);
+      console.log(affiche.comment.count);
     },
 
     logout: function () {

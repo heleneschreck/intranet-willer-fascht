@@ -28,7 +28,13 @@ class ConversationUsersController extends Controller
     public function getMessagesByConversations($conversation_id)
     {
         $conversation = Conversation_Users::where('conversation_id', $conversation_id)->get();
-        return response()->json($conversation);
+        $count = $conversation ->count();
+
+        $conversationData = [
+            'conversation' => $conversation,
+            'count' => $count,
+        ];
+        return response()->json($conversationData);
     }
   /**
      * Get the participants by user_id.

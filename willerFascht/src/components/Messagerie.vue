@@ -15,6 +15,7 @@ export default {
       membresConversation: [],
       conversationsUser: [],
       generalConversations: [],
+      generalConversation: [],
       conversation_id: null,
     };
   },
@@ -23,67 +24,112 @@ export default {
     ...mapState(["userInfos"]),
   },
   async created() {
+    function delay(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+    // UTILISATEUR CONNECTER
     this.user = JSON.parse(localStorage.getItem("user") || "[]");
-    console.log(this.user);
+    // console.log(this.user.id);
+    function delay(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+    // Module date
     this.moment = moment;
-
+    function delay(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+    // membres associations
     let fetched_membres = await fetch("http://127.0.0.1:8000/api/users");
     this.membres = await fetched_membres.json();
-    console.table(this.membres);
-
-    let fetched_conversations = await fetch(
-      "http://localhost:8000/api/conversations/user/" + this.user.id
-    );
-    this.conversations = await fetched_conversations.json();
-    console.table(this.conversations);
-
+    function delay(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+    // liste conversations où l'utilisateur participe
     let fetched_conversationsUser = await fetch(
       "http://localhost:8000/api/conversation_users/user/" + this.user.id
     );
     this.conversationsUser = await fetched_conversationsUser.json();
-    console.table(this.conversationsUser);
+    // console.log(this.conversationsUser);
+    function delay(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
 
+    // liste de toutes les conversations
     let fetched_generalConversations = await fetch(
       "http://localhost:8000/api/conversations"
     );
     this.generalConversations = await fetched_generalConversations.json();
-    console.table(this.generalConversations);
+    // console.log(this.generalConversations);
+    function delay(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+    for (let i = 0; i < this.generalConversations.length; i++) {
+      await this.fetchConversationsForCount(this.generalConversations[i]);
+    }
 
+    function delay(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
     let fetched_destinataires = await fetch(
       "http://localhost:8000/api/conversation_users/"
     );
     this.destinataires = await fetched_destinataires.json();
-    console.table(this.destinataires);
+    // console.log(this.destinataires);
+    function delay(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
   },
   methods: {
+    async fetchConversationsForCount(generalConversation) {
+      let fetched_count = await fetch(
+        "http://localhost:8000/api/conversation_users/conversation/" +
+          generalConversation.id
+      );
+      let ConversationsData = await fetched_count.json();
+      console.log(ConversationsData);
+      generalConversation.conversation = {
+        count: ConversationsData.count || 0,
+      };
+      console.log(generalConversation.conversation.count);
+    },
+
+    async makeRequestsWithBackoff(requestCount, delay) {
+      for (let i = 0; i < requestCount; i++) {
+        try {
+          await makeRequest();
+        } catch (error) {
+          console.error("Erreur lors de la requête :", error);
+        }
+        await delay(delay); // Introduire le délai après chaque requête
+        delay *= 2; // Augmenter le délai pour la prochaine requête (facultatif)
+      }
+    },
     logout: function () {
       this.$store.commit("logout");
       this.$router.push("/");
     },
     display_Messages: async function (conversation) {
+      console.log(conversation.id);
       this.mode = "conversations";
-      console.log(conversation.user_id);
+
       // destinataires
       let fetched_membresConversation = await fetch(
         "http://localhost:8000/api/conversation_users/conversation/" +
           conversation.id
       );
       this.membresConversation = await fetched_membresConversation.json();
-      console.table(this.membresConversation);
-
+      console.log(this.membresConversation.count);
       // messages
       let fetched_messages = await fetch(
         "http://localhost:8000/api/messages/conversation/" + conversation.id
       );
       this.messages = await fetched_messages.json();
-      console.table(this.messages);
 
       this.conversation_id = conversation;
       return this.conversation_id;
     },
-   
+
     delete_destinataire: function (membreConversation) {
-      console.log(membreConversation.id);
       var requestOptions = {
         method: "DELETE",
         redirect: "follow",
@@ -99,7 +145,6 @@ export default {
       }, "2000");
     },
     deletemessage: function (message) {
-      console.log(message.id);
       var requestOptions = {
         method: "DELETE",
         redirect: "follow",
@@ -114,10 +159,6 @@ export default {
       }, "2000");
     },
     ajoutMessage: function () {
-      console.log(this.user.id);
-      console.log(this.content);
-      console.log(this.conversation_id.id);
-
       var urlencoded = new URLSearchParams();
       urlencoded.append("user_id", this.user.id);
       urlencoded.append("conversation_id", this.conversation_id.id);
@@ -138,9 +179,6 @@ export default {
       }, "2000");
     },
     AjoutDestinataire: function () {
-      console.log(this.users_id);
-      console.log(this.conversation_id.id);
-
       var urlencoded = new URLSearchParams();
       urlencoded.append("users_id", this.users_id);
       urlencoded.append("conversation_id", this.conversation_id.id);
@@ -159,23 +197,6 @@ export default {
         this.$router.go(this.$router.currentRoute);
       }, "2000");
     },
-    ajouterconversation: function () {
-      console.log(this.user.id);
-
-      var urlencoded = new URLSearchParams();
-      urlencoded.append("user_id", this.user.id);
-
-      var requestOptions = {
-        method: "POST",
-        body: urlencoded,
-        redirect: "follow",
-      };
-      let url = "http://localhost:8000/api/conversations";
-      fetch(url, requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .catch((error) => console.log("error", error));
-    },
     survol: function () {
       this.mode = "display_delete";
     },
@@ -187,6 +208,56 @@ export default {
     },
     display_ajoutDestinataires: function () {
       this.mode = "ajoutdestinataire";
+    },
+    ajouterconversation: async function () {
+      const urlencoded = new URLSearchParams();
+      urlencoded.append("user_id", this.user.id);
+
+      const requestOptions = {
+        method: "POST",
+        body: urlencoded,
+        redirect: "follow",
+      };
+
+      const url = "http://localhost:8000/api/conversations";
+
+      try {
+        const response = await fetch(url, requestOptions);
+        const result = await response.json(); // Parse the response JSON
+        console.log(result);
+
+        // Assuming the API response has an "id" property
+        if (result.id !== undefined) {
+          // Update the component's result property
+          this.result = result;
+
+          // Access the ID
+        } else {
+          console.log("Response does not contain an ID.");
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+
+      console.log(this.result.id);
+
+      var urlencoded2 = new URLSearchParams();
+      urlencoded2.append("users_id", this.user.id);
+      urlencoded2.append("conversation_id", this.result.id);
+
+      var requestOptions2 = {
+        method: "POST",
+        body: urlencoded2,
+        redirect: "follow",
+      };
+      let url2 = "http://localhost:8000/api/conversation_users";
+      fetch(url2, requestOptions2)
+        .then((response2) => response2.text())
+        .then((result2) => console.log(result2))
+        .catch((error) => console.log("error", error));
+      setTimeout(() => {
+        this.$router.go(this.$router.currentRoute);
+      }, "2000");
     },
   },
 };
@@ -209,31 +280,42 @@ export default {
       <hr />
       <br />
       <div class="listeConversations">
-        <div
-          v-for="conversation in conversations"
-          class="conversation"
-          @click="display_Messages(conversation)"
-        >
-          <div v-for="destinataire in destinataires">
-            <div v-if="destinataire.conversation_id == conversation.id">
-              <div v-for="membre in membres">
-                <div v-if="membre.id == destinataire.users_id">
-                  {{ membre.prenom }} ,
+        <div v-for="conversationUser in conversationsUser" class="conversation">
+          <div v-for="membre in membres" style="display: flex">
+            <div v-for="conversation in generalConversations">
+              <div v-if="conversation.id == conversationUser.conversation_id">
+                <div v-for="destinataire in destinataires">
+                  <div v-if="destinataire.conversation_id == conversation.id">
+                    <div
+                      v-if="
+                        membre.id == destinataire.users_id &&
+                        conversation.conversation.count == 1
+                      "
+                      @click="display_Messages(conversation)" class="pasdedestinataire" 
+                    >
+                      Ajoutez un destinataire à la conversation :
+                    </div>
+
+                    <div
+                      v-else-if="
+                        membre.id == destinataire.users_id &&
+                        destinataire.users_id != user.id
+                      "
+                      @click="display_Messages(conversation)"
+                    >
+                      {{ membre.prenom }} ,
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div v-for="conversationUser in conversationsUser" class="conversation" >
-          <div v-for="conversation in generalConversations">
-            
-            <div v-if="conversation.id == conversationUser.conversation_id ">
-              <div v-for="membre in membres">
-                <div v-if="membre.id == conversation.user_id" @click="display_Messages(conversation)">
-                  {{ membre.prenom }} ,
-                </div>
-              </div>
-            </div>
+          <div class="quitterconversation" >
+            <img
+              src="https://cdn-icons-png.flaticon.com/128/4008/4008990.png"
+              class="illustrationQuitterConversation"
+              alt="quitter la conversation"
+            />
           </div>
         </div>
       </div>
@@ -251,25 +333,31 @@ export default {
           mode == 'ajoutdestinataire'
         "
       >
-        <div v-for="membreConversation in membresConversation">
-          <div v-for="membre in membres">
-            <div v-if="membre.id == membreConversation.users_id">
-              <h2 @mouseover="survolprenom()">
-                {{ membre.prenom }}
-                <button
+        <div v-for="membreConversation in membresConversation.conversation">
+          <div v-if="membresConversation.count != 1">
+
+            <div v-for="membre in membres">
+              <div v-if="membre.id == membreConversation.users_id" >
+                <h2 @mouseover="survolprenom()">
+                  {{ membre.prenom }}
+                  <button
                   class="deletedestinataire"
                   v-if="mode == 'display_deletedestinataire'"
-                >
+                  >
                   <img
-                    src="https://cdn-icons-png.flaticon.com/128/216/216658.png"
-                    alt=""
-                    @click="delete_destinataire(membreConversation)"
+                  src="https://cdn-icons-png.flaticon.com/128/216/216658.png"
+                  alt=""
+                  @click="delete_destinataire(membreConversation)"
                   />
                 </button>
-                ,
+                , 
               </h2>
             </div>
+            </div>
           </div>
+        </div>
+        <div v-if="membresConversation.count == 1">
+      <h2 class="pasdedestinataire">Ajoutez un destinataire à la conversation :</h2>    
         </div>
         <select
           v-if="mode == 'ajoutdestinataire'"
@@ -390,7 +478,15 @@ export default {
 .conversation:hover {
   cursor: pointer;
 }
-
+.illustrationQuitterConversation:hover {
+  cursor: pointer;
+}
+.quitterconversation {
+  margin-left: 15px;
+}
+.illustrationQuitterConversation {
+  width: 30px;
+}
 .enteteFlex {
   display: flex;
   justify-content: space-between;
@@ -430,6 +526,9 @@ export default {
   padding: 2px;
   font-weight: bold !important;
   border-radius: 10px;
+}
+.pasdedestinataire{
+  color:#C0C0C0;
 }
 .deletedestinataire {
   width: 30px;
