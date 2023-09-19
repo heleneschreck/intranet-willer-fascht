@@ -36,13 +36,14 @@ export default {
 
     let fetched_membres = await fetch("http://127.0.0.1:8000/api/users");
     this.membres = await fetched_membres.json();
+    // console.log(this.membres);
     function delay(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
 
     let fetched_affiches = await fetch("http://localhost:8000/api/image");
     this.affiches = await fetched_affiches.json();
-    // console.table(this.affiches);
+    console.table(this.affiches);
     function delay(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
@@ -57,12 +58,25 @@ export default {
 
     for (let i = 0; i < this.affiches.length; i++) {
       const affiche = this.affiches[i];
+
+      let fetched_likes = await fetch(
+        "http://localhost:8000/api/like/image/" + affiche.id
+      );
+      this.likes = await fetched_likes.json();
+      const test = this.likes.likes;
+      console.table(test);
+      function delay(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+      // Créez un tableau des IDs des likes
+      const likeIds = test.map((like) => like.user_id);
+
+      console.log(likeIds);
+      // Vérifiez si l'ID de l'utilisateur (4) est présent dans le tableau
+      this.isUserAbsent = likeIds.includes(4);
+
+      console.log(this.isUserAbsent);
     }
-
-    let fetched_likes = await fetch("http://localhost:8000/api/like/");
-
-    this.likes = await fetched_likes.json();
-    console.table(this.likes);
 
     function delay(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
@@ -78,14 +92,10 @@ export default {
         "http://localhost:8000/api/commentaires/image/" + affiche.id
       );
     }
-    this.isUserAbsent = !this.likes.some(
-      (like) => like.user_id == this.user.id
-    );
-    console.log(this.isUserAbsent);
+
     function delay(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
-
   },
   methods: {
     async makeRequestsWithBackoff(requestCount, delay) {
@@ -105,11 +115,11 @@ export default {
         "http://localhost:8000/api/like/image/" + affiche.id
       );
       let likesData = await fetched_likes.json();
-      console.log(likesData);
+      // console.log(likesData);
       affiche.likes = {
         count: likesData.count || 0, // Utilisez la valeur de likesData.count ou 0 si elle n'est pas définie
       };
-      console.log(affiche);
+      // console.log(affiche);
     },
     async fetchCommentsForAffiche(affiche) {
       let fetched_comments = await fetch(
@@ -119,7 +129,7 @@ export default {
       affiche.comment = {
         count: CommentData.count || 0, // Utilisez la valeur de likesData.count ou 0 si elle n'est pas définie
       };
-      console.log(affiche.comment.count);
+      // console.log(affiche.comment.count);
     },
 
     logout: function () {
@@ -133,8 +143,8 @@ export default {
         "http://localhost:8000/api/commentaires/image/" + affiche.id
       );
       this.comments = await fetched_comments.json();
-      console.log(this.comments);
-      console.table(this.comments.length);
+      // console.log(this.comments);
+      // console.table(this.comments.length);
     },
     delete_affiche: function (affiche) {
       console.log(affiche.id);
@@ -214,9 +224,8 @@ export default {
         this.$router.go(this.$router.currentRoute);
       }, "2000");
     },
-    display_prenomlike:function(){
+    display_prenomlike: function () {
       this.mode = "displayPrenom";
-
     },
     display_deleteComment: function () {
       this.mode = "display";
@@ -317,7 +326,7 @@ export default {
                   alt="likes"
                 />
               </div>
-              <div class="membreslike" v-if="mode=='displayPrenom'">
+              <div class="membreslike" v-if="mode == 'displayPrenom'">
                 <div class="membrelike" v-for="membre in membres">
                   <div v-if="membre.id == like.user_id" class="prenomlike">
                     {{ membre.prenom }}
@@ -336,8 +345,12 @@ export default {
               />
             </div>
 
-            <p class="nbjaime" v-if="affiche.likes" @mouseover="display_prenomlike()">
-              {{ affiche.likes.count }} j'aime
+            <p
+              class="nbjaime"
+              v-if="affiche.likes"
+              @mouseover="display_prenomlike()"
+            >
+              <!-- {{ affiche.likes.count }} j'aime -->
             </p>
           </div>
 

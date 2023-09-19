@@ -245,39 +245,56 @@ export default {
                   alt=""
                 />
                 Supports publicitaires</span
-              >
-            </a>
-          </li>
+                >
+              </a>
+            </li>
         </router-link>
         <li>
           <hr />
-          <router-link :to="`accueil`">
+          <!-- <router-link :to="`accueil`"> -->
+            <a
+            href="#"
+            class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
+            >
+            <img
+              src="https://cdn-icons-png.flaticon.com/128/5434/5434169.png"
+              style="width: 30px; height: 30px; margin-right: 18%"
+              alt=""
+            />
+            
+            <span class="group-hover:text-gray-700">Partenaires</span>
+            </a>
+          <!-- </router-link> -->
+          <!-- <router-link :to="`accueil`"> -->
             <a
               href="#"
               class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
               >
-                <path
-                  class="fill-current text-gray-600 group-hover:text-cyan-600"
-                  fill-rule="evenodd"
-                  d="M2 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 002 2H4a2 2 0 01-2-2V5zm3 1h6v4H5V6zm6 6H5v2h6v-2z"
-                  clip-rule="evenodd"
-                />
-                <path
-                  class="fill-current text-gray-300 group-hover:text-cyan-300"
-                  d="M15 7h1a2 2 0 012 2v5.5a1.5 1.5 0 01-3 0V7z"
-                />
-              </svg>
-              <span class="group-hover:text-gray-700">Site</span>
+              <img
+                src="https://cdn-icons-png.flaticon.com/128/6329/6329568.png"
+                style="width: 30px; height: 30px; margin-right: 18%"
+                alt=""
+              />
+              
+              <span class="group-hover:text-gray-700">Mise en ligne </span>
             </a>
-          </router-link>
+          <!-- </router-link> -->
         </li>
-
+        
+        <router-link :to="`accueil`">
+          <a
+            href="#"
+            class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
+            >
+            
+            <img
+              src="https://cdn-icons-png.flaticon.com/128/3518/3518229.png"
+              style="width: 30px; height: 30px; margin-right: 18%"
+              alt=""
+            />
+            <span class="group-hover:text-gray-700">Site</span>
+          </a>
+        </router-link>
         <!-- <li>
                 <a href="#" class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

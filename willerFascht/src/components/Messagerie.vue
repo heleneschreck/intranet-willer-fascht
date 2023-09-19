@@ -78,6 +78,7 @@ export default {
     function delay(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
+    
   },
   methods: {
     async fetchConversationsForCount(generalConversation) {
@@ -109,7 +110,7 @@ export default {
       this.$router.push("/");
     },
     display_Messages: async function (conversation) {
-      console.log(conversation.id);
+      // console.log(conversation.user_id);
       this.mode = "conversations";
 
       // destinataires
@@ -118,8 +119,9 @@ export default {
           conversation.id
       );
       this.membresConversation = await fetched_membresConversation.json();
-      console.log(this.membresConversation.count);
-      // messages
+
+     
+
       let fetched_messages = await fetch(
         "http://localhost:8000/api/messages/conversation/" + conversation.id
       );
@@ -291,7 +293,8 @@ export default {
                         membre.id == destinataire.users_id &&
                         conversation.conversation.count == 1
                       "
-                      @click="display_Messages(conversation)" class="pasdedestinataire" 
+                      @click="display_Messages(conversation)"
+                      class="pasdedestinataire"
                     >
                       Ajoutez un destinataire à la conversation :
                     </div>
@@ -303,18 +306,20 @@ export default {
                       "
                       @click="display_Messages(conversation)"
                     >
-                      {{ membre.prenom }} ,
+                      {{ membre.prenom }}, 
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="quitterconversation" >
+          <div class="quitterconversation">
             <img
               src="https://cdn-icons-png.flaticon.com/128/4008/4008990.png"
               class="illustrationQuitterConversation"
-              alt="quitter la conversation"
+              alt="quitter la conversation" 
+              @click="sortir_Conversation()"
+          
             />
           </div>
         </div>
@@ -333,31 +338,38 @@ export default {
           mode == 'ajoutdestinataire'
         "
       >
+        
         <div v-for="membreConversation in membresConversation.conversation">
           <div v-if="membresConversation.count != 1">
-
-            <div v-for="membre in membres">
-              <div v-if="membre.id == membreConversation.users_id" >
-                <h2 @mouseover="survolprenom()">
+            <div v-for="membre in membres" class="listeprenom">
+              <div
+                v-if="
+                  membre.id == membreConversation.users_id &&
+                  membre.id != user.id
+                "
+              >
+                <h2 @mouseover="survolprenom()" style="font-size: 130% !important;">
                   {{ membre.prenom }}
                   <button
-                  class="deletedestinataire"
-                  v-if="mode == 'display_deletedestinataire'"
+                    class="deletedestinataire"
+                    v-if="mode == 'display_deletedestinataire'"
                   >
-                  <img
-                  src="https://cdn-icons-png.flaticon.com/128/216/216658.png"
-                  alt=""
-                  @click="delete_destinataire(membreConversation)"
-                  />
-                </button>
-                , 
-              </h2>
-            </div>
+                    <img
+                      src="https://cdn-icons-png.flaticon.com/128/216/216658.png"
+                      alt=""
+                      @click="delete_destinataire(membreConversation)"
+                    />
+                  </button>
+                  ,
+                </h2>
+              </div>
             </div>
           </div>
         </div>
         <div v-if="membresConversation.count == 1">
-      <h2 class="pasdedestinataire">Ajoutez un destinataire à la conversation :</h2>    
+          <h2 class="pasdedestinataire">
+            Ajoutez un destinataire à la conversation :
+          </h2>
         </div>
         <select
           v-if="mode == 'ajoutdestinataire'"
@@ -523,12 +535,13 @@ export default {
   margin-left: 15px;
   margin-right: 15px;
   margin-top: 5px;
+  height: 55px;
   padding: 2px;
   font-weight: bold !important;
   border-radius: 10px;
 }
-.pasdedestinataire{
-  color:#C0C0C0;
+.pasdedestinataire {
+  color: #c0c0c0;
 }
 .deletedestinataire {
   width: 30px;
@@ -538,6 +551,8 @@ export default {
   /* margin-left: 30px; */
   border: none;
 }
+
+
 .ajoutdestinataire {
   width: 59px;
 
