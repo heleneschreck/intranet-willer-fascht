@@ -31,6 +31,7 @@ use App\Http\Controllers\API\ConversationUsersController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
 Route::apiResource("users", UserController::class); // Les routes "users.*" de l'API
 Route::apiResource("messages", MessagesController::class); // Les routes "messages
 Route::get('/messages/conversation/{conversation_id}', [MessagesController::class, 'getMessageByConversation']);
@@ -42,7 +43,10 @@ Route::get('/conversations/user/{user_id}', [ConversationController::class, 'get
 Route::apiResource("conversation_users", ConversationUsersController::class); // Les routes "convers
 Route::get('/conversation_users/conversation/{conversation_id}', [ConversationUsersController::class, 'getMessagesByConversations']);
 Route::get('/conversation_users/user/{users_id}', [ConversationUsersController::class, 'getMessagesByUser']);
-Route::apiResource("profils", ProfilsController::class); 
+Route::delete('/conversation_users/{user_id}/{conversation_id}', [ConversationUsersController::class, 'destroyByUserAndConversation']);
+
+
+Route::apiResource("profils", ProfilsController::class);
 Route::apiResource("rendezvous", RendezvousController::class);
 Route::apiResource("participants", ParticipantsController::class);
 Route::get('/participants/rendezvous/{rendezvous_id}', [ParticipantsController::class, 'getParticipantsByRendezvous']);
@@ -55,9 +59,9 @@ Route::get('/images/{path}', 'App\Http\Controllers\Api\ImageController@index');
 Route::apiResource("like", LikesController::class);
 Route::get('/like/image/{image_id}', [LikesController::class, 'getLikesByImage']);
 Route::get('/likes/{user_id}/{image_id}', [LikesController::class, 'getLikesByUserAndImage']);
-Route::delete('/likes/{id}',[LikesController::class, 'destroy']);
+Route::delete('/likes/{id}', [LikesController::class, 'destroy']);
 
-Route::post('image',[ImageController::class, 'imageStore']);
+Route::post('image', [ImageController::class, 'imageStore']);
 Route::get('/image/{id}', 'ImageController@show');
 Route::apiResource("commentaires", CommentairesController::class);
 Route::get('/commentaires/image/{image_id}', [CommentairesController::class, 'getCommentairesByImage']);

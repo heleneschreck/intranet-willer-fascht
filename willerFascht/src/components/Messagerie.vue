@@ -30,20 +30,24 @@ export default {
     // UTILISATEUR CONNECTER
     this.user = JSON.parse(localStorage.getItem("user") || "[]");
     // console.log(this.user.id);
+
     function delay(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
     // Module date
     this.moment = moment;
+
     function delay(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
     // membres associations
     let fetched_membres = await fetch("http://127.0.0.1:8000/api/users");
     this.membres = await fetched_membres.json();
+    // console.log(this.membres.id);
     function delay(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
+
     // liste conversations où l'utilisateur participe
     let fetched_conversationsUser = await fetch(
       "http://localhost:8000/api/conversation_users/user/" + this.user.id
@@ -70,6 +74,7 @@ export default {
     function delay(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
+
     let fetched_destinataires = await fetch(
       "http://localhost:8000/api/conversation_users/"
     );
@@ -78,7 +83,6 @@ export default {
     function delay(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
-    
   },
   methods: {
     async fetchConversationsForCount(generalConversation) {
@@ -105,10 +109,13 @@ export default {
         delay *= 2; // Augmenter le délai pour la prochaine requête (facultatif)
       }
     },
+
     logout: function () {
       this.$store.commit("logout");
       this.$router.push("/");
     },
+
+    // Afficher la conversation selectionné
     display_Messages: async function (conversation) {
       // console.log(conversation.user_id);
       this.mode = "conversations";
@@ -120,8 +127,6 @@ export default {
       );
       this.membresConversation = await fetched_membresConversation.json();
 
-     
-
       let fetched_messages = await fetch(
         "http://localhost:8000/api/messages/conversation/" + conversation.id
       );
@@ -131,6 +136,31 @@ export default {
       return this.conversation_id;
     },
 
+    // Sortir de la conversation
+    sortir_Conversation: function (conversationUser) {
+      // console.log(conversationUser.conversation_id);
+      // console.log(this.user.id);
+      var requestOptions = {
+        method: "DELETE",
+        redirect: "follow",
+      };
+
+      fetch(
+        "http://localhost:8000/api/conversation_users/" +
+          this.user.id +
+          "/" +
+          conversationUser.conversation_id,
+        requestOptions
+      )
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error", error));
+      setTimeout(() => {
+        this.$router.go(this.$router.currentRoute);
+      }, "2000");
+    },
+
+    // Supprimer les destinataire de la conversation
     delete_destinataire: function (membreConversation) {
       var requestOptions = {
         method: "DELETE",
@@ -160,6 +190,38 @@ export default {
         this.$router.go(this.$router.currentRoute);
       }, "2000");
     },
+
+    // changer lu
+    Lu: async function (message) {
+      function delay(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+      console.log(this.conversation_id.id);
+      console.log(message);
+
+      // destinataires
+      let fetched_membresConversation = await fetch(
+        "http://localhost:8000/api/conversation_users/conversation/" +
+          this.conversation_id.id
+      );
+      this.IdmembresConversation = await fetched_membresConversation.json();
+      // console.log(this.IdmembresConversation.conversation);
+      this.reponse = this.IdmembresConversation.conversation;
+      console.table(this.reponse);
+      function delay(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+      for (let i = 0; i < this.reponse.length; i++) {
+        this.reponses = this.reponse[i];
+        console.log(this.reponses.users_id);
+
+        this.touslemondealu = this.reponses.users_id;
+        console.log(this.touslemondealu);
+
+      }
+    },
+
+    // Ecrire dans la conversation
     ajoutMessage: function () {
       var urlencoded = new URLSearchParams();
       urlencoded.append("user_id", this.user.id);
@@ -180,6 +242,8 @@ export default {
         this.$router.go(this.$router.currentRoute);
       }, "2000");
     },
+
+    // Ajouter des participants à la conversation
     AjoutDestinataire: function () {
       var urlencoded = new URLSearchParams();
       urlencoded.append("users_id", this.users_id);
@@ -199,6 +263,7 @@ export default {
         this.$router.go(this.$router.currentRoute);
       }, "2000");
     },
+    // Afficher
     survol: function () {
       this.mode = "display_delete";
     },
@@ -306,7 +371,7 @@ export default {
                       "
                       @click="display_Messages(conversation)"
                     >
-                      {{ membre.prenom }}, 
+                      {{ membre.prenom }},
                     </div>
                   </div>
                 </div>
@@ -317,9 +382,8 @@ export default {
             <img
               src="https://cdn-icons-png.flaticon.com/128/4008/4008990.png"
               class="illustrationQuitterConversation"
-              alt="quitter la conversation" 
-              @click="sortir_Conversation()"
-          
+              alt="quitter la conversation"
+              @click="sortir_Conversation(conversationUser)"
             />
           </div>
         </div>
@@ -338,7 +402,6 @@ export default {
           mode == 'ajoutdestinataire'
         "
       >
-        
         <div v-for="membreConversation in membresConversation.conversation">
           <div v-if="membresConversation.count != 1">
             <div v-for="membre in membres" class="listeprenom">
@@ -348,7 +411,10 @@ export default {
                   membre.id != user.id
                 "
               >
-                <h2 @mouseover="survolprenom()" style="font-size: 130% !important;">
+                <h2
+                  @mouseover="survolprenom()"
+                  style="font-size: 130% !important"
+                >
                   {{ membre.prenom }}
                   <button
                     class="deletedestinataire"
@@ -417,7 +483,16 @@ export default {
               </button>
             </div>
             <div class="contenu">
-              {{ message.message }}
+              <div
+                v-if="message.Lu == 0"
+                @mouseover="Lu(message)"
+                style="font-weight: bold; font-size: 19px"
+              >
+                {{ message.message }}
+              </div>
+              <div v-else>
+                {{ message.message }}
+              </div>
             </div>
             <div class="datemessage">
               {{ moment(message.created_at).format("DD/MM/YYYY") }}
@@ -551,7 +626,6 @@ export default {
   /* margin-left: 30px; */
   border: none;
 }
-
 
 .ajoutdestinataire {
   width: 59px;

@@ -208,12 +208,12 @@ export default {
 
   <br />
   <!-- La tache a changé est {{ dragtache }} -->
-  <div v-for="project in projects" v-show="$route.params.projet == project.id">
-    <h1>{{ project.title }}</h1>
+  <div v-for="project in projects" v-show="$route.params.projet == project.id" >
+    <h1 style="background-color: transparent;">{{ project.title }}</h1>
 
     <div class="tableau">
       <div v-for="statut in statuts" class="statut">
-        >
+        
         {{ statut.statut }}
 
         <router-link :to="`/ajoutTache/${$route.params.projet}/${statut.id}`">
@@ -531,12 +531,12 @@ export default {
   <br />
   <div v-show="user.niveau == 1">
     <div class="display" v-if="mode == 'nodisplay'">
-      <button @click="display()" class="button rounded-lg button-disabled">
+      <button @click="display()" class="button rounded-lg button-disabled affichagetache">
         Afficher l'avancé des taches assigné aux autres membres
       </button>
     </div>
     <div class="arriere" v-if="mode == 'display'">
-      <button @click="nodisplay()" class="button rounded-lg button-disabled">
+      <button @click="nodisplay()" class="button rounded-lg button-disabled affichagetache">
         Revenir sur mes taches
       </button>
     </div>
@@ -584,12 +584,15 @@ export default {
   width: 30px;
 }
 .projet {
+  background-color: hsla(0, 0%, 84%, 0.3);
   margin-top: 6% !important;
   margin-left: 1%;
 }
 .retourtodo {
   margin-bottom: 1px !important;
   margin-left: 5%;
+  background-color: white;
+  box-shadow: 12px 15px 25px black;
 }
 
 h1 {
@@ -612,12 +615,14 @@ h1 {
   width: 110px;
 }
 .taches {
+  background-color: white;
   border: 1px solid;
   padding: 1%;
   border-radius: 10px;
   margin-top: 8%;
   width: 400px;
   font-family: Arial Narrow Bold !important;
+  box-shadow: 10px 12px 15px black;
 }
 .suppmod {
   display: flex;
@@ -626,8 +631,14 @@ h1 {
   padding-left: 20%;
   padding-right: 20%;
 }
+.affichagetache{
+  box-shadow: 10px 12px 15px black;
+  background-color: white;
+
+}
 .prenom {
   font-weight: bolder !important;
   color: black !important;
+  
 }
 </style>

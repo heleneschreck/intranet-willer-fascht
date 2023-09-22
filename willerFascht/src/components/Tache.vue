@@ -263,9 +263,12 @@ export default {
 .tache {
   margin-top: 8% !important;
   margin-left: 1%;
+  background-color:  hsla(0, 0%, 84%, 0.3);
 }
 .tachesdetail {
   border: 1px solid black;
+  background-color: white;
+  box-shadow: 10px 12px 15px black;
   border-radius: 10px;
   font-size: 20px;
   width: 60% !important;
@@ -273,6 +276,7 @@ export default {
   padding-left: 10px;
   padding-right: 10px;
   padding: 5px;
+  
 }
 .soustacheavalider {
   margin-left: 15px;
