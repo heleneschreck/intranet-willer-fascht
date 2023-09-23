@@ -4,6 +4,7 @@ import AccueilView from '../views/AccueilView.vue'
 import NavbarsView from '../views/NavbarsView.vue'
 import ConnexionView from '../views/ConnexionView.vue'
 import AccueilintraView from '../views/AccueilintraView.vue'
+import PartenairesView from '../views/PartenairesView.vue'
 import AffichesView from '../views/AffichesView.vue'
 import CompteRenduView from '../views/CompteRenduView.vue'
 import DetailView from '../views/DetailView.vue'
@@ -52,6 +53,11 @@ const router = createRouter({
       path: '/accueilintra',
       name: 'accueilintra',
       component: AccueilintraView
+    },
+    {
+      path: '/partenaires',
+      name: 'partenaires',
+      component: PartenairesView
     },
     {
       path: '/affiches',

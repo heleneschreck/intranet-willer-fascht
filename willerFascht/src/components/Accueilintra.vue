@@ -251,7 +251,7 @@ export default {
         </router-link>
         <li>
           <hr />
-          <!-- <router-link :to="`accueil`"> -->
+          <router-link :to="`partenaires`">
             <a
             href="#"
             class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
@@ -264,7 +264,7 @@ export default {
             
             <span class="group-hover:text-gray-700">Partenaires</span>
             </a>
-          <!-- </router-link> -->
+          </router-link>
           <!-- <router-link :to="`accueil`"> -->
             <a
               href="#"

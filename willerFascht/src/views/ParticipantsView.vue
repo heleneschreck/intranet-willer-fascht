@@ -1,6 +1,6 @@
 <script setup>
 import Participants from "../components/Participants.vue";
-// console.log("coucou");
+
 </script>
 
 <template>
