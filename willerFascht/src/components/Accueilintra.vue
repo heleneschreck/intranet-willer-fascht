@@ -281,7 +281,7 @@ export default {
           <!-- </router-link> -->
         </li>
         
-        <router-link :to="`accueil`">
+        <router-link :to="`/`">
           <a
             href="#"
             class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"

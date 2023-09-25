@@ -17,6 +17,7 @@ class PartenairesController extends Controller
      */
     public function index()
     {
+        
         $images = Partenaires::all();
         $imageData = [];
 
@@ -29,6 +30,7 @@ class PartenairesController extends Controller
 
             ];
         }
+        return response()->json($imageData);
     }
 
     /**

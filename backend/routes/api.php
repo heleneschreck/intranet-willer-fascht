@@ -14,6 +14,7 @@ use App\Http\Controllers\API\ProjectController;
 use App\Http\Controllers\API\MessagesController;
 use App\Http\Controllers\API\RendezvousController;
 use App\Http\Controllers\API\SoustachesController;
+use App\Http\Controllers\API\PartenairesController;
 use App\Http\Controllers\API\CommentairesController;
 use App\Http\Controllers\API\CompterendusController;
 use App\Http\Controllers\API\ConversationController;
@@ -45,7 +46,7 @@ Route::get('/conversation_users/conversation/{conversation_id}', [ConversationUs
 Route::get('/conversation_users/user/{users_id}', [ConversationUsersController::class, 'getMessagesByUser']);
 Route::delete('/conversation_users/{user_id}/{conversation_id}', [ConversationUsersController::class, 'destroyByUserAndConversation']);
 
-
+Route::apiResource("partenaires", PartenairesController::class);
 Route::apiResource("profils", ProfilsController::class);
 Route::apiResource("rendezvous", RendezvousController::class);
 Route::apiResource("participants", ParticipantsController::class);
