@@ -265,7 +265,7 @@ export default {
             <span class="group-hover:text-gray-700">Partenaires</span>
             </a>
           </router-link>
-          <!-- <router-link :to="`accueil`"> -->
+          <router-link :to="`miseenligne`">
             <a
               href="#"
               class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
@@ -278,9 +278,23 @@ export default {
               
               <span class="group-hover:text-gray-700">Mise en ligne </span>
             </a>
-          <!-- </router-link> -->
+          </router-link>
         </li>
         
+        <router-link :to="`/equipe`">
+          <a
+            href="#"
+            class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
+            >
+            
+            <img
+              src="https://cdn-icons-png.flaticon.com/128/3718/3718057.png"
+              style="width: 30px; height: 30px; margin-right: 18%"
+              alt=""
+            />
+            <span class="group-hover:text-gray-700">L'équipe</span>
+          </a>
+        </router-link>
         <router-link :to="`/`">
           <a
             href="#"

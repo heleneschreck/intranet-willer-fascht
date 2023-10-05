@@ -1,10 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+
+
 import AccueilView from '../views/AccueilView.vue'
 import NavbarsView from '../views/NavbarsView.vue'
 import ConnexionView from '../views/ConnexionView.vue'
 import AccueilintraView from '../views/AccueilintraView.vue'
 import PartenairesView from '../views/PartenairesView.vue'
+import MiseEnLigneView from '../views/MiseEnLigneView.vue'
+import EquipeView from '../views/EquipeView.vue'
 import AffichesView from '../views/AffichesView.vue'
 import CompteRenduView from '../views/CompteRenduView.vue'
 import DetailView from '../views/DetailView.vue'
@@ -58,6 +62,16 @@ const router = createRouter({
       path: '/partenaires',
       name: 'partenaires',
       component: PartenairesView
+    },
+    {
+      path: '/miseenligne',
+      name: 'miseenligne',
+      component: MiseEnLigneView
+    },
+    {
+      path: '/equipe',
+      name: 'equipe',
+      component: EquipeView
     },
     {
       path: '/affiches',
