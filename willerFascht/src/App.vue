@@ -46,20 +46,20 @@ export default {
 </script>
 
 <template>
-  <nav
+  <!-- <nav
     class="bg-white px-2 sm:px-4 py-2.5 dark:bg-gray-900 fixed w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600"
   >
     <div class="container flex flex-wrap items-center justify-between mx-auto ">
       <img src="./assets/logo.jpg" class="h-6 mr-3 sm:h-9" alt="Logo" />
 
       <div class="flex md:order-2">
-        <!-- <button
+        <button
           type="button"
           class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         
         >
           Deconnexion
-        </button> -->
+        </button> 
         <div class="px-6 -mx-6 pt-4 flex justify-between items-center border-t">
           <button
             class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
@@ -257,7 +257,7 @@ export default {
         </ul>
       </div>
     </div>
-  </nav>
+  </nav> -->
 
   <RouterView />
 </template>

@@ -1,10 +1,11 @@
 <script setup>
-    import Mesinfos from '../components/Mesinfos.vue'
-    
-    </script>
-    
-    <template>
-      <div class="mesinfos" >
-      <Mesinfos />
-      </div >
-    </template>
+import Mesinfos from "../components/Mesinfos.vue";
+import Navbars from "../components/Navbars.vue";
+</script>
+
+<template>
+  <div class="mesinfos">
+    <Navbars />
+    <Mesinfos />
+  </div>
+</template>

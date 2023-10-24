@@ -1,34 +1,7 @@
-<!--
-
-  methods: {
-    logout: function () {
-      this.$store.commit("logout");
-      this.$router.push("/");
-    },
-    delete_membres: function (membre) {
-      console.log(membre.id);
-
-      var requestOptions = {
-        method: "DELETE",
-        redirect: "follow",
-      };
-      let url = "http://127.0.0.1:8000/api/users/" + membre.id;
-      fetch(url, requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .catch((error) => console.log("error", error));
-        setTimeout(() => {
-        this.$router.go(this.$router.currentRoute);
-      }, "2000");
-    },
-  },
-};
-
-
-</script> -->
-
 <script>
 import { mapState } from "vuex";
+import { RouterLink, RouterView } from "vue-router";
+
 export default {
   // name: "slate-navbar",
   data() {
@@ -36,6 +9,7 @@ export default {
       showMenu: false,
       member: Number,
       user: [],
+      currentPage: "", // Gardera le nom de la page actuelle
       membres: [],
     };
   },
@@ -45,7 +19,12 @@ export default {
   computed: {
     ...mapState(["userInfos"]),
   },
-  async created() {
+  watch: {
+    "$route.name"(newRouteName) {
+      this.currentPage = newRouteName;
+    },
+  },
+  async beforeMount() {
     this.user = JSON.parse(localStorage.getItem("user") || "[]");
     console.log(this.user);
 
@@ -68,19 +47,20 @@ export default {
   <nav
     class="relative flex flex-wrap items-center justify-between px-2 py-3 bg-slate-500 mb-3"
   >
-   
     <div
       class="container px-4 mx-auto flex flex-wrap items-center justify-between"
     >
       <div
         class="w-full relative flex justify-between lg:w-auto px-4 lg:static lg:block lg:justify-start"
       >
-        <a
-          class="text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-black logonav"
-          href=""
-        >
-        <img src="../assets/logo.jpg" class="h-6 mr-3 sm:h-9" alt="Logo" />
-        </a>
+        <router-link :to="`accueilintra`">
+          <a
+            class="text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-black logonav"
+            href=""
+          >
+            <img src="../assets/logo.jpg" class="h-6 mr-3 sm:h-9" alt="Logo" />
+          </a>
+        </router-link>
         <button
           class="text-black cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none"
           type="button"
@@ -231,7 +211,33 @@ export default {
               >
             </router-link>
           </li>
-
+          <li>
+            <div
+              class="px-6 -m-6 pt-4 flex justify-between items-center border-t"
+            >
+              <button
+                class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
+                style="padding: 4px !important; margin-bottom: 7px !important"
+                @click="logout()"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  />
+                </svg>
+                <span class="group-hover:text-gray-700">Deconnexion</span>
+              </button>
+            </div>
+          </li>
         </ul>
       </div>
     </div>
@@ -244,17 +250,17 @@ nav {
 .nav-item {
   color: black !important;
 }
-.logonav{
-    margin-left: -50px ;
-  }
-  .listeonglets{
-    padding-left: -56px !important;
-  }
-  
+.logonav {
+  margin-left: -50px;
+}
+.listeonglets {
+  padding-left: -40px !important;
+}
+
 .ongletaccueil {
-    margin-right: 350px !important;
+  margin-right: 350px !important;
 }
 li {
-  margin-left: 25px !important; ;
+  margin-left: 25px !important;
 }
 </style>
