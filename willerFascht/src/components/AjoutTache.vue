@@ -100,7 +100,7 @@ export default {
 </template>
 <style>
 .ajouttache {
-  margin-top: 8% !important;
+  /* margin-top: 8% !important; */
   margin-left: 1%;
 }
 .formulaire {

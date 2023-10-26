@@ -92,7 +92,7 @@ export default {
 </template>
 <style>
 .compterendu {
-  margin-top: 8% !important;
+  /* margin-top: 8% !important; */
   margin-left: 3%;
   width: 95%;
 }

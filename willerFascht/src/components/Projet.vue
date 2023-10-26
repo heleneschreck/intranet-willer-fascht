@@ -585,7 +585,7 @@ export default {
 }
 .projet {
   background-color: hsla(0, 0%, 84%, 0.3);
-  margin-top: 6% !important;
+  /* margin-top: 6% !important; */
   margin-left: 1%;
 }
 .retourtodo {

@@ -118,11 +118,11 @@ export default {
 .retourcompterendu{
   margin-left: 15px;
 }
-.addcompterendu {
+/* .addcompterendu {
   margin-top: 8% !important;
-  /* margin-left: 3%;
-  width: 95%; */
-}
+  margin-left: 3%;
+  width: 95%;
+} */
 .inputmembre {
   margin-left: 416px;
 }

@@ -206,7 +206,7 @@ export default {
 </template>
 <style>
 .updateinscription {
-  margin-top: 8% !important;
+  /* margin-top: 8% !important; */
   width: 90%;
   margin: auto;
   font-size: large;

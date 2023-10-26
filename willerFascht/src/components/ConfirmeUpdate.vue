@@ -58,7 +58,7 @@ export default {
 </template>
 <style>
 .confirmeupdate {
-  margin-top: 7%;
+  /* margin-top: 7%; */
   text-align: center;
   border: 1px solid;
 }

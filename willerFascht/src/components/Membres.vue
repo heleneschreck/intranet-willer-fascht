@@ -132,7 +132,7 @@ nav {
   margin-bottom: 1%;
 }
 .membres {
-  margin-top: 7%;
+  /* margin-top: 7%; */
   margin-left: 1%;
   margin-right: 1%;
 }

@@ -186,7 +186,7 @@ export default {
   margin-left: 30%;
 }
 .addevent {
-  margin-top: 8% !important;
+  /* margin-top: 8% !important; */
   width: 90%;
   margin: auto;
   border: 1px solid;

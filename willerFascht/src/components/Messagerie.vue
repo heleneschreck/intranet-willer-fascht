@@ -539,7 +539,7 @@ export default {
 </template>
 <style>
 .messagerie {
-  margin-top: 6% !important;
+  /* margin-top: 6% !important; */
   background-color: hsla(0, 0%, 84%, 0.3);
 }
 

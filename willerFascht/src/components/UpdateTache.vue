@@ -102,7 +102,7 @@ export default {
 </template>
 <style>
 .updatetache {
-  margin-top: 8% !important;
+  /* margin-top: 8% !important; */
   margin-left: 1%;
 }
 .updateTache {

@@ -192,7 +192,7 @@ h1 {
   font-weight: bolder !important;
 }
 .rendezvous {
-  margin-top: 8% !important;
+  /* margin-top: 8% !important; */
   width: 90%;
   margin: auto;
   font-size: large;

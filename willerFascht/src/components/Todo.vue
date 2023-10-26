@@ -132,7 +132,7 @@ export default {
 </template>
 <style>
 .Todo {
-  margin-top: 8% !important;
+  /* margin-top: 8% !important; */
   margin-left: 1%;
 }
 .projets {

@@ -187,7 +187,7 @@ export default {
 </template>
 <style>
 .partenaires {
-  margin-top: 4% !important;
+  /* margin-top: 4% !important; */
   background-color: hsla(0, 0%, 84%, 0.3);
   padding-bottom: 25px;
 }

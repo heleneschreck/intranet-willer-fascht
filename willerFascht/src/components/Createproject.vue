@@ -127,7 +127,7 @@ let url= "http://127.0.0.1:8000/api/project/"
 </template>
 <style>
 .createproject {
-  margin-top: 8% !important;
+  /* margin-top: 8% !important; */
   margin-left: 1%;
 }
 </style>

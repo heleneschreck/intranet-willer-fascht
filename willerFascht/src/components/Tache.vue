@@ -261,7 +261,7 @@ export default {
   border: none;
 }
 .tache {
-  margin-top: 8% !important;
+  /* margin-top: 8% !important; */
   margin-left: 1%;
   background-color:  hsla(0, 0%, 84%, 0.3);
 }

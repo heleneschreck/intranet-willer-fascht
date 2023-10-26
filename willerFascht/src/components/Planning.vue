@@ -149,7 +149,7 @@ export default {
 </template>
 <style>
 .Planning {
-  margin-top: 8% !important;
+  /* margin-top: 8% !important; */
   width: 90%;
   margin: auto;
 

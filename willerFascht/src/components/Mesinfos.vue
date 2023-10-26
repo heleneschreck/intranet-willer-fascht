@@ -84,9 +84,9 @@ export default {
   </div>
 </template>
 <style>
-.mesinfos {
+/* .mesinfos {
   margin-top: 8%;
-}
+} */
 .retourintra {
   margin-left: 10%;
   margin-bottom: -25px !important;

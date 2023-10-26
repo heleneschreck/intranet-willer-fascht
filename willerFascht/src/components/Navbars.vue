@@ -48,17 +48,17 @@ export default {
     class="relative flex flex-wrap items-center justify-between px-2 py-3 bg-slate-500 mb-3"
   >
     <div
-      class="container px-4 mx-auto flex flex-wrap items-center justify-between"
+      class="container px-4 mx-auto flex flex-wrap items-center justify-between" style="margin-right: 15px;"
     >
       <div
-        class="w-full relative flex justify-between lg:w-auto px-4 lg:static lg:block lg:justify-start"
+        class="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start"
       >
         <router-link :to="`accueilintra`">
           <a
             class="text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-black logonav"
             href=""
           >
-            <img src="../assets/logo.jpg" class="h-6 mr-3 sm:h-9" alt="Logo" />
+            <img src="../assets/logo.jpg" class="h-6  sm:h-9" alt="Logo" />
           </a>
         </router-link>
         <button
@@ -66,14 +66,28 @@ export default {
           type="button"
           v-on:click="toggleNavbar()"
         >
-          <i class="fas fa-bars"></i>
+        <svg
+            class="w-6 h-6"
+            aria-hidden="true"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+       
+       
         </button>
       </div>
       <div
         v-bind:class="{ hidden: !showMenu, flex: showMenu }"
         class="lg:flex lg:flex-grow items-center listeonglets"
       >
-        <ul class="flex flex-col lg:flex-row list-none ml-auto ongletaccueil">
+        <ul class="flex flex-col mt-4 lg:flex-row list-none ml-auto ongletaccueil">
           <li>
             <router-link
               :to="`/accueilintra`"
@@ -213,7 +227,7 @@ export default {
           </li>
           <li>
             <div
-              class="px-6 -m-6 pt-4 flex justify-between items-center border-t"
+              class="px-6 -m-6 pt-4 flex justify-between items-center mb-1 "
             >
               <button
                 class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
@@ -245,20 +259,20 @@ export default {
 </template>
 <style scoped>
 nav {
-  background-color: white !important;
+  background-color:white!important;
 }
 .nav-item {
   color: black !important;
 }
 .logonav {
-  margin-left: -50px;
+  margin-left: 0px;
 }
 .listeonglets {
   padding-left: -40px !important;
 }
 
 .ongletaccueil {
-  margin-right: 350px !important;
+  margin-right: 250px !important;
 }
 li {
   margin-left: 25px !important;

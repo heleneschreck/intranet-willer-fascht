@@ -78,7 +78,7 @@ let url ="http://127.0.0.1:8000/api/users/"+this.$route.params.membre
 </template>
 <style>
   .updateniveau {
-    margin-top: 8% !important;
+    /* margin-top: 8% !important; */
     width: 90%;
     margin: auto;
 

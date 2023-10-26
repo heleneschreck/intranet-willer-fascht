@@ -7,7 +7,7 @@
 </template>
 <style>
 .equipe {
-  padding-top: 8% !important;
+  /* padding-top: 8% !important; */
   background-color: hsla(0, 0%, 84%, 0.3);
 }
 </style>

@@ -82,7 +82,7 @@ nav {
   margin-bottom: 1%;
 }
 .updateinfos {
-  margin-top: 15%;
+  /* margin-top: 15%; */
   margin-left: 1%;
   margin-right: 1%;
 }
