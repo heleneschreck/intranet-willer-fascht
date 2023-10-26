@@ -131,10 +131,7 @@ export default {
   </div>
 </template>
 <style>
-.Todo {
-  /* margin-top: 8% !important; */
-  margin-left: 1%;
-}
+
 .projets {
   display: flex;
   flex-wrap: wrap;

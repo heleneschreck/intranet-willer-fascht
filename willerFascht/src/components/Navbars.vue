@@ -34,6 +34,7 @@ export default {
     console.table(this.membres);
     console.log(this.$router.currentRoute);
     console.log(this.$router.currentRoute._value.name);
+
   },
   methods: {
     logout: function () {
