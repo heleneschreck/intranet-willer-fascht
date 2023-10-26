@@ -22,6 +22,7 @@ export default {
   watch: {
     "$route.name"(newRouteName) {
       this.currentPage = newRouteName;
+      console.log(this.currentPage);
     },
   },
   async beforeMount() {
@@ -31,12 +32,16 @@ export default {
     let fetched_membres = await fetch("http://127.0.0.1:8000/api/users");
     this.membres = await fetched_membres.json();
     console.table(this.membres);
+    console.log(this.$router.currentRoute);
+    console.log(this.$router.currentRoute._value.name);
   },
   methods: {
     logout: function () {
       this.$store.commit("logout");
       this.$router.push("/");
     },
+    
+
     toggleNavbar: function () {
       this.showMenu = !this.showMenu;
     },
@@ -44,11 +49,13 @@ export default {
 };
 </script>
 <template>
+  
   <nav
     class="relative flex flex-wrap items-center justify-between px-2 py-3 bg-slate-500 mb-3"
   >
     <div
-      class="container px-4 mx-auto flex flex-wrap items-center justify-between" style="margin-right: 15px;"
+      class="container px-4 mx-auto flex flex-wrap items-center justify-between"
+      style="margin-right: 15px"
     >
       <div
         class="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start"
@@ -58,7 +65,7 @@ export default {
             class="text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-black logonav"
             href=""
           >
-            <img src="../assets/logo.jpg" class="h-6  sm:h-9" alt="Logo" />
+            <img src="../assets/logo.jpg" class="h-6 sm:h-9" alt="Logo" />
           </a>
         </router-link>
         <button
@@ -66,7 +73,7 @@ export default {
           type="button"
           v-on:click="toggleNavbar()"
         >
-        <svg
+          <svg
             class="w-6 h-6"
             aria-hidden="true"
             fill="currentColor"
@@ -79,15 +86,15 @@ export default {
               clip-rule="evenodd"
             ></path>
           </svg>
-       
-       
         </button>
       </div>
       <div
         v-bind:class="{ hidden: !showMenu, flex: showMenu }"
         class="lg:flex lg:flex-grow items-center listeonglets"
       >
-        <ul class="flex flex-col mt-4 lg:flex-row list-none ml-auto ongletaccueil">
+        <ul
+          class="flex flex-col mt-4 lg:flex-row list-none ml-auto ongletaccueil"
+        >
           <li>
             <router-link
               :to="`/accueilintra`"
@@ -97,7 +104,7 @@ export default {
               <a
                 :class="{
                   'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
-                    currentPage === 'accueilintra',
+                  $router.currentRoute._value.name === 'accueilintra',
                 }"
                 href="#"
                 class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
@@ -115,7 +122,7 @@ export default {
               <a
                 :class="{
                   'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
-                    currentPage === 'mesinfos',
+                  $router.currentRoute._value.name === 'mesinfos',
                 }"
                 href="#"
                 class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
@@ -132,7 +139,7 @@ export default {
               <a
                 :class="{
                   'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
-                    currentPage === 'planning',
+                  $router.currentRoute._value.name === 'planning',
                 }"
                 href="#"
                 class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
@@ -149,7 +156,7 @@ export default {
               <a
                 :class="{
                   'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
-                    currentPage === 'membres',
+                  $router.currentRoute._value.name === 'membres',
                 }"
                 href="#"
                 class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
@@ -166,7 +173,7 @@ export default {
               <a
                 :class="{
                   'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
-                    currentPage === 'createmembres',
+                  $router.currentRoute._value.name === 'createmembres',
                 }"
                 href="#"
                 class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
@@ -184,7 +191,7 @@ export default {
                 href="#"
                 :class="{
                   'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
-                    currentPage === 'messagerie',
+                  $router.currentRoute._value.name === 'messagerie',
                 }"
                 class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                 >Messagerie</a
@@ -201,7 +208,7 @@ export default {
                 href="#"
                 :class="{
                   'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
-                    currentPage === 'todo',
+                  $router.currentRoute._value.name === 'todo',
                 }"
                 class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                 >Projets</a
@@ -218,7 +225,7 @@ export default {
                 href="#"
                 :class="{
                   'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
-                    currentPage === 'affiches',
+                  $router.currentRoute._value.name === 'affiches',
                 }"
                 class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                 >Supports publicitaires</a
@@ -226,9 +233,7 @@ export default {
             </router-link>
           </li>
           <li>
-            <div
-              class="px-6 -m-6 pt-4 flex justify-between items-center mb-1 "
-            >
+            <div class="px-6 -m-6 pt-4 flex justify-between items-center mb-1">
               <button
                 class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
                 style="padding: 4px !important; margin-bottom: 7px !important"
@@ -259,8 +264,11 @@ export default {
 </template>
 <style scoped>
 nav {
-  background-color:white!important;
+  background-color: white !important;
+  box-shadow: inset 4px 1px 20px 0px black;
 }
+
+
 .nav-item {
   color: black !important;
 }

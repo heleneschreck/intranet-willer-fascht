@@ -23,6 +23,7 @@ export default {
   watch: {
     "$route.name"(newRouteName) {
       this.currentPage = newRouteName;
+      console.log(this.currentPage)
     },
   },
   async beforeMount() {
@@ -31,6 +32,8 @@ export default {
     // if (localStorage.getItem("user") != null) {
     //   this.mode = true;
     // }
+
+
   },
   methods: {
     logout: function () {
