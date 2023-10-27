@@ -31,7 +31,7 @@ import ListeView from '../views/ListeView.vue'
 import RendezvousView from '../views/RendezvousView.vue'
 import ParticipantsView from '../views/ParticipantsView.vue'
 import UpdateRendezvousView from '../views/UpdateRendezVousView.vue'
-import UpdateniveauView from '../views/UpdateniveauView.vue'
+
 import InscriptionView from '../views/InscriptionView.vue'
 import UpdateInscriptionView from '../views/UpdateInscriptionView.vue'
 
@@ -196,11 +196,7 @@ const router = createRouter({
       name: 'updateinfos',
       component: UpdateinfosView
     },
-    {
-      path: '/updateniveau/:membre',
-      name: 'updateniveau',
-      component: UpdateniveauView
-    },
+
     {
       path: '/confirmeupdate',
       name: 'confirmeupdate',

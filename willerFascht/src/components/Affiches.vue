@@ -493,11 +493,11 @@ h1 {
 }
 .supportpublicitaires {
   display: flex;
+
   margin-top: 45px;
   margin-bottom: 45px;
-  margin-left: 40px;
-  margin-right: 40px;
-
+  margin-left: 10px;
+  margin-right: 10px;
   flex-wrap: wrap;
   position: relative;
 }

@@ -217,7 +217,7 @@ height: 300px;
   left: 400px;
   z-index: 1;
 }
-.supprimerpartenaire:hover {
+.supprimerphotosouvenirs:hover {
   cursor: pointer;
 }
 .illustrationSuppressionPartenaire {
