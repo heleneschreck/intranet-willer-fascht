@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Souvenirs;
 use App\Models\Conversation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -12,6 +13,7 @@ use App\Http\Controllers\API\StatusController;
 use App\Http\Controllers\API\ProfilsController;
 use App\Http\Controllers\API\ProjectController;
 use App\Http\Controllers\API\MessagesController;
+use App\Http\Controllers\API\SouvenirsController;
 use App\Http\Controllers\API\RendezvousController;
 use App\Http\Controllers\API\SoustachesController;
 use App\Http\Controllers\API\PartenairesController;
@@ -62,6 +64,7 @@ Route::get('/like/image/{image_id}', [LikesController::class, 'getLikesByImage']
 Route::get('/likes/{user_id}/{image_id}', [LikesController::class, 'getLikesByUserAndImage']);
 Route::delete('/likes/{id}', [LikesController::class, 'destroy']);
 
+Route::apiResource("souvenirs", SouvenirsController::class);
 Route::post('image', [ImageController::class, 'imageStore']);
 Route::get('/image/{id}', 'ImageController@show');
 Route::apiResource("commentaires", CommentairesController::class);

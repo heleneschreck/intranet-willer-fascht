@@ -150,7 +150,7 @@ export default {
 <style>
 .Planning {
   /* margin-top: 8% !important; */
-  width: 90%;
+  width: 99%;
   margin: auto;
 
 }
