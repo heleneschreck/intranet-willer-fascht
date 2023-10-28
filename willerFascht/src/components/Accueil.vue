@@ -172,8 +172,14 @@ export default defineComponent({
     </div>
   </nav>
   <div class="bod">
+    <div class="banniere">
+      <img src="../assets/logo.jpg" class="bannierelogo" alt="">
+    </div>
+    <div class="actualite">
+      <h2>Notre actualité : </h2>
+    </div>
     <div class="albumPhoto">
-      <h2>Album souvenir:</h2>
+      <h2>Album souvenirs :</h2>
 
       <Carousel
       :autoplay="1500"
@@ -213,15 +219,44 @@ export default defineComponent({
         ...
       </Carousel>
     </div>
-    <div class="nousRejoindre mt-5">
+    <div class="nousRejoindre mt-20 ">
       <hr />
+      <br>
       <h2>Vous souhaitez nous rejoindre ?</h2>
-    </div>
+      
+<div class="inputCandidature">
+
+  
+  <input v-model="name" class="inputCandidaturenom" type="text" placeholder="Nom"/>
+  
+  <input v-model="prenom" class="inputCandidatureprenom" type="text" placeholder="Prénom"/>
+  <br>
+  
+  <input v-model="telephone" class="inputCandidaturetelephone" type="tel" placeholder="Telephone" />
+  
+  <input v-model="email" class="inputCandidatureemail" type="email" placeholder="Email" />
+  <button @click="add_support()" class="addpartenaire">Valider</button>
+</div>
+</div>
+
+    
   </div>
 </template>
 <style scoped>
 .bod {
+
   margin-top: 7%;
+}
+
+
+.bannierelogo{
+  box-shadow:  4px 1px 20px 0px black;
+  border-radius: 10px;
+  width: 99%;
+  height: 555px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 .carousel__slide {
   padding: 5px;
@@ -261,6 +296,44 @@ export default defineComponent({
 .carousel__slide--active {
   opacity: 1;
   transform: rotateY(0) scale(1.1);
+}
+.nousRejoindre{
+  background-color: hsla(0, 0%, 84%, 0.3);
+}
+
+.inputCandidature{
+  margin-top: 25px;
+  padding-bottom: 25px;
+}
+.inputCandidaturenom{
+  height: 55px;
+  margin-left: 15%;
+  margin-right: 30px;
+  margin-bottom: 15px;
+  width: 700px;
+  border-radius: 15px;
+}
+.inputCandidatureprenom{
+  margin-right: 30px;
+  height: 55px;
+  margin-bottom: 15px;
+  width: 700px;
+  border-radius: 15px;
+}
+.inputCandidaturetelephone{
+  margin-left: 15%;
+  height: 55px;
+  margin-right: 30px;
+  margin-bottom: 15px;
+  width: 700px;
+  border-radius: 15px;
+}
+.inputCandidatureemail{
+  height: 55px;
+  margin-right: 30px;
+  margin-bottom: 15px;
+  width: 700px;
+  border-radius: 15px;
 }
 /* .albumsouvenirs {
   width: 60% !important;
