@@ -38,6 +38,9 @@ export default defineComponent({
       this.$store.commit("logout");
       this.$router.push("/");
     },
+    add_inscription: function(){
+
+    },
     slideTo(val) {
       this.currentSlide = val;
     },
@@ -235,7 +238,7 @@ export default defineComponent({
   <input v-model="telephone" class="inputCandidaturetelephone" type="tel" placeholder="Telephone" />
   
   <input v-model="email" class="inputCandidatureemail" type="email" placeholder="Email" />
-  <button @click="add_support()" class="addpartenaire">Valider</button>
+  <button @click="add_inscription()" class="addpartenaire">Valider</button>
 </div>
 </div>
 

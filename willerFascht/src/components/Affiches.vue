@@ -296,6 +296,9 @@ export default {
 };
 </script>
 <template>
+  <router-link :to="`/accueilintra`">
+    <button class="button rounded-lg retourcompterendu">Retour</button>
+  </router-link>
   <h1>Supports publicitaires</h1>
   <div class="supportpublicitaires">
     <div v-for="affiche in affiches">

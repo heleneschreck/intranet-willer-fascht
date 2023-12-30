@@ -53,7 +53,11 @@ export default {
     console.table(this.taches);
 
     let fetched_affiches = await fetch("http://localhost:8000/api/image");
-    this.affiches = await fetched_affiches.json();
+    let affiches = await fetched_affiches.json();
+    affiches = affiches.sort((a, b) =>
+      b.created_at.localeCompare(a.created_at)
+    );
+    this.affiches = affiches.slice(0, 4);
   },
   methods: {
     logout: function () {
@@ -121,9 +125,7 @@ export default {
     class="ml-[-100%] fixed z-10 top-0 pb-3 px-6 w-full flex flex-col justify-between h-screen border-r bg-white transition duration-300 md:w-4/12 lg:ml-0 lg:w-[25%] xl:w-[20%] 2xl:w-[15%]"
   >
     <div>
-      <div class="-mx-6 px-6 py-4">
-      
-      </div>
+      <div class="-mx-6 px-6 py-4"></div>
 
       <div class="mt-8 text-center" v-for="profil in profils">
         <div v-if="profil.user_id == user.id">
@@ -239,48 +241,47 @@ export default {
                   alt=""
                 />
                 Supports publicitaires</span
-                >
-              </a>
-            </li>
+              >
+            </a>
+          </li>
         </router-link>
         <li>
           <hr />
           <router-link :to="`partenaires`">
             <a
-            href="#"
-            class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
+              href="#"
+              class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
             >
-            <img
-              src="https://cdn-icons-png.flaticon.com/128/5434/5434169.png"
-              style="width: 30px; height: 30px; margin-right: 18%"
-              alt=""
-            />
-            
-            <span class="group-hover:text-gray-700">Partenaires</span>
+              <img
+                src="https://cdn-icons-png.flaticon.com/128/5434/5434169.png"
+                style="width: 30px; height: 30px; margin-right: 18%"
+                alt=""
+              />
+
+              <span class="group-hover:text-gray-700">Partenaires</span>
             </a>
           </router-link>
           <router-link :to="`miseenligne`">
             <a
               href="#"
               class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
-              >
+            >
               <img
                 src="https://cdn-icons-png.flaticon.com/128/6329/6329568.png"
                 style="width: 30px; height: 30px; margin-right: 18%"
                 alt=""
               />
-              
+
               <span class="group-hover:text-gray-700">Mise en ligne </span>
             </a>
           </router-link>
         </li>
-        
+
         <router-link :to="`/equipe`">
           <a
             href="#"
             class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
-            >
-            
+          >
             <img
               src="https://cdn-icons-png.flaticon.com/128/3718/3718057.png"
               style="width: 30px; height: 30px; margin-right: 18%"
@@ -293,8 +294,7 @@ export default {
           <a
             href="#"
             class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
-            >
-            
+          >
             <img
               src="https://cdn-icons-png.flaticon.com/128/3518/3518229.png"
               style="width: 30px; height: 30px; margin-right: 18%"
@@ -363,20 +363,20 @@ export default {
             aria-label="chat"
             class="w-10 h-10 rounded-xl border bg-gray-100 focus:bg-gray-100 active:bg-gray-200"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 m-auto text-gray-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
+        <img src="https://cdn-icons-png.flaticon.com/128/10754/10754151.png" alt="">
+          </button>
+          <button
+            aria-label="chat"
+            class="w-10 h-10 rounded-xl border bg-gray-100 focus:bg-gray-100 active:bg-gray-200"
+          >
+   <img src="https://cdn-icons-png.flaticon.com/128/2594/2594044.png" alt="">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
               />
-            </svg>
+         
           </button>
           <button
             aria-label="notification"
@@ -399,56 +399,66 @@ export default {
 
     <div class="px-6 pt-6 3xl:container">
       <div class="onglets">
-        
-          <div
-            class="h-full py-8 px-6 space-y-6 rounded-xl border border-gray-200 bg-white onglet"
-          >
-            <div>
-              <h5 class="text-xl text-gray-600 text-center rubrique">
+        <div
+          class="h-full py-8 px-6 space-y-6 rounded-xl border border-gray-200 bg-white onglet"
+        >
+          <div>
+            <h5 class="text-xl text-gray-600 text-center rubrique">
+              <router-link :to="`todo`">
                 Projets en cours :
-              </h5>
-              <div v-for="project in projects">
-                <div class="titreprojectsencours">
+              </router-link>
+            </h5>
+            <div v-for="project in projects">
+              <router-link :to="`projet/${project.id}`">
+              <div class="titreprojectsencours">
                   {{ project.title }} -
                   {{ moment(project.end).format("DD/MM/YYYY") }} :
                 </div>
-                <div v-for="tache in taches">
-                  <div
-                    v-if ="
-                      tache.status_id == '2' 
-                      && tache.project_id == project.id
-                    "
-                  >
-                    <div v-if="tache.user_id == user.id">
-                     
-                        <div class="tacheafaire">
-                          {{ tache.title }}
-                        </div>
-                      
+              </router-link> 
+              <div v-for="tache in taches">
+                <div
+                  v-if="
+                    tache.status_id == '2' && tache.project_id == project.id
+                  "
+                >
+                  <div v-if="tache.user_id == user.id">
+                    <div class="tacheafaire">
+                      {{ tache.title }}
                     </div>
                   </div>
-              <div>
+                </div>
+                <div></div>
               </div>
-         
-            </div>
-              </div>
-             
             </div>
           </div>
-       
+        </div>
+
         <div class="onglet">
           <div
-            class="h-full py-6 px-6 rounded-xl border border-gray-200 bg-white "
+            class="h-full py-6 px-6 rounded-xl border border-gray-200 bg-white"
           >
+          <router-link :to="`liste`">
             <h5 class="text-xl text-gray-700 rubrique">
               Prochains rendez-vous :
             </h5>
+            </router-link>
             <div class="EvenementTitleAccueilIntra">
-
               <div v-for="evenement in evenements">
-             <li>{{ evenement.title }} - Du {{ moment(evenement.start).format("DD/MM/YYYY [à] HH[h]mm")}} au {{ moment(evenement.start).format("DD/MM/YYYY [à] HH[h]mm")  }} </li>
+              <div  v-show="moment(evenement.end) > moment()">
+                  <li>
+                    <router-link :to="`/rendezvous/${evenement.id}`">
+                    {{ evenement.title }} - Du
+                    {{
+                      moment(evenement.start).format("DD/MM/YYYY [à] HH[h]mm")
+                    }}
+                    au
+                    {{
+                      moment(evenement.start).format("DD/MM/YYYY [à] HH[h]mm")
+                    }}
+                    </router-link>
+                  </li>
+                </div>
               </div>
-            
             </div>
           </div>
         </div>
@@ -457,7 +467,7 @@ export default {
             class="h-full py-6 px-6 rounded-xl border border-gray-200 bg-white onglets"
           >
             <h5 class="text-xl text-gray-700 rubrique">
-           Nouveaux membres de l'association  :
+              Nouveaux membres de l'association :
             </h5>
           </div>
         </div>
@@ -466,13 +476,13 @@ export default {
       <div
         class="lg:h-full py-8 px-6 text-gray-600 rounded-xl border border-gray-200 bg-white listderniereaffiches"
       >
-        <h5 class="text-xl text-gray-700 rubrique">Dernières affiches :</h5>
+        <router-link :to="`affiches`">
+          <h5 class="text-xl text-gray-700 rubrique">Dernières affiches :</h5>
+        </router-link>
         <div class="dernieresAffiche">
           <div v-for="affiche in affiches">
             <div class="derniereAffiche">
-              <div class="titleDerniereaffiches">
-                {{ affiche.title }} :
-              </div>
+              <div class="titleDerniereaffiches">{{ affiche.title }} :</div>
               <div class="imageDerniereAffiche">
                 <img
                   v-bind:src="affiche.url"
@@ -544,19 +554,16 @@ export default {
 .listderniereaffiches {
   /* width: 123% !important; */
 }
-.titleDerniereaffiches{
+.titleDerniereaffiches {
   text-align: center;
   margin-bottom: 10px;
 }
 .onglets {
- 
   display: flex;
   margin-bottom: 7px;
 }
 .onglet {
-    width: 40%;
-    margin-right: 7px;
+  width: 40%;
+  margin-right: 7px;
 }
-
-
 </style>

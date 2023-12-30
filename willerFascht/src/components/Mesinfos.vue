@@ -5,6 +5,7 @@ export default {
     return {
       mode: false,
       user: [],
+      profils: []
     };
   },
   computed: {
@@ -16,6 +17,9 @@ export default {
     // if (localStorage.getItem("user") != null) {
     //   this.mode = true;
     // }
+    let fetched_profils = await fetch("http://127.0.0.1:8000/api/profils");
+    this.profils = await fetched_profils.json();
+    console.table(this.profils);
   },
   methods: {
     logout: function () {
@@ -35,12 +39,15 @@ export default {
     <div class="flex items-center h-screen w-full justify-center carduser">
       <div class="max-w-xs">
         <div class="bg-white shadow-xl rounded-lg py-3">
-          <div class="photo-wrapper p-2" style="text-overflow: ellipsis">
-            <img
-              class="w-32 h-32 rounded-full mx-auto"
-              src="https://images.unsplash.com/photo-1605136292546-36994b3f5b59?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1174&q=80"
-              alt="John Doe"
-            />
+          <div v-for="profil in profils" class="photo-wrapper p-2" style="text-overflow: ellipsis">
+            <div v-if="profil.user_id == user.id">
+       
+          <img
+            v-bind:src="profil.url"
+            alt=""
+            class="w-40 h-40 rounded-full mx-auto"
+          />
+         </div>
           </div>
           <div class="p-2">
             <h3 class="text-center text-xl text-gray-900 font-medium leading-8">

@@ -27,6 +27,7 @@ class ImageController extends Controller
                 'url' => $imageUrl,
                 'title' => $image->title,
                 'user_id' => $image->user_id,
+                'created_at' => $image->created_at
             ];
         }
     
