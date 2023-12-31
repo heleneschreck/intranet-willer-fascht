@@ -12,6 +12,7 @@ export default defineComponent({
       user: [],
       partenaires: [],
       souvenirs: [],
+      mode: "candidaturevalider",
     };
   },
   computed: {
@@ -38,8 +39,29 @@ export default defineComponent({
       this.$store.commit("logout");
       this.$router.push("/");
     },
-    add_inscription: function(){
+    add_inscription: function () {
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("nom", this.name);
+      urlencoded.append("prenom", this.prenom);
+      urlencoded.append("telephone", this.telephone);
+      urlencoded.append("email", this.email);
+      urlencoded.append("vu", "0");
+      var requestOptions = {
+        method: "POST",
+        redirect: "follow",
+      };
 
+      fetch(
+        "http://localhost:8000/api/candidats?nom=NomCandidats&prenom=prenomCandidats&telephone=0987654321&email=test@test.fr&vu=0",
+        requestOptions
+      )
+        .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error", error));
+      this.mode = "candidaturevalider";
+      // setTimeout(() => {
+      //   this.$router.go(this.$router.currentRoute);
+      // }, "2000");
     },
     slideTo(val) {
       this.currentSlide = val;
@@ -61,15 +83,8 @@ export default defineComponent({
   >
     <div class="container flex flex-wrap items-center justify-between mx-auto">
       <a href="https://flowbite.com/" class="flex items-center">
-        <img
-          src="https://flowbite.com/docs/images/logo.svg"
-          class="h-6 mr-3 sm:h-9"
-          alt="Flowbite Logo"
-        />
-        <span
-          class="self-center text-xl font-semibold whitespace-nowrap dark:text-white"
-          >Flowbite</span
-        >
+        <img src="../assets/logo.jpg" class="h-6 sm:h-9" alt="Logo" />
+      
       </a>
       <div class="flex md:order-2">
         <div v-if="mode">
@@ -146,28 +161,28 @@ export default defineComponent({
               href="#"
               class="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white"
               aria-current="page"
-              >Home</a
+              >Notre actualité</a
             >
           </li>
           <li>
             <a
               href="#"
               class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-              >About</a
+              >Album souvenir</a
             >
           </li>
           <li>
             <a
               href="#"
               class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-              >Services</a
+              >Nos partenaires</a
             >
           </li>
           <li>
             <a
               href="#"
               class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-              >Contact</a
+              >Vous souhaitez nous rejoindre ?</a
             >
           </li>
         </ul>
@@ -176,17 +191,15 @@ export default defineComponent({
   </nav>
   <div class="bod">
     <div class="banniere">
-      <img src="../assets/logo.jpg" class="bannierelogo" alt="">
+      <img src="../assets/logo.jpg" class="bannierelogo" alt="" />
     </div>
     <div class="actualite">
-      <h2>Notre actualité : </h2>
+      <h2>Notre actualité :</h2>
     </div>
     <div class="albumPhoto">
       <h2>Album souvenirs :</h2>
 
-      <Carousel
-      :autoplay="1500"
-      :wrapAround="true">
+      <Carousel :autoplay="1500" :wrapAround="true">
         <Slide v-for="slide in souvenirs" :key="slide">
           <div class="carousel__item albumsouvenirs">
             <img
@@ -222,38 +235,78 @@ export default defineComponent({
         ...
       </Carousel>
     </div>
-    <div class="nousRejoindre mt-20 ">
+    <div class="nousRejoindre mt-20">
       <hr />
-      <br>
+      <br />
+
+      <div
+        class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md"
+        role="alert"
+        v-if="mode == 'candidaturevalider'"
+      >
+        <div class="flex">
+          <div class="py-1">
+            <svg
+              class="fill-current h-6 w-6 text-teal-500 mr-4"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"
+              />
+            </svg>
+          </div>
+          <div>
+            <p class="font-bold">Nous avons bien reçu votre candidature</p>
+            <p class="text-sm">Nous vous recontacterons dès que possible.</p>
+          </div>
+        </div>
+      </div>
+      <div v-if="mode == 'false'"></div>
       <h2>Vous souhaitez nous rejoindre ?</h2>
-      
-<div class="inputCandidature">
+      <div class="inputCandidature">
+        <input
+          v-model="name"
+          class="inputCandidaturenom"
+          type="text"
+          placeholder="Nom"
+        />
 
-  
-  <input v-model="name" class="inputCandidaturenom" type="text" placeholder="Nom"/>
-  
-  <input v-model="prenom" class="inputCandidatureprenom" type="text" placeholder="Prénom"/>
-  <br>
-  
-  <input v-model="telephone" class="inputCandidaturetelephone" type="tel" placeholder="Telephone" />
-  
-  <input v-model="email" class="inputCandidatureemail" type="email" placeholder="Email" />
-  <button @click="add_inscription()" class="addpartenaire">Valider</button>
-</div>
-</div>
+        <input
+          v-model="prenom"
+          class="inputCandidatureprenom"
+          type="text"
+          placeholder="Prénom"
+        />
+        <br />
 
-    
+        <input
+          v-model="telephone"
+          class="inputCandidaturetelephone"
+          type="tel"
+          placeholder="Telephone"
+        />
+
+        <input
+          v-model="email"
+          class="inputCandidatureemail"
+          type="email"
+          placeholder="Email"
+        />
+        <button @click="add_inscription()" class="addpartenaire">
+          Valider
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 <style scoped>
 .bod {
-
   margin-top: 7%;
 }
 
-
-.bannierelogo{
-  box-shadow:  4px 1px 20px 0px black;
+.bannierelogo {
+  box-shadow: 4px 1px 20px 0px black;
   border-radius: 10px;
   width: 99%;
   height: 555px;
@@ -300,15 +353,15 @@ export default defineComponent({
   opacity: 1;
   transform: rotateY(0) scale(1.1);
 }
-.nousRejoindre{
+.nousRejoindre {
   background-color: hsla(0, 0%, 84%, 0.3);
 }
 
-.inputCandidature{
+.inputCandidature {
   margin-top: 25px;
   padding-bottom: 25px;
 }
-.inputCandidaturenom{
+.inputCandidaturenom {
   height: 55px;
   margin-left: 15%;
   margin-right: 30px;
@@ -316,14 +369,14 @@ export default defineComponent({
   width: 700px;
   border-radius: 15px;
 }
-.inputCandidatureprenom{
+.inputCandidatureprenom {
   margin-right: 30px;
   height: 55px;
   margin-bottom: 15px;
   width: 700px;
   border-radius: 15px;
 }
-.inputCandidaturetelephone{
+.inputCandidaturetelephone {
   margin-left: 15%;
   height: 55px;
   margin-right: 30px;
@@ -331,7 +384,7 @@ export default defineComponent({
   width: 700px;
   border-radius: 15px;
 }
-.inputCandidatureemail{
+.inputCandidatureemail {
   height: 55px;
   margin-right: 30px;
   margin-bottom: 15px;

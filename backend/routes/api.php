@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Candidats;
 use App\Models\Souvenirs;
 use App\Models\Conversation;
 use Illuminate\Http\Request;
@@ -13,6 +14,7 @@ use App\Http\Controllers\API\StatusController;
 use App\Http\Controllers\API\ProfilsController;
 use App\Http\Controllers\API\ProjectController;
 use App\Http\Controllers\API\MessagesController;
+use App\Http\Controllers\API\CandidatsController;
 use App\Http\Controllers\API\SouvenirsController;
 use App\Http\Controllers\API\RendezvousController;
 use App\Http\Controllers\API\SoustachesController;
@@ -49,6 +51,8 @@ Route::get('/conversation_users/user/{users_id}', [ConversationUsersController::
 Route::delete('/conversation_users/{user_id}/{conversation_id}', [ConversationUsersController::class, 'destroyByUserAndConversation']);
 
 Route::apiResource("partenaires", PartenairesController::class);
+Route::apiResource("candidats", CandidatsController::class);
+Route::get('/candidats/see/{vu}', [CandidatsController::class, 'getCandidatsBySee']);
 Route::apiResource("profils", ProfilsController::class);
 Route::apiResource("rendezvous", RendezvousController::class);
 Route::apiResource("participants", ParticipantsController::class);

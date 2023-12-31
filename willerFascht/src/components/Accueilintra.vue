@@ -12,7 +12,7 @@ export default {
       projects: [],
       statuts: [],
       evenements: [],
-
+      candidats: [],
       taches: [],
     };
   },
@@ -29,28 +29,34 @@ export default {
 
     let fetched_profils = await fetch("http://127.0.0.1:8000/api/profils");
     this.profils = await fetched_profils.json();
-    console.table(this.profils);
+    // console.table(this.profils);
 
+    
     let fetched_evenements = await fetch(
       "http://127.0.0.1:8000/api/rendezvous"
-    );
-    let lListe = await fetched_evenements.json();
-    lListe = lListe.sort((a, b) => b.start.localeCompare(a.start));
-    this.evenements = lListe;
-    console.table(this.evenements);
+      );
+      let lListe = await fetched_evenements.json();
+      lListe = lListe.sort((a, b) => b.start.localeCompare(a.start));
+      this.evenements = lListe;
+      // console.table(this.evenements);
+      
+      lListe = lListe.sort((a, b) => b.start.localeCompare(a.start));
+      
+      let fetched_projects = await fetch("http://127.0.0.1:8000/api/project");
+      this.projects = await fetched_projects.json();
+    // console.table(this.projects);
 
-    lListe = lListe.sort((a, b) => b.start.localeCompare(a.start));
-
-    let fetched_projects = await fetch("http://127.0.0.1:8000/api/project");
-    this.projects = await fetched_projects.json();
-    console.table(this.projects);
-
+      let fetched_candidats = await fetch(
+        "http://localhost:8000/api/candidats/see/0"
+      );
+      this.candidats = await fetched_candidats.json();
+      console.table(this.candidats);
     let fetched_statuts = await fetch("http://127.0.0.1:8000/api/statut");
     this.statuts = await fetched_statuts.json();
-    console.table(this.statuts);
+    // console.table(this.statuts);
     let fetched_taches = await fetch("http://127.0.0.1:8000/api/taches");
     this.taches = await fetched_taches.json();
-    console.table(this.taches);
+    // console.table(this.taches);
 
     let fetched_affiches = await fetch("http://localhost:8000/api/image");
     let affiches = await fetched_affiches.json();
@@ -60,10 +66,14 @@ export default {
     this.affiches = affiches.slice(0, 4);
   },
   methods: {
+    async fetchedcandidats() {
+
+    },
     logout: function () {
       this.$store.commit("logout");
       this.$router.push("/");
     },
+
 
     deleteimage: function (profil) {
       console.log(profil.id);
@@ -359,24 +369,33 @@ export default {
               ></path>
             </svg>
           </button>
+          <!-- Candidats -->
+          <router-link :to="`candidats`">
           <button
             aria-label="chat"
             class="w-10 h-10 rounded-xl border bg-gray-100 focus:bg-gray-100 active:bg-gray-200"
           >
-        <img src="https://cdn-icons-png.flaticon.com/128/10754/10754151.png" alt="">
+            <img
+              src="https://cdn-icons-png.flaticon.com/128/10754/10754151.png"
+              alt=""
+            />
+            <span class="nouveauxcandidats"> {{ candidats.count }} </span> 
           </button>
+     </router-link>
           <button
             aria-label="chat"
             class="w-10 h-10 rounded-xl border bg-gray-100 focus:bg-gray-100 active:bg-gray-200"
           >
-   <img src="https://cdn-icons-png.flaticon.com/128/2594/2594044.png" alt="">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
-              />
-         
+            <img
+              src="https://cdn-icons-png.flaticon.com/128/2594/2594044.png"
+              alt=""
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
+            />
           </button>
           <button
             aria-label="notification"
@@ -404,17 +423,15 @@ export default {
         >
           <div>
             <h5 class="text-xl text-gray-600 text-center rubrique">
-              <router-link :to="`todo`">
-                Projets en cours :
-              </router-link>
+              <router-link :to="`todo`"> Projets en cours : </router-link>
             </h5>
             <div v-for="project in projects">
               <router-link :to="`projet/${project.id}`">
-              <div class="titreprojectsencours">
+                <div class="titreprojectsencours">
                   {{ project.title }} -
                   {{ moment(project.end).format("DD/MM/YYYY") }} :
                 </div>
-              </router-link> 
+              </router-link>
               <div v-for="tache in taches">
                 <div
                   v-if="
@@ -437,24 +454,24 @@ export default {
           <div
             class="h-full py-6 px-6 rounded-xl border border-gray-200 bg-white"
           >
-          <router-link :to="`liste`">
-            <h5 class="text-xl text-gray-700 rubrique">
-              Prochains rendez-vous :
-            </h5>
+            <router-link :to="`liste`">
+              <h5 class="text-xl text-gray-700 rubrique">
+                Prochains rendez-vous :
+              </h5>
             </router-link>
             <div class="EvenementTitleAccueilIntra">
               <div v-for="evenement in evenements">
-              <div  v-show="moment(evenement.end) > moment()">
+                <div v-show="moment(evenement.end) > moment()">
                   <li>
                     <router-link :to="`/rendezvous/${evenement.id}`">
-                    {{ evenement.title }} - Du
-                    {{
-                      moment(evenement.start).format("DD/MM/YYYY [à] HH[h]mm")
-                    }}
-                    au
-                    {{
-                      moment(evenement.start).format("DD/MM/YYYY [à] HH[h]mm")
-                    }}
+                      {{ evenement.title }} - Du
+                      {{
+                        moment(evenement.start).format("DD/MM/YYYY [à] HH[h]mm")
+                      }}
+                      au
+                      {{
+                        moment(evenement.start).format("DD/MM/YYYY [à] HH[h]mm")
+                      }}
                     </router-link>
                   </li>
                 </div>
@@ -506,6 +523,17 @@ export default {
   </div>
 </template>
 <style>
+.nouveauxcandidats{
+  position: relative;
+  border: 1px solid;
+  border-radius: 25px;
+  padding: 2px;
+  left: 20px;
+  bottom: 10px;
+  background-color: white;
+  font-weight: 900;
+  color: green;
+}
 .accueilintra {
   /* margin-top: 4% !important; */
   background-color: hsla(0, 0%, 84%, 0.3);

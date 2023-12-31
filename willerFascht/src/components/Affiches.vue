@@ -17,7 +17,7 @@ export default {
       isUserAbsent: false,
       title: "",
       fileData: "",
-      isUserAbsent: false,
+ 
     };
   },
   computed: {
