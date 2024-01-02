@@ -133,7 +133,7 @@ export default {
 <template>
   <aside
     class="ml-[-100%] fixed z-10 top-0 pb-3 px-6 w-full flex flex-col justify-between h-screen border-r bg-white transition duration-300 md:w-4/12 lg:ml-0 lg:w-[25%] xl:w-[20%] 2xl:w-[15%]"
-  >
+ style="overflow: scroll;" >
     <div>
       <div class="-mx-6 px-6 py-4"></div>
 
@@ -300,6 +300,20 @@ export default {
             <span class="group-hover:text-gray-700">L'équipe</span>
           </a>
         </router-link>
+       
+        <router-link :to="`/candidats`" v-if="user.niveau==1">
+          <a
+            href="#"
+            class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
+          >
+            <img
+              src="https://cdn-icons-png.flaticon.com/128/6373/6373828.png"
+              style="width: 30px; height: 30px; margin-right: 18%"
+              alt=""
+            />
+            <span class="group-hover:text-gray-700">Examiner les candidats</span>
+          </a>
+        </router-link>
         <router-link :to="`/`">
           <a
             href="#"
@@ -374,7 +388,7 @@ export default {
           <button
             aria-label="chat"
             class="w-10 h-10 rounded-xl border bg-gray-100 focus:bg-gray-100 active:bg-gray-200"
-          >
+            v-if="user.niveau==1 && candidats.count >= 1"  >
             <img
               src="https://cdn-icons-png.flaticon.com/128/10754/10754151.png"
               alt=""
@@ -516,6 +530,34 @@ export default {
                 {{ moment(affiche.created_at).format("DD/MM/YYYY") }}
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="lg:h-full py-8 px-6 text-gray-600 rounded-xl border border-gray-200 bg-white listderniereaffiches"
+      >
+        
+          <h5 class="text-xl text-gray-700 rubrique">Nouveaux membres de l'association  :</h5>
+        
+        <div class="dernieresAffiche">
+         
+            <div class="derniereAffiche">
+              <div class="titleDerniereaffiches"> :</div>
+              <div class="imageDerniereAffiche">
+                <img src= "https://cdn-icons-png.flaticon.com/128/6373/6373828.png"
+                  style="
+                    width: 400px;
+                    height: 460px;
+                    margin-left: auto;
+                    margin-right: auto;
+                    margin-bottom: 15px;
+                  "
+                />
+              </div>
+              <div class="creea">
+              
+              </div>
+          
           </div>
         </div>
       </div>

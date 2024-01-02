@@ -53,6 +53,8 @@ Route::delete('/conversation_users/{user_id}/{conversation_id}', [ConversationUs
 Route::apiResource("partenaires", PartenairesController::class);
 Route::apiResource("candidats", CandidatsController::class);
 Route::get('/candidats/see/{vu}', [CandidatsController::class, 'getCandidatsBySee']);
+Route::put('/candidats/update-by-vu/{vu}',[CandidatsController::class,'updateByVu'] );
+
 Route::apiResource("profils", ProfilsController::class);
 Route::apiResource("rendezvous", RendezvousController::class);
 Route::apiResource("participants", ParticipantsController::class);

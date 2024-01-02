@@ -79,19 +79,51 @@ class CandidatsController extends Controller
         return $candidats;
     }
 
+    public function destroy($id)
+    {
+        // $candidats = Candidats::findOrFail($id);
+        // if ($candidats)
+        //     $candidats->delete();
+        // else
+        //     return response()->json('error');
+        // return response()->json(null);
+        $candidats = Candidats::find($id);
+
+        if (!$candidats) {
+            return response()->json(['error' => 'Candidat non trouvé.'], 404);
+        }
+    
+        $candidats->delete();
+    
+        return response()->json(['message' => 'Candidat supprimé avec succès']);
+    }
+
+
+
+    /**
+ * Update 'vu' field for multiple resources.
+ *
+ * @param  \Illuminate\Http\Request  $request
+ * @param  string  $vu
+ * @return \Illuminate\Http\Response
+ */
+public function updateByVu(Request $request, $vu)
+{
+
+   $this->validate($request, [
+        'new_vu' => 'required', // Validation du nouveau champ 'vu'
+    ]);
+
+    // Mettez à jour tous les utilisateurs ayant la même valeur sur l'entrée 'vu'
+    Candidats::where('vu', $vu)->update(['vu' => $request->new_vu]);
+
+    return response()->json(['message' => 'Utilisateurs mis à jour avec succès']);
+}
+
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Candidats  $candidats
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        $candidats = Candidats::findOrFail($id);
-        if ($candidats)
-            $candidats->delete();
-        else
-            return response()->json('error');
-        return response()->json(null);
-    }
 }

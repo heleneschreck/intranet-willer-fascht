@@ -48,11 +48,13 @@ export default defineComponent({
       urlencoded.append("vu", "0");
       var requestOptions = {
         method: "POST",
+        body: urlencoded,
         redirect: "follow",
       };
 
+let url= "http://localhost:8000/api/candidats";
       fetch(
-        "http://localhost:8000/api/candidats?nom=NomCandidats&prenom=prenomCandidats&telephone=0987654321&email=test@test.fr&vu=0",
+       url,
         requestOptions
       )
         .then((response) => response.text())
