@@ -15,6 +15,9 @@ return new class extends Migration
     {
         Schema::create('luses', function (Blueprint $table) {
             $table->id();
+            $table->string('participants_id');
+            $table->string('message_id');
+            $table->boolean('Lu');
             $table->timestamps();
         });
     }
