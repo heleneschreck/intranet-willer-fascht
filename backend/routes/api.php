@@ -1,8 +1,6 @@
 <?php
 
-use App\Models\Candidats;
-use App\Models\Souvenirs;
-use App\Models\Conversation;
+use App\Http\Controllers\API\ArticlesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
@@ -23,8 +21,8 @@ use App\Http\Controllers\API\CommentairesController;
 use App\Http\Controllers\API\CompterendusController;
 use App\Http\Controllers\API\ConversationController;
 use App\Http\Controllers\API\ParticipantsController;
-use App\Http\Controllers\API\NoparticpantsController;
 use App\Http\Controllers\API\ConversationUsersController;
+use App\Http\Controllers\API\IllustrationsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +49,8 @@ Route::get('/conversation_users/user/{users_id}', [ConversationUsersController::
 Route::delete('/conversation_users/{user_id}/{conversation_id}', [ConversationUsersController::class, 'destroyByUserAndConversation']);
 
 Route::apiResource("partenaires", PartenairesController::class);
+Route::apiResource("articles", ArticlesController::class);
+Route::apiResource("illustrations", IllustrationsController::class);
 Route::apiResource("candidats", CandidatsController::class);
 Route::get('/candidats/see/{vu}', [CandidatsController::class, 'getCandidatsBySee']);
 Route::put('/candidats/update-by-vu/{vu}',[CandidatsController::class,'updateByVu'] );
@@ -61,7 +61,7 @@ Route::apiResource("participants", ParticipantsController::class);
 Route::get('/participants/rendezvous/{rendezvous_id}', [ParticipantsController::class, 'getParticipantsByRendezvous']);
 Route::get('/participants/user/{user_id}', [ParticipantsController::class, 'getUserByRendezvous']);
 
-Route::apiResource("noparticipants", NoparticpantsController::class);
+
 Route::apiResource("image", ImageController::class);
 Route::get('/images/{path}', 'App\Http\Controllers\Api\ImageController@index');
 

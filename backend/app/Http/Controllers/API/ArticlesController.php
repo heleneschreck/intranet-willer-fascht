@@ -15,7 +15,9 @@ class ArticlesController extends Controller
      */
     public function index()
     {
-        //
+        $articles = Articles::all();
+
+        return response()->json($articles);
     }
 
     /**
@@ -26,7 +28,24 @@ class ArticlesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'title' => 'required',
+            'content' => 'required',
+            'color' => 'required',
+            'size' => 'required',
+            'weight' => 'required',
+            'italique' => 'required',
+            'user_id' => 'required',
+        ]);
+        $articles = Articles::create([
+            'title' => $request->title,
+            'content' => $request->content,
+            'color' => $request->color,
+            'size' => $request->size,
+            'weight' => $request->weight,
+            'italique' => $request->italique,
+            'user_id' => $request->user_id,
+        ]);
     }
 
     /**
@@ -37,7 +56,7 @@ class ArticlesController extends Controller
      */
     public function show(Articles $articles)
     {
-        //
+        return response()->json($articles);
     }
 
     /**
@@ -47,9 +66,11 @@ class ArticlesController extends Controller
      * @param  \App\Models\Articles  $articles
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Articles $articles)
+    public function update(Request $request,$id)
     {
-        //
+        $articles = Articles::find($id);
+        $articles->update($request->all());
+        return $articles;
     }
 
     /**
@@ -58,8 +79,15 @@ class ArticlesController extends Controller
      * @param  \App\Models\Articles  $articles
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Articles $articles)
+    public function destroy($id)
     {
-        //
+        $articles = Articles::findOrFail($id);
+        if ($articles)
+        $articles->delete();
+     
+        else
+            return response()->json('error');
+        return response()->json(null);
+
     }
 }
