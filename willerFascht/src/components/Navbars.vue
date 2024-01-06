@@ -233,6 +233,24 @@ export default {
               >
             </router-link>
           </li>
+   
+          <li>
+            <router-link
+              :to="`/mesarticles`"
+              exact
+              @update:current-page="currentPage = $event"
+            >
+              <a
+                href="#"
+                :class="{
+                  'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
+                  $router.currentRoute._value.name === 'affiches',
+                }"
+                class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                >Mes articles</a
+              >
+            </router-link>
+          </li>
           <li>
             <div class="px-6 -m-6 pt-4 flex justify-between items-center mb-1">
               <button
@@ -281,7 +299,7 @@ nav {
 }
 
 .ongletaccueil {
-  margin-right: 250px !important;
+  margin-right: 150px !important;
 }
 li {
   margin-left: 25px !important;

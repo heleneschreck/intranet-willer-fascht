@@ -46,8 +46,15 @@ class ArticlesController extends Controller
             'italique' => $request->italique,
             'user_id' => $request->user_id,
         ]);
+        return response()->json($articles, 201);
     }
 
+
+    public function getArticlesByUser($user_id)
+    {   
+        $articles = Articles::where('user_id', $user_id)->get();
+        return response()->json($articles);
+    }
     /**
      * Display the specified resource.
      *

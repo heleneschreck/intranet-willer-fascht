@@ -50,7 +50,9 @@ Route::delete('/conversation_users/{user_id}/{conversation_id}', [ConversationUs
 
 Route::apiResource("partenaires", PartenairesController::class);
 Route::apiResource("articles", ArticlesController::class);
+Route::get('/articles/user/{user_id}', [ArticlesController::class, 'getArticlesByUser']);
 Route::apiResource("illustrations", IllustrationsController::class);
+Route::get('/illustrations/article/{article_id}', [IllustrationsController::class, 'getIllustrationByArticle']);
 Route::apiResource("candidats", CandidatsController::class);
 Route::get('/candidats/see/{vu}', [CandidatsController::class, 'getCandidatsBySee']);
 Route::put('/candidats/update-by-vu/{vu}',[CandidatsController::class,'updateByVu'] );

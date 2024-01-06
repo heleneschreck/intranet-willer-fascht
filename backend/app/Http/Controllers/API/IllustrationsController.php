@@ -55,6 +55,13 @@ class IllustrationsController extends Controller
         return response($data, Response::HTTP_CREATED);
     }
 
+    public function getIllustrationByArticle($article_id)
+    {
+        
+        $illustrations = illustrations::where('article_id', $article_id)->get();
+        return response()->json($illustrations);
+    }
+
     /**
      * Display the specified resource.
      *

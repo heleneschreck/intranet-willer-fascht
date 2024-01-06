@@ -9,6 +9,8 @@ import AccueilintraView from '../views/AccueilintraView.vue'
 import CandidatsView from '../views/CandidatsView.vue'
 import PartenairesView from '../views/PartenairesView.vue'
 import MiseEnLigneView from '../views/MiseEnLigneView.vue'
+import MesArticlesView from '../views/MesArticlesView.vue'
+import IllustrationsView from '../views/IllustrationsView.vue'
 import EquipeView from '../views/EquipeView.vue'
 import AffichesView from '../views/AffichesView.vue'
 import CompteRenduView from '../views/CompteRenduView.vue'
@@ -73,6 +75,16 @@ const router = createRouter({
       path: '/miseenligne',
       name: 'miseenligne',
       component: MiseEnLigneView
+    },
+    {
+      path: '/mesarticles',
+      name: 'mesarticles',
+      component: MesArticlesView
+    },
+    {
+      path: '/illustrations/:id',
+      name: 'illustrations',
+      component: IllustrationsView
     },
     {
       path: '/equipe',
