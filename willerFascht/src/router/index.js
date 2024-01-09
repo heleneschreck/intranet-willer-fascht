@@ -10,6 +10,7 @@ import CandidatsView from '../views/CandidatsView.vue'
 import PartenairesView from '../views/PartenairesView.vue'
 import MiseEnLigneView from '../views/MiseEnLigneView.vue'
 import MesArticlesView from '../views/MesArticlesView.vue'
+import UpdateArticleView from '../views/UpdateArticleView.vue'
 import IllustrationsView from '../views/IllustrationsView.vue'
 import EquipeView from '../views/EquipeView.vue'
 import AffichesView from '../views/AffichesView.vue'
@@ -80,6 +81,11 @@ const router = createRouter({
       path: '/mesarticles',
       name: 'mesarticles',
       component: MesArticlesView
+    },
+    {
+      path: '/updatearticle/:id',
+      name: 'updatearticle',
+      component: UpdateArticleView
     },
     {
       path: '/illustrations/:id',

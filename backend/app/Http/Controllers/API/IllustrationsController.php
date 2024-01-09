@@ -58,8 +58,12 @@ class IllustrationsController extends Controller
     public function getIllustrationByArticle($article_id)
     {
         
-        $illustrations = illustrations::where('article_id', $article_id)->get();
-        return response()->json($illustrations);
+        $illustrations = illustrations::where('article_id', $article_id)->get();     
+        $count = $illustrations->count();
+        $illustrationsData = [
+          'count' => $count
+        ];
+        return response()->json($illustrationsData);
     }
 
     /**
@@ -113,4 +117,32 @@ class IllustrationsController extends Controller
     
         return response()->json(['message' => 'Image deleted successfully'], 200);
     }
+    /**
+ * Remove all images associated with a specific article.
+ *
+ * @param  int  $article_id
+ * @return \Illuminate\Http\Response
+ */
+public function destroyByArticle($article_id)
+{
+    // Récupérer toutes les images liées à l'article
+    $images = illustrations::where('article_id', $article_id)->get();
+
+    // Vérifier si des images existent pour l'article
+    if ($images->isEmpty()) {
+        return response()->json(['message' => 'No images found for the specified article'], 404);
+    }
+
+    // Supprimer chaque image du stockage et de la base de données
+    foreach ($images as $image) {
+        // Supprimer l'image du stockage
+        Storage::disk('public')->delete($image->image);
+
+        // Supprimer l'enregistrement de la base de données
+        $image->delete();
+    }
+
+    return response()->json(['message' => 'All images for the article deleted successfully'], 200);
+}
+
 }

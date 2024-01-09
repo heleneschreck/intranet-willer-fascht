@@ -87,6 +87,12 @@ export default {
 };
 </script>
 <template>
+  <router-link :to="`/accueilintra`">
+    <button class="button rounded-lg retourcompterendu">Retour</button>
+  </router-link>
+  <router-link :to="`/mesarticles`">
+    <button class="button rounded-lg retourcompterendu">Mes articles</button>
+  </router-link>
   <h1>Ajouter des photos à notre publication :</h1>
   <div class="ajoutdepartenaire" @mouseover="not_display()">
     <div class="flex items-center justify-center w-full">

@@ -52,6 +52,7 @@ Route::apiResource("partenaires", PartenairesController::class);
 Route::apiResource("articles", ArticlesController::class);
 Route::get('/articles/user/{user_id}', [ArticlesController::class, 'getArticlesByUser']);
 Route::apiResource("illustrations", IllustrationsController::class);
+Route::delete('/illustrations/article/{article_id}', [IllustrationsController::class, 'destroyByArticle']);
 Route::get('/illustrations/article/{article_id}', [IllustrationsController::class, 'getIllustrationByArticle']);
 Route::apiResource("candidats", CandidatsController::class);
 Route::get('/candidats/see/{vu}', [CandidatsController::class, 'getCandidatsBySee']);
