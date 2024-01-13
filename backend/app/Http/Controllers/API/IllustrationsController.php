@@ -58,11 +58,16 @@ class IllustrationsController extends Controller
     
             return response($data, Response::HTTP_CREATED);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            dd($e); // Ajoutez cette ligne pour afficher les détails de l'exception
+            // Code existant...
+        
             return response()->json([
                 'error' => 'Validation failed',
                 'errors' => $e->validator->errors(),
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (\Exception $e) {
+            // Ajoutez cette partie pour afficher des détails sur l'exception
+            report($e);
+            return response()->json(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         
     }
