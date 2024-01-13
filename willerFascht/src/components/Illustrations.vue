@@ -11,63 +11,79 @@ export default {
       fileData: "",
       fileValidate: "",
       illustrations: [],
-   
     };
   },
   computed: {
     ...mapState(["userInfos"]),
   },
   async created() {
-
     this.user = JSON.parse(localStorage.getItem("user") || "[]");
 
-    let fetched_illustrations = await fetch("http://127.0.0.1:8000/api/illustrations");
+    let fetched_illustrations = await fetch(
+      "http://127.0.0.1:8000/api/illustrations"
+    );
     this.illustrations = await fetched_illustrations.json();
     console.table(this.illustrations);
-
-
-    
   },
   methods: {
     onFileSelected(event) {
-      // Récupérer le fichier sélectionné par l'utilisateur
-      const selectedFile = event.target.files[0];
+    // Récupérer le fichier sélectionné par l'utilisateur
+    const selectedFile = event.target.files[0];
 
-      // Mettre à jour les données ou faire ce que vous voulez avec le fichier
-      // par exemple, vous pouvez l'assigner à une variable du modèle
-      this.fileData = selectedFile;
-      this.fileValidate = "Image téléchargée";
-      return this.fileValidate;
-    },
+    // Vérifier si un fichier a été sélectionné
+    if (!selectedFile) {
+      this.fileValidate = "Aucun fichier sélectionné";
+      return;
+    }
 
-    add_support: function () {
-      console.log(this.fileData);
+    // Vérifier l'extension du fichier
+    const allowedExtensions = ['.jpg', '.jpeg', '.png'];
+    const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
 
-      var myHeaders = new Headers();
-      myHeaders.append("Accept", "application/json");
+    if (!allowedExtensions.includes(`.${fileExtension}`)) {
+      this.fileValidate = "Extension de fichier non autorisée";
+      return;
+    }
 
-      var formdata = new FormData();
-      formdata.append("image", this.fileData); // Utilisez directement "selectedFile" ici
+    // Vérifier la taille du fichier
+    const maxSizeInBytes = 7000000; // 7 Mo
+    if (selectedFile.size > maxSizeInBytes) {
+      this.fileValidate = "Fichier trop volumineux. La taille maximale autorisée est 7 Mo";
+      return;
+    }
 
-      formdata.append("article_id", this.$route.params.id);
-      var requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: formdata,
-        redirect: "follow",
-      };
+    // Mettre à jour les données ou faire ce que vous voulez avec le fichier
+    // par exemple, vous pouvez l'assigner à une variable du modèle
+    this.fileData = selectedFile;
+    this.fileValidate = "Image téléchargée";
+  },
 
-      fetch("http://localhost:8000/api/illustrations", requestOptions)
-        .then((response) => response.text())
-        .then((result) => {
-            console.log(result)
-            this.chargerIllustrations();
-        })
-        .catch((error) => console.log("error", error));
-    //   setTimeout(() => {
-    //     this.$router.go(this.$router.currentRoute);
-    //   }, "2000");
-    },
+  add_support: function () {
+  console.log(this.fileData);
+
+  var myHeaders = new Headers();
+  myHeaders.append("Accept", "application/json");
+
+  var formdata = new FormData();
+  formdata.append("image", this.fileData); // Utilisez directement "selectedFile" ici
+
+  formdata.append("article_id", this.$route.params.id);
+  var requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: formdata,
+    redirect: "follow",
+  };
+
+  fetch("http://localhost:8000/api/illustrations", requestOptions)
+    .then((response) => response.text())
+    .then((result) => {
+      console.log(result); // Affichez la réponse côté serveur
+      this.chargerIllustrations();
+    })
+    .catch((error) => console.log("error", error));
+},
+
 
     chargerIllustrations() {
       fetch("http://localhost:8000/api/illustrations")
@@ -83,6 +99,25 @@ export default {
           )
         );
     },
+    delete_illustration(illustration){
+      var myHeaders = new Headers();
+      myHeaders.append("Accept", "application/json");
+
+      var requestOptions = {
+        method: "DELETE",
+        headers: myHeaders,
+
+        redirect: "follow",
+      };
+      let url = "http://localhost:8000/api/illustrations/" + illustration;
+      fetch(url, requestOptions)
+      .then((response) => response.text())
+        .then((result) => {
+          console.log(result);
+          this.chargerIllustrations();
+        })
+        .catch((error) => console.log("error", error));
+    }
   },
 };
 </script>
@@ -121,9 +156,7 @@ export default {
           <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
             <span class="font-semibold"> Cliquez pour télécharger </span>
           </p>
-          <p class="text-xs text-gray-500 dark:text-gray-400">
-            JPEG, PNG, JPG (MAX. 800x400px)
-          </p>
+         
           {{ fileValidate }}
         </div>
         <input
@@ -157,6 +190,15 @@ export default {
     <div class="illustrationArticle">
       <div v-for="illustration in illustrations" class="listeIllustration">
         <div v-show="illustration.article_id == $route.params.id">
+          <button
+            class="deleteillustration"
+            @click="delete_illustration(illustration.id)"
+          >
+            <img
+              src="https://cdn-icons-png.flaticon.com/128/216/216658.png"
+              alt=""
+            />
+          </button>
           <img v-bind:src="illustration.url" class="illustrationListe" alt="" />
         </div>
       </div>
@@ -199,7 +241,14 @@ export default {
   height: 400px;
   margin-right: 20px;
 }
-.illustrationArticle{
-    display: flex;
+.illustrationArticle {
+  display: flex;
+}
+.deleteillustration {
+  position: absolute;
+  z-index: 1;
+  width: 35px;
+  border: none;
+  background-color: rgba(34, 33, 33, 0.535);
 }
 </style>

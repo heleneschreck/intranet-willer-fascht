@@ -62,6 +62,21 @@ export default {
       // Then specify how you want your dates to be formatted
       return date.format("dddd MMMM D, YYYY");
     },
+
+    chargerTaches() {
+      fetch("http://localhost:8000/api/taches")
+        .then((response) => response.json())
+        .then((data) => {
+          // Mettre à jour les données du composant avec les nouvelles données de l'API
+          this.taches = data;
+        })
+        .catch((error) =>
+          console.error(
+            "Erreur lors du chargement des candidats depuis l'API",
+            error
+          )
+        );
+    },
     deleteTache: function (tache) {
       console.log(tache.id);
       var requestOptions = {
@@ -70,12 +85,12 @@ export default {
       };
       let url = "http://127.0.0.1:8000/api/taches/" + tache.id;
       fetch(url, requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
+      .then((response) => response.text())
+        .then((result) => {
+          console.log(result);
+          this.chargerTaches();
+        })
         .catch((error) => console.log("error", error));
-      setTimeout(() => {
-        this.$router.go(this.$router.currentRoute);
-      }, "2000");
     },
     updateStatut1: function (tache) {
       console.log(tache.status_id - "1");
@@ -92,12 +107,12 @@ export default {
       };
       let url = "http://127.0.0.1:8000/api/taches/" + tache.id;
       fetch(url, requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
+      .then((response) => response.text())
+        .then((result) => {
+          console.log(result);
+          this.chargerTaches();
+        })
         .catch((error) => console.log("error", error));
-      setTimeout(() => {
-        this.$router.go(this.$router.currentRoute);
-      }, "2000");
     },
     updateStatut: function (tache) {
       let increment = tache.status_id;
@@ -119,12 +134,12 @@ export default {
       };
       let url = "http://127.0.0.1:8000/api/taches/" + tache.id;
       fetch(url, requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
+      .then((response) => response.text())
+        .then((result) => {
+          console.log(result);
+          this.chargerTaches();
+        })
         .catch((error) => console.log("error", error));
-      setTimeout(() => {
-        this.$router.go(this.$router.currentRoute);
-      }, "2000");
     },
     onDragStart: function (statut, tache) {
       // Store the data being dragged (e.g., task ID) in the dataTransfer object
@@ -155,12 +170,12 @@ export default {
         redirect: "follow",
       };
       fetch(url, requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
+      .then((response) => response.text())
+        .then((result) => {
+          console.log(result);
+          this.chargerTaches();
+        })
         .catch((error) => console.log("error", error));
-      setTimeout(() => {
-        this.$router.go(this.$router.currentRoute);
-      }, 2000);
     },
 
     display: function () {
@@ -203,7 +218,7 @@ export default {
 </script>
 <template>
   <router-link :to="`/todo`">
-    <button class="button rounded-lg retourtodo">Retour</button>
+    <button class="button rounded-lg Retour">Retour</button>
   </router-link>
 
   <br />
@@ -248,7 +263,7 @@ export default {
             "
             class="rounded-lg shadow termine"
           >
-            >
+            
             <router-link :to="`/tache/${tache.id}`">
               {{ tache.title }}
             </router-link>
@@ -632,6 +647,7 @@ h1 {
 .affichagetache{
   box-shadow: 10px 12px 15px black;
   background-color: white;
+  margin-bottom: 25px !important;
 
 }
 .prenom {

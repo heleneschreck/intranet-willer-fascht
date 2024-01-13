@@ -17,7 +17,6 @@ export default {
       isUserAbsent: false,
       title: "",
       fileData: "",
- 
     };
   },
   computed: {
@@ -136,36 +135,56 @@ export default {
       this.$store.commit("logout");
       this.$router.push("/");
     },
-    displayComments: async function (affiche) {
-      console.log(affiche.id);
 
-      let fetched_comments = await fetch(
-        "http://localhost:8000/api/commentaires/image/" + affiche.id
-      );
-      this.comments = await fetched_comments.json();
-      // console.log(this.comments);
-      // console.table(this.comments.length);
+    chargerAffiche() {
+      fetch("http://localhost:8000/api/image")
+        .then((response) => response.json())
+        .then((data) => {
+          // Mettre à jour les données du composant avec les nouvelles données de l'API
+          this.affiches = data;
+        })
+        .catch((error) =>
+          console.error(
+            "Erreur lors du chargement des candidats depuis l'API",
+            error
+          )
+        );
     },
+
     delete_affiche: function (affiche) {
       console.log(affiche.id);
+
       var myHeaders = new Headers();
       myHeaders.append("Accept", "application/json");
 
       var requestOptions = {
         method: "DELETE",
         headers: myHeaders,
-
         redirect: "follow",
       };
       let url = "http://localhost:8000/api/image/" + affiche.id;
+
       fetch(url, requestOptions)
         .then((response) => response.text())
-        .then((result) => console.log(result))
+        .then((result) => {
+          console.log(result);
+
+          // Mettez à jour les commentaires en filtrant ceux qui ne sont pas liés à l'affiche supprimée
+          this.comments = this.comments.filter(
+            (comment) => comment.image_id !== affiche.id
+          );
+
+          // Supprimez l'affiche du tableau affiches
+          const index = this.affiches.findIndex(
+            (item) => item.id === affiche.id
+          );
+          if (index !== -1) {
+            this.affiches.splice(index, 1);
+          }
+        })
         .catch((error) => console.log("error", error));
-      setTimeout(() => {
-        this.$router.go(this.$router.currentRoute);
-      }, "2000");
     },
+    // ajouter les supports
     onFileSelected(event) {
       // Récupérer le fichier sélectionné par l'utilisateur
       const selectedFile = event.target.files[0];
@@ -174,6 +193,33 @@ export default {
       // par exemple, vous pouvez l'assigner à une variable du modèle
       this.fileData = selectedFile;
     },
+    add_support: function () {
+      console.log(this.user.id);
+      console.log(this.fileData);
+      console.log(this.title);
+      var myHeaders = new Headers();
+      myHeaders.append("Accept", "application/json");
+
+      var formdata = new FormData();
+      formdata.append("image", this.fileData); // Utilisez directement "selectedFile" ici
+      formdata.append("user_id", this.user.id);
+      formdata.append("title", this.title);
+      var requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: formdata,
+        redirect: "follow",
+      };
+      let url = "http://localhost:8000/api/image";
+      fetch(url, requestOptions)
+      .then((response) => response.text())
+        .then((result) => console.log(result))
+        .catch((error) => console.log("error", error));
+      setTimeout(() => {
+        this.$router.go(this.$router.currentRoute);
+      }, "1000");
+},
+    // ajouter les commentaires
     Add_comment: function (affiche) {
       console.log(affiche.id);
       console.log(this.user.id);
@@ -198,43 +244,8 @@ export default {
         this.$router.go(this.$router.currentRoute);
       }, "1000");
     },
-    add_support: function () {
-      console.log(this.user.id);
-      console.log(this.fileData);
-      console.log(this.title);
-      var myHeaders = new Headers();
-      myHeaders.append("Accept", "application/json");
 
-      var formdata = new FormData();
-      formdata.append("image", this.fileData); // Utilisez directement "selectedFile" ici
-      formdata.append("user_id", this.user.id);
-      formdata.append("title", this.title);
-      var requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: formdata,
-        redirect: "follow",
-      };
-
-      fetch("http://localhost:8000/api/image", requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .catch((error) => console.log("error", error));
-      setTimeout(() => {
-        this.$router.go(this.$router.currentRoute);
-      }, "2000");
-    },
-    display_prenomlike: function () {
-      this.mode = "displayPrenom";
-    },
-    display_deleteComment: function () {
-      this.mode = "display";
-    },
-
-    not_display: function () {
-      this.mode = "notdisplay";
-    },
-
+    // Supprimer les commentaire
     delete_commentaire: function (comment) {
       var myHeaders = new Headers();
       myHeaders.append("Accept", "application/json");
@@ -254,6 +265,29 @@ export default {
         this.$router.go(this.$router.currentRoute);
       }, "2000");
     },
+    // Voir les commentaires
+    displayComments: async function (affiche) {
+      console.log(affiche.id);
+
+      let fetched_comments = await fetch(
+        "http://localhost:8000/api/commentaires/image/" + affiche.id
+      );
+      this.comments = await fetched_comments.json();
+      // console.log(this.comments);
+      // console.table(this.comments.length);
+    },
+
+    display_prenomlike: function () {
+      this.mode = "displayPrenom";
+    },
+    display_deleteComment: function () {
+      this.mode = "display";
+    },
+
+    not_display: function () {
+      this.mode = "notdisplay";
+    },
+
     create_like: function (affiche) {
       var urlencoded = new URLSearchParams();
       urlencoded.append("user_id", this.user.id);
@@ -468,10 +502,7 @@ export default {
 h1 {
   background-color: white;
 }
-.affiches {
-  /* padding-top: 8% !important; */
-  background-color: hsla(0, 0%, 84%, 0.3);
-}
+
 .inputtitle {
   margin-bottom: 13px;
 }
@@ -499,7 +530,7 @@ h1 {
 
   margin-top: 45px;
   margin-bottom: 45px;
-  margin-left: 10px;
+  margin-left: 60px;
   margin-right: 10px;
   flex-wrap: wrap;
   position: relative;
@@ -515,9 +546,15 @@ h1 {
 }
 .addaffiche {
   margin-left: 30px;
+  background-color: green;
+  color: white;
+  font-weight: bold;
+
 }
 .ajoutdaffiche {
   margin-left: 24%;
+  
+
 }
 .corbeille {
   width: 25px;
@@ -527,9 +564,7 @@ h1 {
   left: 370px;
   top: 60px;
   background-color: hsla(0, 0%, 84%, 0.3);
-  /* height: 31px; */
   border-radius: 5px;
-  /* align-content: center; */
   padding: 1px;
 }
 .deleteaffiche {

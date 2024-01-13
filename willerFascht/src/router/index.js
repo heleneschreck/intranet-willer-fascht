@@ -18,7 +18,7 @@ import CompteRenduView from '../views/CompteRenduView.vue'
 import DetailView from '../views/DetailView.vue'
 import AddCompteRenduView from '../views/AddCompteRenduView.vue'
 import TodoView from '../views/TodoView.vue'
-import CreateprojectView from '../views/CreateprojectView.vue'
+
 import ProjetView from '../views/ProjetView.vue'
 import AjoutTacheView from '../views/AjoutTacheView.vue'
 import TacheView from '../views/TacheView.vue'
@@ -142,11 +142,7 @@ const router = createRouter({
       name: 'tache',
       component: TacheView
     },
-    {
-      path: '/createproject',
-      name: 'createproject',
-      component: CreateprojectView
-    },
+
     {
       path: '/navbars',
       name: 'navbars',

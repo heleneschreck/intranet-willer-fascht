@@ -9,6 +9,7 @@ export default {
 
       user: [],
       projects: [],
+      CreateProjectOpen:false
     };
   },
   computed: {
@@ -39,6 +40,43 @@ export default {
       this.$store.commit("logout");
       this.$router.push("/");
     },
+    chargerProjets() {
+      fetch("http://localhost:8000/api/project")
+        .then((response) => response.json())
+        .then((data) => {
+          // Mettre à jour les données du composant avec les nouvelles données de l'API
+          this.projects = data;
+        })
+        .catch((error) =>
+          console.error(
+            "Erreur lors du chargement des candidats depuis l'API",
+            error
+          )
+        );
+    },
+    createProject: function () {
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("title", this.title);
+      urlencoded.append("end", this.end);
+      urlencoded.append("user.id", this.user.id)
+    
+      var requestOptions = {
+        method: "POST",
+        body: urlencoded,
+        redirect: "follow",
+       
+      };
+let url= "http://127.0.0.1:8000/api/project/"
+      fetch(
+        url, requestOptions
+      )
+      .then((response) => response.text())
+        .then((result) => {
+          console.log(result);
+          this.chargerProjets();
+        })
+        .catch((error) => console.log("error", error));
+    },
     deleteProject: function (project) {
       console.log(project.id);
       var requestOptions = {
@@ -47,13 +85,19 @@ export default {
       };
       let url = "http://127.0.0.1:8000/api/project/" + project.id;
       fetch(url, requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
+      .then((response) => response.text())
+        .then((result) => {
+          console.log(result);
+          this.chargerProjets();
+        })
         .catch((error) => console.log("error", error));
-      setTimeout(() => {
-        this.$router.go(this.$router.currentRoute);
-      }, "2000");
     },
+    OpenProject: function(){
+      this.CreateProjectOpen = true;
+    },
+    sortir: function(){
+      this.CreateProjectOpen = false;
+    }
   },
 };
 </script>
@@ -74,8 +118,8 @@ export default {
                   d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
                 />
 
-                <router-link :to="`createproject`">
-                  <span class="ajoutproject">
+                <!-- <router-link :to="`createproject`"> -->
+                  <span class="ajoutproject" @click="OpenProject()">
                     <img
                       src="https://cdn-icons-png.flaticon.com/512/3803/3803910.png"
                       alt="logoAjouter"
@@ -83,7 +127,7 @@ export default {
                     />
                     créer un projet</span
                   >
-                </router-link>
+                <!-- </router-link> -->
               </a>
               <hr />
             </li>
@@ -111,7 +155,7 @@ export default {
         </div>
       </div>
     </div>
-    <div class="projets">
+    <div class="projets"  :class="{ blurred: CreateProjectOpen }">
       <div
         class="container mx-auto mt-5 listeproject"
         v-for="project in projects"
@@ -128,6 +172,38 @@ export default {
         </router-link>
       </div>
     </div>
+
+    <div class="container mx-auto mt-12" style="left:515px;top: 150px; position: absolute;" v-if="CreateProjectOpen == true">
+      <img
+      src="https://cdn-icons-png.flaticon.com/128/45/45320.png"
+      class="croixSortir"
+      style="width: 15px; position: absolute; left: 30%;top:10px; z-index: 1"
+      @click="sortir()"
+      alt=""
+    />
+
+        <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-3">
+          <div class="w-full px-4 py-5 bg-white rounded-lg shadow">
+            <div class="text-sm font-medium text-gray-500 truncate"></div>
+            <label for="title">Nom du projet :</label>
+            <input v-model="title"  type="text" />
+            <br />
+            <br />
+      
+        <label for="end">Fin:</label>
+        <input v-model="end" type="datetime-local" id="end" name="end" />
+        <br/>
+        <br/>
+      
+            <button
+              @click="createProject()"
+              class="button rounded-lg button-disabled createProjectTodo"
+            >
+              Créer le projet
+            </button>
+          </div>
+        </div>
+      </div>
   </div>
 </template>
 <style>
@@ -172,4 +248,15 @@ export default {
 .titleproject {
   margin-bottom: -5px !important;
 }
+.createProjectTodo{
+  margin-left: 35%;
+  background-color: green;
+  color: white;
+  padding: 5px !important;
+}
+.croixSortir:hover{
+  cursor: pointer;
+  width: 20px !important;
+}
+
 </style>

@@ -77,7 +77,7 @@ export default {
 <template>
    
      <router-link :to="`/projet/${this.$route.params.projet}`">
-<button  class="button rounded-lg updateTache">Retour</button>
+<button  class="button rounded-lg Retour">Retour</button>
 </router-link>
   <div class="formulaire">
     <h1>Modification</h1>
@@ -101,11 +101,12 @@ export default {
   </div>
 </template>
 <style>
-.updatetache {
-  /* margin-top: 8% !important; */
-  margin-left: 1%;
-}
+
 .updateTache {
-  margin-top: 3% !important;
+  background-color: green;
+  color: white;
+  font-weight: bold;
+  padding: 5px !important;
+  margin-bottom: 15px !important;
 }
 </style>

@@ -48,6 +48,20 @@ export default {
       // Then specify how you want your dates to be formatted
       return date.format("dddd MMMM D, YYYY");
     },
+    chargersousTaches() {
+      fetch("http://localhost:8000/api/soustaches")
+        .then((response) => response.json())
+        .then((data) => {
+          // Mettre à jour les données du composant avec les nouvelles données de l'API
+          this.soustaches = data;
+        })
+        .catch((error) =>
+          console.error(
+            "Erreur lors du chargement des candidats depuis l'API",
+            error
+          )
+        );
+    },
     deleteTache: function (tache) {
       console.log(tache.id);
       var requestOptions = {
@@ -57,11 +71,11 @@ export default {
       let url = "http://127.0.0.1:8000/api/taches/" + tache.id;
       fetch(url, requestOptions)
         .then((response) => response.text())
-        .then((result) => console.log(result))
+        .then((result) => {
+          console.log(result);
+          this.chargersousTaches();
+        })
         .catch((error) => console.log("error", error));
-      setTimeout(() => {
-        this.$router.go(this.$router.currentRoute);
-      }, "2000");
     },
 
     survol: function (soustache) {
@@ -92,11 +106,11 @@ export default {
       let url = "http://127.0.0.1:8000/api/soustaches";
       fetch(url, requestOptions)
         .then((response) => response.text())
-        .then((result) => console.log(result))
+        .then((result) => {
+          console.log(result);
+          this.chargersousTaches();
+        })
         .catch((error) => console.log("error", error));
-      setTimeout(() => {
-        this.$router.go(this.$router.currentRoute);
-      }, "1000");
     },
     validate: function (soustache) {
       console.log(soustache.id);
@@ -111,11 +125,11 @@ export default {
       let url = "http://127.0.0.1:8000/api/soustaches/" + soustache.id;
       fetch(url, requestOptions)
         .then((response) => response.text())
-        .then((result) => console.log(result))
+        .then((result) => {
+          console.log(result);
+          this.chargersousTaches();
+        })
         .catch((error) => console.log("error", error));
-      setTimeout(() => {
-        this.$router.go(this.$router.currentRoute);
-      }, "1000");
     },
     notvalidate: function (soustache) {
       // console.log(soustache.id);
@@ -130,11 +144,11 @@ export default {
       let url = "http://127.0.0.1:8000/api/soustaches/" + soustache.id;
       fetch(url, requestOptions)
         .then((response) => response.text())
-        .then((result) => console.log(result))
+        .then((result) => {
+          console.log(result);
+          this.chargersousTaches();
+        })
         .catch((error) => console.log("error", error));
-      setTimeout(() => {
-        this.$router.go(this.$router.currentRoute);
-      }, "1000");
     },
     deletesoustache: function (soustache) {
       var requestOptions = {
@@ -157,7 +171,7 @@ export default {
   <div v-for="tache in taches">
     <div v-if="tache.id == $route.params.tache">
       <router-link :to="`/projet/${tache.project_id}`">
-        <button class="button rounded-lg retourtodo">Retour</button>
+        <button class="button rounded-lg Retour">Retour</button>
       </router-link>
     </div>
   </div>
@@ -189,6 +203,7 @@ export default {
               <div class="deletesoustache" v-if="mode == 'display'">
                 <button
                   @click="deletesoustache(soustache)"
+                  style="border: none !important"
                   title="Bon à effacer?"
                 >
                   <img
@@ -211,6 +226,7 @@ export default {
 
               <div v-if="mode == 'display'" class="deletesoustache">
                 <button
+                  style="border: none !important"
                   @click="deletesoustache(soustache)"
                   title="Bon à effacer?"
                 >
@@ -225,7 +241,12 @@ export default {
         </div>
         <div class="validatesoustache" v-if="mode == 'displayinputsoustache'">
           <input type="checkbox" @click="validate()" />
-          <input type="text" v-model="title" class="inputsoustache" />
+          <input
+            type="text"
+            v-model="title"
+            class="inputsoustache"
+            @keyup.enter="validersoustache()"
+          />
           <button class="validersoustache" @click="validersoustache()">
             <img
               src="https://cdn-icons-png.flaticon.com/128/6669/6669498.png"
@@ -263,7 +284,7 @@ export default {
 .tache {
   /* margin-top: 8% !important; */
   margin-left: 1%;
-  background-color:  hsla(0, 0%, 84%, 0.3);
+  /* background-color:  hsla(0, 0%, 84%, 0.3); */
 }
 .tachesdetail {
   border: 1px solid black;
@@ -276,7 +297,6 @@ export default {
   padding-left: 10px;
   padding-right: 10px;
   padding: 5px;
-  
 }
 .soustacheavalider {
   margin-left: 15px;

@@ -292,16 +292,16 @@ nav {
   color: black !important;
 }
 .logonav {
-  margin-left: 0px;
+  margin-left: -70px;
 }
 .listeonglets {
-  padding-left: -40px !important;
+  padding-left: -30px !important;
 }
 
 .ongletaccueil {
-  margin-right: 150px !important;
+  margin-right: 27px !important;
 }
 li {
-  margin-left: 25px !important;
+  margin-left: 24px !important;
 }
 </style>

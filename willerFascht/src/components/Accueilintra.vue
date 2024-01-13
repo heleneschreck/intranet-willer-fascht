@@ -6,6 +6,7 @@ export default {
   data() {
     return {
       mode: false,
+      mode: 'vue3',
       user: [],
       profils: [],
       affiches: [],
@@ -127,14 +128,20 @@ export default {
         this.$router.go(this.$router.currentRoute);
       }, "2000");
     },
+    toogleAside(){
+      console.log('coucou');
+      this.mode =='vue3'
+    }
   },
 };
 </script>
 <template>
-  <aside
-    class="ml-[-100%] fixed z-10 top-0 pb-3 px-6 w-full flex flex-col justify-between h-screen border-r bg-white transition duration-300 md:w-4/12 lg:ml-0 lg:w-[25%] xl:w-[20%] 2xl:w-[15%]"
- style="overflow: scroll;" >
-    <div>
+<aside
+  class="ml-[-100%] fixed z-10 top-0 pb-3 px-6 w-full flex flex-col justify-between h-screen border-r bg-white lg:ml-0 lg:w-[25%] xl:w-[20%] 2xl:w-[15%]"
+  style="overflow: scroll;margin-top: 95px;"
+  >
+  <!-- <img src="https://www.flaticon.com/fr/icone-gratuite/fleche-vers-le-bas-vers-la-gauche_20856" class="fermerAside" alt=""> -->
+  <div>
       <div class="-mx-6 px-6 py-4"></div>
 
       <div class="mt-8 text-center" v-for="profil in profils">
@@ -347,7 +354,7 @@ export default {
         <h5 hidden class="text-3xl text-gray-600 font-medium lg:block">
           Les actualités de l'association
         </h5>
-        <button class="w-12 h-16 -mr-2 border-r lg:hidden">
+        <button class="w-12 h-16 -mr-2 border-r lg:hidden" @click="toogleAside()" >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-6 w-6 my-auto"
@@ -470,13 +477,13 @@ export default {
           >
             <router-link :to="`liste`">
               <h5 class="text-xl text-gray-700 rubrique">
-                Prochains rendez-vous :
+                Prochains rendez-vous:
               </h5>
             </router-link>
             <div class="EvenementTitleAccueilIntra">
               <div v-for="evenement in evenements">
-                <div v-show="moment(evenement.end) > moment()">
-                  <li>
+                <!-- <div > -->
+                  <li v-if="moment(evenement.end) > moment()">
                     <router-link :to="`/rendezvous/${evenement.id}`">
                       {{ evenement.title }} - Du
                       {{
@@ -488,7 +495,7 @@ export default {
                       }}
                     </router-link>
                   </li>
-                </div>
+                <!-- </div> -->
               </div>
             </div>
           </div>
@@ -565,6 +572,12 @@ export default {
   </div>
 </template>
 <style>
+.fermerAside {
+    position: absolute;
+    top: 63px;
+    z-index: 1;
+    LEFT: 243px;
+}
 .nouveauxcandidats{
   position: relative;
   border: 1px solid;

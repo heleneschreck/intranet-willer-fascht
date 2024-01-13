@@ -72,36 +72,39 @@ export default {
 </script>
 <template>
   <router-link :to="`/projet/${this.$route.params.projet}`">
-    <button class="button rounded-lg updateTache">Retour</button>
+    <button class="button rounded-lg  Retour">Retour</button>
   </router-link>
   <div class="formulaire">
     <h1>Tache à ajouter</h1>
 
     <label for="title">Tache :</label>
-    <input v-model="title" class="input" type="text" />
+    <input v-model="title" class="inputTitle" type="text" @keyup.enter="createTache()" />
 
     <label for="end">Date buttoir :</label>
-    <input v-model="end" class="input" type="date" />
+    <input v-model="end" class="inputDate" type="date" @keyup.enter="createTache()"/>
 
     <label for="user_id">Je confie cette tache à :</label>
     <select v-model="user_id" name="user_id" id="user_id">
-      <option v-for="membre in membres" :value="membre.id">
+      <option v-for="membre in membres" :value="membre.id" @keyup.enter="createTache()">
         {{ membre.prenom }}
       </option>
     </select>
     <br />
     <button
       @click="createTache()"
-      class="button rounded-lg button-disabled connexions"
+      class="button rounded-lg button-disabled AjoutTache"
     >
       Ajouter la tache
     </button>
   </div>
 </template>
 <style>
+body {
+  background-color:hsla(0, 0%, 84%, 0.3) !important;
+}
 .ajouttache {
-  /* margin-top: 8% !important; */
-  margin-left: 1%;
+  /* background-color: hsla(0, 0%, 84%, 0.3); */
+ height: 100% !important;
 }
 .formulaire {
   text-align: center;
@@ -109,5 +112,24 @@ export default {
   width: 27%;
   margin-left: 35%;
   border-radius: 10px;
+  background-color: white;
+  box-shadow: 10px 12px 15px black;
+ 
+}
+
+.AjoutTache{
+  background-color: green;
+  color: white;
+  font-weight: bold;
+  padding: 5px !important;
+}
+.Retour{
+  border-radius: 20px;
+  margin-left: 3%;
+  border: 5px solid rgb(9, 59, 125);
+  background-color: rgb(13, 64, 131);
+  color: white;
+  font-weight: bold;
+  /* font-size: 20px; */
 }
 </style>

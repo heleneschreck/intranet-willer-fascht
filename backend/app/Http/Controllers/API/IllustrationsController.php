@@ -41,18 +41,30 @@ class IllustrationsController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:7000',
-            'article_id' => 'required'
-        ]);
-        $image_path = $request->file('image')->store('image', 'public');
-
-        $data = illustrations::create([
-            'image' => $image_path,
-            'article_id' => $request->article_id,
-        ]);
-
-        return response($data, Response::HTTP_CREATED);
+        try {
+            $this->validate($request, [
+                'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:7000',
+                'article_id' => 'required'
+            ]);
+    
+            // Reste du code pour le stockage de l'image
+    
+            $image_path = $request->file('image')->store('image', 'public');
+            $data = illustrations::create([
+                'image' => $image_path,
+                'article_id' => $request->article_id,
+            
+            ]);
+    
+            return response($data, Response::HTTP_CREATED);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            dd($e); // Ajoutez cette ligne pour afficher les détails de l'exception
+            return response()->json([
+                'error' => 'Validation failed',
+                'errors' => $e->validator->errors(),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        
     }
 
     public function getIllustrationByArticle($article_id)
@@ -65,6 +77,25 @@ class IllustrationsController extends Controller
         ];
         return response()->json($illustrationsData);
     }
+    public function getIllustrationByArticleReduits($article_id)
+{
+    $illustrations = illustrations::where('article_id', $article_id)->get();     
+    
+    $imageData = [];
+
+    foreach ($illustrations as $illustration) {
+        $imageUrl = asset('storage/' . $illustration->image);
+        $imageData[] = [
+            'id' => $illustration->id,
+            'url' => $imageUrl,
+            'article_id' => $illustration->article_id,
+            'created_at' => $illustration->created_at
+        ];
+    }
+
+    return response()->json($imageData);
+}
+
 
     /**
      * Display the specified resource.

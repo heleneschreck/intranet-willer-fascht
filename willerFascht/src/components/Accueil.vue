@@ -13,10 +13,19 @@ export default defineComponent({
       partenaires: [],
       souvenirs: [],
       mode: "candidaturevalider",
+      currentPage: 1,
+      articlesPerPage: 5,
+      articles: [],
+      illustrations: [],
     };
   },
   computed: {
     ...mapState(["userInfos"]),
+    paginatedArticles() {
+      const startIndex = (this.currentPage - 1) * this.articlesPerPage;
+      const endIndex = startIndex + this.articlesPerPage;
+      return this.articles.slice(startIndex, endIndex);
+    },
   },
   async beforeMount() {
     this.user = JSON.parse(localStorage.getItem("user") || "[]");
@@ -33,8 +42,32 @@ export default defineComponent({
     let fetched_souvenirs = await fetch("http://localhost:8000/api/souvenirs");
     this.souvenirs = await fetched_souvenirs.json();
     console.table(this.souvenirs);
+
+    let fetched_articles = await fetch(
+      "http://127.0.0.1:8000/api/articles/user/" + this.user.id
+    );
+    this.articles = await fetched_articles.json();
+    console.table(this.articles);
+
+    let fetched_illustrations = await fetch(
+      "http://127.0.0.1:8000/api/illustrations/"
+    );
+    this.illustrations = await fetched_illustrations.json();
+    console.table(this.illustrations);
   },
   methods: {
+    getColor(article) {
+      return article.color;
+    },
+    getSize(article) {
+      return article.size;
+    },
+    getWeight(article) {
+      return article.weight;
+    },
+    getItalique(article) {
+      return article.italique;
+    },
     logout: function () {
       this.$store.commit("logout");
       this.$router.push("/");
@@ -52,11 +85,8 @@ export default defineComponent({
         redirect: "follow",
       };
 
-let url= "http://localhost:8000/api/candidats";
-      fetch(
-       url,
-        requestOptions
-      )
+      let url = "http://localhost:8000/api/candidats";
+      fetch(url, requestOptions)
         .then((response) => response.text())
         .then((result) => console.log(result))
         .catch((error) => console.log("error", error));
@@ -64,6 +94,9 @@ let url= "http://localhost:8000/api/candidats";
       // setTimeout(() => {
       //   this.$router.go(this.$router.currentRoute);
       // }, "2000");
+    },
+    changePage(step) {
+      this.currentPage += step;
     },
     slideTo(val) {
       this.currentSlide = val;
@@ -86,7 +119,6 @@ let url= "http://localhost:8000/api/candidats";
     <div class="container flex flex-wrap items-center justify-between mx-auto">
       <a href="https://flowbite.com/" class="flex items-center">
         <img src="../assets/logo.jpg" class="h-6 sm:h-9" alt="Logo" />
-      
       </a>
       <div class="flex md:order-2">
         <div v-if="mode">
@@ -197,7 +229,51 @@ let url= "http://localhost:8000/api/candidats";
     </div>
     <div class="actualite">
       <h2>Notre actualité :</h2>
+      <div class="postsListes">
+        <div v-for="article in paginatedArticles" :key="article.id">
+          <div class="post">
+            <div class="titlePostAccueil">
+              {{ article.title }}
+            </div>
+            <div class="imagePostAccueil">
+              <div v-for="illustration in illustrations">
+                <div v-if="illustration.article_id == article.id">
+                  <img
+                    v-bind:src="illustration.url"
+                    class="illustrationPostAccueil"
+                    style="margin-top: 5%"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="contentPostAccueil"
+              :style="{
+                color: getColor(article),
+                'font-size': getSize(article),
+                'font-weight': getWeight(article),
+                'font-style': getItalique(article),
+              }"
+            >
+              {{ article.content }}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+    <div>
+      <div class="boutonschangementsdepages" style="padding-left: 43%; background-color: hsla(0, 0%, 84%, 0.3);">
+        <button @click="changePage(-1)" :disabled="currentPage === 1">
+          Précédent
+        </button>
+        <span>{{ currentPage }}</span>
+        <button @click="changePage(1)" :disabled="currentPage === totalPages">
+          Suivant
+        </button>
+      </div>
+    </div>
+
     <div class="albumPhoto">
       <h2>Album souvenirs :</h2>
 
@@ -295,7 +371,7 @@ let url= "http://localhost:8000/api/candidats";
           type="email"
           placeholder="Email"
         />
-        <button @click="add_inscription()" class="addpartenaire">
+        <button @click="add_inscription()" class="addpartenaire" style="margin-left: 45%;">
           Valider
         </button>
       </div>
@@ -365,13 +441,14 @@ let url= "http://localhost:8000/api/candidats";
 }
 .inputCandidaturenom {
   height: 55px;
-  margin-left: 15%;
+  margin-left: 25%;
   margin-right: 30px;
   margin-bottom: 15px;
   width: 700px;
   border-radius: 15px;
 }
 .inputCandidatureprenom {
+  margin-left: 25%;
   margin-right: 30px;
   height: 55px;
   margin-bottom: 15px;
@@ -379,7 +456,7 @@ let url= "http://localhost:8000/api/candidats";
   border-radius: 15px;
 }
 .inputCandidaturetelephone {
-  margin-left: 15%;
+  margin-left: 25%;
   height: 55px;
   margin-right: 30px;
   margin-bottom: 15px;
@@ -387,13 +464,58 @@ let url= "http://localhost:8000/api/candidats";
   border-radius: 15px;
 }
 .inputCandidatureemail {
+  margin-left: 25%;
   height: 55px;
   margin-right: 30px;
   margin-bottom: 15px;
   width: 700px;
   border-radius: 15px;
 }
+.titlePostAccueil {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.contentPostAccueil {
+  text-align: justify;
+  padding: 3px;
+}
 /* .albumsouvenirs {
   width: 60% !important;
 } */
+
+.postsListes {
+  /* width: 70%; */
+  /* margin-left: 16%; */
+  padding-left: 130px !important;
+  padding-right: 130px !important;
+  background-color: hsla(0, 0%, 84%, 0.3);
+  padding: 10px;
+}
+.imagePostAccueil {
+  display: flex;
+  background-color: hsla(0, 0%, 84%, 0.3);
+}
+.illustrationPostAccueil {
+  /* background-color: white; */
+  padding: 10px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex-wrap: wrap !important;
+  /* margin-left: 15px !important; */
+  width: 450px;
+}
+.post {
+  background-color: white;
+  padding: 5px;
+  display: flex;
+  margin-top: 10px;
+  flex-direction: column;
+  justify-content: space-around;
+  border: 1px solid rgba(164, 158, 158, 0.279);
+  box-shadow: 2px 1px 15px 0px black;
+}
 </style>
