@@ -36,6 +36,22 @@ class ConversationUsersController extends Controller
         ];
         return response()->json($conversationData);
     }
+
+
+    public function getParticipantsByMessages($conversation_id)
+    {
+        $participants = Conversation_Users::where('conversation_id', $conversation_id)
+        ->pluck('users_id')
+        ->toArray();
+
+    return response()->json($participants);
+    }
+
+
+
+
+
+
     /**
      * Get the participants by user_id.
      *

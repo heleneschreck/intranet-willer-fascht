@@ -16,6 +16,8 @@ export default {
       conversationsUser: [],
       generalConversations: [],
       generalConversation: [],
+      particpantsConversation: [],
+      NomembresIds: [],
       conversation_id: null,
     };
   },
@@ -85,19 +87,7 @@ export default {
     }
   },
   methods: {
-    async fetchConversationsForCount(generalConversation) {
-      let fetched_count = await fetch(
-        "http://localhost:8000/api/conversation_users/conversation/" +
-          generalConversation.id
-      );
-      let ConversationsData = await fetched_count.json();
-      console.log(ConversationsData);
-      generalConversation.conversation = {
-        count: ConversationsData.count || 0,
-      };
-      console.log(generalConversation.conversation.count);
-    },
-
+    // fonction delai
     async makeRequestsWithBackoff(requestCount, delay) {
       for (let i = 0; i < requestCount; i++) {
         try {
@@ -110,172 +100,127 @@ export default {
       }
     },
 
-    logout: function () {
-      this.$store.commit("logout");
-      this.$router.push("/");
+
+    async updateConversationCount(conversationId) {
+  const conversation = this.generalConversations.find(
+    (conv) => conv.id === conversationId
+  );
+  if (conversation) {
+    await this.fetchConversationsForCount(conversation);
+  }
+},
+
+    // mettre à jour api destinataire
+    chargerDestinataires() {
+      fetch("http://localhost:8000/api/conversation_users/")
+        .then((response) => response.json())
+        .then((data) => {
+          // Mettre à jour les données du composant avec les nouvelles données de l'API
+          this.destinataires = data;
+        })
+        .catch((error) =>
+          console.error(
+            "Erreur lors du chargement des candidats depuis l'API",
+            error
+          )
+        );
+    },
+    chargerMembres() {
+      fetch("http://localhost:8000/api/users/")
+        .then((response) => response.json())
+        .then((data) => {
+          // Mettre à jour les données du composant avec les nouvelles données de l'API
+          this.membres = data;
+        })
+        .catch((error) =>
+          console.error(
+            "Erreur lors du chargement des candidats depuis l'API",
+            error
+          )
+        );
+    },
+    chargerConversations() {
+      fetch("http://localhost:8000/api/conversations")
+        .then((response) => response.json())
+        .then((data) => {
+          // Mettre à jour les données du composant avec les nouvelles données de l'API
+          this.generalConversations = data;
+        })
+        .catch((error) =>
+          console.error(
+            "Erreur lors du chargement des candidats depuis l'API",
+            error
+          )
+        );
+    },
+    // mettre à jour Conversations
+    chargerConversationsUser() {
+      fetch("http://localhost:8000/api/conversation_users/user/" + this.user.id)
+        .then((response) => response.json())
+        .then((data) => {
+          // Mettre à jour les données du composant avec les nouvelles données de l'API
+          this.conversationsUser = data;
+        })
+        .catch((error) =>
+          console.error(
+            "Erreur lors du chargement des candidats depuis l'API",
+            error
+          )
+        );
+    },
+    chargerDisplayDestinataire() {
+      fetch("http://localhost:8000/api/conversation_users/")
+        .then((response) => response.json())
+        .then((data) => {
+          // Mettre à jour les données du composant avec les nouvelles données de l'API
+          this.destinataires = data;
+        })
+        .catch((error) =>
+          console.error(
+            "Erreur lors du chargement des candidats depuis l'API",
+            error
+          )
+        );
     },
 
-    // Afficher la conversation selectionné
-    display_Messages: async function (conversation) {
-      // console.log(conversation.user_id);
-      this.mode = "conversations";
-
-      // destinataires
-      let fetched_membresConversation = await fetch(
-        "http://localhost:8000/api/conversation_users/conversation/" +
-          conversation.id
-      );
-      this.membresConversation = await fetched_membresConversation.json();
-
-      let fetched_messages = await fetch(
-        "http://localhost:8000/api/messages/conversation/" + conversation.id
-      );
-      this.messages = await fetched_messages.json();
-
-      this.conversation_id = conversation;
-      return this.conversation_id;
-    },
-
-    // Sortir de la conversation
-    sortir_Conversation: function (conversationUser) {
-      // console.log(conversationUser.conversation_id);
-      // console.log(this.user.id);
-      var requestOptions = {
-        method: "DELETE",
-        redirect: "follow",
-      };
-
-      fetch(
-        "http://localhost:8000/api/conversation_users/" +
-          this.user.id +
-          "/" +
-          conversationUser.conversation_id,
-        requestOptions
-      )
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .catch((error) => console.log("error", error));
-      setTimeout(() => {
-        this.$router.go(this.$router.currentRoute);
-      }, "2000");
-    },
-
-    // Supprimer les destinataire de la conversation
-    delete_destinataire: function (membreConversation) {
-      var requestOptions = {
-        method: "DELETE",
-        redirect: "follow",
-      };
-      let url =
-        "http://localhost:8000/api/conversation_users/" + membreConversation.id;
-      fetch(url, requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .catch((error) => console.log("error", error));
-      setTimeout(() => {
-        this.$router.go(this.$router.currentRoute);
-      }, "2000");
-    },
-    deletemessage: function (message) {
-      var requestOptions = {
-        method: "DELETE",
-        redirect: "follow",
-      };
-      let url = "http://localhost:8000/api/messages/" + message.id;
-      fetch(url, requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .catch((error) => console.log("error", error));
-      setTimeout(() => {
-        this.$router.go(this.$router.currentRoute);
-      }, "2000");
-    },
-
-    // changer lu
-    Lu: async function (message) {
-      function delay(ms) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-      }
+    chargerDisplayMessages(conversation_id) {
       console.log(this.conversation_id.id);
-      console.log(message);
-
-      // destinataires
-      let fetched_membresConversation = await fetch(
+      fetch(
         "http://localhost:8000/api/conversation_users/conversation/" +
           this.conversation_id.id
-      );
-      this.IdmembresConversation = await fetched_membresConversation.json();
-      // console.log(this.IdmembresConversation.conversation);
-      this.reponse = this.IdmembresConversation.conversation;
-      console.table(this.reponse);
-      function delay(ms) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-      }
-      for (let i = 0; i < this.reponse.length; i++) {
-        this.reponses = this.reponse[i];
-        console.log(this.reponses.users_id);
-
-        this.touslemondealu = this.reponses.users_id;
-        console.log(this.touslemondealu);
-
-      }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          // Mettre à jour les données du composant avec les nouvelles données de l'API
+          this.membresConversation = data;
+          this.mode = "conversations";
+        })
+        .catch((error) =>
+          console.error(
+            "Erreur lors du chargement des candidats depuis l'API",
+            error
+          )
+        );
     },
 
-    // Ecrire dans la conversation
-    ajoutMessage: function () {
-      var urlencoded = new URLSearchParams();
-      urlencoded.append("user_id", this.user.id);
-      urlencoded.append("conversation_id", this.conversation_id.id);
-      urlencoded.append("message", this.content);
-      urlencoded.append("Lu", "0");
-      var requestOptions = {
-        method: "POST",
-        body: urlencoded,
-        redirect: "follow",
-      };
-      let url = "http://localhost:8000/api/messages";
-      fetch(url, requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .catch((error) => console.log("error", error));
-      setTimeout(() => {
-        this.$router.go(this.$router.currentRoute);
-      }, "2000");
+    chargerMessages(conversation_id) {
+      console.log(conversation_id);
+      fetch(
+        "http://localhost:8000/api/messages/conversation/" + conversation_id
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          // Mettre à jour les données du composant avec les nouvelles données de l'API
+          this.messages = data;
+        })
+        .catch((error) =>
+          console.error(
+            "Erreur lors du chargement des candidats depuis l'API",
+            error
+          )
+        );
     },
 
-    // Ajouter des participants à la conversation
-    AjoutDestinataire: function () {
-      var urlencoded = new URLSearchParams();
-      urlencoded.append("users_id", this.users_id);
-      urlencoded.append("conversation_id", this.conversation_id.id);
-
-      var requestOptions = {
-        method: "POST",
-        body: urlencoded,
-        redirect: "follow",
-      };
-      let url = "http://localhost:8000/api/conversation_users";
-      fetch(url, requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .catch((error) => console.log("error", error));
-      setTimeout(() => {
-        this.$router.go(this.$router.currentRoute);
-      }, "2000");
-    },
-    // Afficher
-    survol: function () {
-      this.mode = "display_delete";
-    },
-    survolprenom: function () {
-      this.mode = "display_deletedestinataire";
-    },
-    annuleoptions: function () {
-      this.mode = "conversations";
-    },
-    display_ajoutDestinataires: function () {
-      this.mode = "ajoutdestinataire";
-    },
     ajouterconversation: async function () {
       const urlencoded = new URLSearchParams();
       urlencoded.append("user_id", this.user.id);
@@ -319,12 +264,231 @@ export default {
       };
       let url2 = "http://localhost:8000/api/conversation_users";
       fetch(url2, requestOptions2)
-        .then((response2) => response2.text())
-        .then((result2) => console.log(result2))
+        .then((response) => response.text())
+        .then((result) => {
+          console.log(result);
+          this.updateConversationCount(this.result.id);
+          this.chargerConversationsUser();
+          this.chargerDisplayDestinataire();
+          this.chargerDestinataires();
+          this.chargerMembres()
+        })
+        .catch((error) => console.log("error", error));
+    },
+    // Afficher la conversation selectionné
+    display_Messages: async function (conversation) {
+      // console.log(conversation.user_id);
+      this.mode = "conversations";
+
+      // destinataires
+      let fetched_membresConversation = await fetch(
+        "http://localhost:8000/api/conversation_users/conversation/" +
+          conversation.id
+      );
+      this.membresConversation = await fetched_membresConversation.json();
+
+      let fetched_participantsConversation = await fetch(
+        "http://localhost:8000/api/conversation_users/participants/" +
+          conversation.id
+      );
+      this.particpantsConversation =
+        await fetched_participantsConversation.json();
+
+      console.log(this.particpantsConversation);
+      console.log(this.membres);
+
+      // Convertir les chaînes d'identifiants en nombres
+      const participantsIds = this.particpantsConversation.map((participant) =>
+        parseInt(participant)
+      );
+
+      // Filtrer les membres en excluant ceux qui sont déjà participants
+      const membresNonParticipants = this.membres.filter(
+        (membre) => !participantsIds.includes(membre.id)
+      );
+
+      // Créer un tableau d'objets à partir des membres restants
+      const membresObjets = membresNonParticipants.map((membre) => ({
+        id: membre.id,
+        prenom: membre.prenom,
+        // ... (autres propriétés que vous souhaitez inclure)
+      }));
+
+      this.NomembresIds = membresObjets;
+      console.log(this.NomembresIds);
+
+      let fetched_messages = await fetch(
+        "http://localhost:8000/api/messages/conversation/" + conversation.id
+      );
+      this.messages = await fetched_messages.json();
+
+      this.conversation_id = conversation;
+      return this.conversation_id;
+    },
+
+    // Ajouter des participants à la conversation
+    AjoutDestinataire: function () {
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("users_id", this.users_id);
+      urlencoded.append("conversation_id", this.conversation_id.id);
+
+      var requestOptions = {
+        method: "POST",
+        body: urlencoded,
+        redirect: "follow",
+      };
+      let url = "http://localhost:8000/api/conversation_users";
+      fetch(url, requestOptions)
+        .then((response) => response.text())
+        .then((result) => {
+          console.log(result);
+          this.chargerDisplayDestinataire();
+          this.chargerDestinataires();
+          this.chargerConversationsUser();
+          this.updateConversationCount(this.conversation_id.id);
+          this.chargerDisplayMessages(this.conversation_id);
+        })
+        .catch((error) => console.log("error", error));
+    },
+    logout: function () {
+      this.$store.commit("logout");
+      this.$router.push("/");
+    },
+    async fetchConversationsForCount(generalConversation) {
+      let fetched_count = await fetch(
+        "http://localhost:8000/api/conversation_users/conversation/" +
+          generalConversation.id
+      );
+      let ConversationsData = await fetched_count.json();
+      console.log(ConversationsData);
+      generalConversation.conversation = {
+        count: ConversationsData.count || 0,
+      };
+      console.log(generalConversation.conversation.count);
+    },
+
+    // Sortir de la conversation
+    sortir_Conversation: function (conversationUser) {
+      // console.log(conversationUser.conversation_id);
+      // console.log(this.user.id);
+      var requestOptions = {
+        method: "DELETE",
+        redirect: "follow",
+      };
+
+      fetch(
+        "http://localhost:8000/api/conversation_users/" +
+          this.user.id +
+          "/" +
+          conversationUser.conversation_id,
+        requestOptions
+      )
+        .then((response) => response.text())
+        .then((result) => console.log(result))
         .catch((error) => console.log("error", error));
       setTimeout(() => {
         this.$router.go(this.$router.currentRoute);
       }, "2000");
+    },
+
+    // Supprimer les destinataire de la conversation
+    delete_destinataire: function (membreConversation) {
+      var requestOptions = {
+        method: "DELETE",
+        redirect: "follow",
+      };
+      let url =
+        "http://localhost:8000/api/conversation_users/" + membreConversation.id;
+      fetch(url, requestOptions)
+        .then((response) => response.text())
+        .then((result) => {
+          console.log(result);
+          this.chargerDisplayDestinataire();
+          this.chargerDestinataires();
+          this.chargerConversationsUser();
+          this.chargerDisplayMessages(this.conversation_id);
+        })
+        .catch((error) => console.log("error", error));
+    },
+    deletemessage: function (message) {
+      var requestOptions = {
+        method: "DELETE",
+        redirect: "follow",
+      };
+      let url = "http://localhost:8000/api/messages/" + message.id;
+      fetch(url, requestOptions)
+        .then((response) => response.text())
+        .then((result) => {
+          console.log(result);
+          this.chargerMessages(this.conversation_id.id);
+        })
+        .catch((error) => console.log("error", error));
+    },
+
+    // changer lu
+    Lu: async function (message) {
+      function delay(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+      console.log(this.conversation_id.id);
+      console.log(message);
+
+      // destinataires
+      let fetched_membresConversation = await fetch(
+        "http://localhost:8000/api/conversation_users/conversation/" +
+          this.conversation_id.id
+      );
+      this.IdmembresConversation = await fetched_membresConversation.json();
+      // console.log(this.IdmembresConversation.conversation);
+      this.reponse = this.IdmembresConversation.conversation;
+      console.table(this.reponse);
+      function delay(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+      for (let i = 0; i < this.reponse.length; i++) {
+        this.reponses = this.reponse[i];
+        console.log(this.reponses.users_id);
+
+        this.touslemondealu = this.reponses.users_id;
+        console.log(this.touslemondealu);
+      }
+    },
+
+    // Ecrire dans la conversation
+    ajoutMessage: function () {
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("user_id", this.user.id);
+      urlencoded.append("conversation_id", this.conversation_id.id);
+      urlencoded.append("message", this.content);
+      urlencoded.append("Lu", "0");
+      var requestOptions = {
+        method: "POST",
+        body: urlencoded,
+        redirect: "follow",
+      };
+      let url = "http://localhost:8000/api/messages";
+      fetch(url, requestOptions)
+        .then((response) => response.text())
+        .then((result) => {
+          console.log(result);
+          this.chargerMessages(this.conversation_id.id);
+          this.content = "";
+        })
+        .catch((error) => console.log("error", error));
+    },
+
+    // Afficher
+    survol: function () {
+      this.mode = "display_delete";
+    },
+    survolprenom: function () {
+      this.mode = "display_deletedestinataire";
+    },
+    annuleoptions: function () {
+      this.mode = "conversations";
+    },
+    display_ajoutDestinataires: function () {
+      this.mode = "ajoutdestinataire";
     },
   },
 };
@@ -446,7 +610,11 @@ export default {
         >
           <option disabled>Ajouter un membre à la conversation</option>
 
-          <option v-for="membre in membres" :key="membre.id" :value="membre.id">
+          <option
+            v-for="membre in NomembresIds"
+            :key="membre.id"
+            :value="membre.id"
+          >
             {{ membre.prenom }}
           </option>
         </select>
@@ -526,7 +694,11 @@ export default {
         "
       >
         <textarea v-model="content" class="inputmessages" />
-        <div class="imageajoutmessage" @click="ajoutMessage()">
+        <div
+          class="imageajoutmessage"
+          @keydown.enter.prevent="ajoutMessage()"
+          @click="ajoutMessage()"
+        >
           <img
             src="https://cdn-icons-png.flaticon.com/128/2161/2161491.png"
             class="addmessage"

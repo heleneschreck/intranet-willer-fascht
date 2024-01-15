@@ -45,6 +45,7 @@ Route::get('/conversations/user/{user_id}', [ConversationController::class, 'get
 
 Route::apiResource("conversation_users", ConversationUsersController::class); // Les routes "convers
 Route::get('/conversation_users/conversation/{conversation_id}', [ConversationUsersController::class, 'getMessagesByConversations']);
+Route::get('/conversation_users/participants/{conversation_id}', [ConversationUsersController::class, 'getParticipantsByMessages']);
 Route::get('/conversation_users/user/{users_id}', [ConversationUsersController::class, 'getMessagesByUser']);
 Route::delete('/conversation_users/{user_id}/{conversation_id}', [ConversationUsersController::class, 'destroyByUserAndConversation']);
 
