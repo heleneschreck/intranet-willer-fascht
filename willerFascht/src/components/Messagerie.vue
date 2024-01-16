@@ -18,6 +18,7 @@ export default {
       generalConversation: [],
       particpantsConversation: [],
       NomembresIds: [],
+      lus: [],
       conversation_id: null,
     };
   },
@@ -100,15 +101,14 @@ export default {
       }
     },
 
-
     async updateConversationCount(conversationId) {
-  const conversation = this.generalConversations.find(
-    (conv) => conv.id === conversationId
-  );
-  if (conversation) {
-    await this.fetchConversationsForCount(conversation);
-  }
-},
+      const conversation = this.generalConversations.find(
+        (conv) => conv.id === conversationId
+      );
+      if (conversation) {
+        await this.fetchConversationsForCount(conversation);
+      }
+    },
 
     // mettre à jour api destinataire
     chargerDestinataires() {
@@ -265,20 +265,18 @@ export default {
       let url2 = "http://localhost:8000/api/conversation_users";
       fetch(url2, requestOptions2)
         .then((response) => response.text())
-        .then((result) => {
-          console.log(result);
-          this.updateConversationCount(this.result.id);
-          this.chargerConversationsUser();
-          this.chargerDisplayDestinataire();
-          this.chargerDestinataires();
-          this.chargerMembres()
-        })
+        .then((result) => console.log(result))
         .catch((error) => console.log("error", error));
+      setTimeout(() => {
+        this.$router.go(this.$router.currentRoute);
+      }, "2000");
     },
     // Afficher la conversation selectionné
     display_Messages: async function (conversation) {
       // console.log(conversation.user_id);
       this.mode = "conversations";
+      
+             
 
       // destinataires
       let fetched_membresConversation = await fetch(
@@ -300,34 +298,47 @@ export default {
       // Convertir les chaînes d'identifiants en nombres
       const participantsIds = this.particpantsConversation.map((participant) =>
         parseInt(participant)
-      );
-
-      // Filtrer les membres en excluant ceux qui sont déjà participants
-      const membresNonParticipants = this.membres.filter(
-        (membre) => !participantsIds.includes(membre.id)
-      );
-
-      // Créer un tableau d'objets à partir des membres restants
-      const membresObjets = membresNonParticipants.map((membre) => ({
-        id: membre.id,
-        prenom: membre.prenom,
-        // ... (autres propriétés que vous souhaitez inclure)
-      }));
-
-      this.NomembresIds = membresObjets;
-      console.log(this.NomembresIds);
+    
+        
+        );
+        
+        // Filtrer les membres en excluant ceux qui sont déjà participants
+        const membresNonParticipants = this.membres.filter(
+          (membre) => !participantsIds.includes(membre.id)
+          );
+          
+          // Créer un tableau d'objets à partir des membres restants
+          const membresObjets = membresNonParticipants.map((membre) => ({
+            id: membre.id,
+            prenom: membre.prenom,
+            // ... (autres propriétés que vous souhaitez inclure)
+          }));
+          
+          this.NomembresIds = membresObjets;
+          console.log(this.NomembresIds);
 
       let fetched_messages = await fetch(
         "http://localhost:8000/api/messages/conversation/" + conversation.id
       );
-      this.messages = await fetched_messages.json();
+      let messages = await fetched_messages.json();
+      messages = messages.sort(
+        (a, b) =>  b.created_at.localeCompare(a.created_at)
+        );
+        this.messages = messages.reverse(); // Reverse the array to display the oldest messages first
+        
+        this.conversation_id = conversation;
 
-      this.conversation_id = conversation;
-      return this.conversation_id;
-    },
 
-    // Ajouter des participants à la conversation
-    AjoutDestinataire: function () {
+
+        let fetched_Lu = await fetch("http://localhost:8000/api/lu")
+              this.lus = await fetched_Lu.json();
+              console.log(this.lus);
+        return this.conversation_id;
+
+      },
+      
+      // Ajouter des participants à la conversation
+      AjoutDestinataire: function () {
       var urlencoded = new URLSearchParams();
       urlencoded.append("users_id", this.users_id);
       urlencoded.append("conversation_id", this.conversation_id.id);
@@ -384,11 +395,15 @@ export default {
         requestOptions
       )
         .then((response) => response.text())
-        .then((result) => console.log(result))
+        .then((result) => {
+          console.log(result);
+          this.chargerDisplayDestinataire();
+          this.chargerDestinataires();
+          this.chargerConversationsUser();
+          this.updateConversationCount(this.conversation_id.id);
+          this.chargerDisplayMessages(this.conversation_id);
+        })
         .catch((error) => console.log("error", error));
-      setTimeout(() => {
-        this.$router.go(this.$router.currentRoute);
-      }, "2000");
     },
 
     // Supprimer les destinataire de la conversation
@@ -455,26 +470,72 @@ export default {
     },
 
     // Ecrire dans la conversation
-    ajoutMessage: function () {
+    ajoutMessage: async function () {
+      let fetched_participantsConversation = await fetch(
+        "http://localhost:8000/api/conversation_users/participants/" +
+          this.conversation_id.id
+      );
+      this.participantsConversation =
+        await fetched_participantsConversation.json();
+
+      const participantsArray = Object.values(this.participantsConversation);
+
+      const membresNonLu = participantsArray
+        .filter((participantId) => participantId !== `${this.user.id}`)
+        .map((participantId) => participantId);
+
+      console.log(membresNonLu);
+
       var urlencoded = new URLSearchParams();
       urlencoded.append("user_id", this.user.id);
       urlencoded.append("conversation_id", this.conversation_id.id);
       urlencoded.append("message", this.content);
       urlencoded.append("Lu", "0");
+
       var requestOptions = {
         method: "POST",
         body: urlencoded,
         redirect: "follow",
       };
-      let url = "http://localhost:8000/api/messages";
-      fetch(url, requestOptions)
-        .then((response) => response.text())
-        .then((result) => {
-          console.log(result);
+
+      const url = "http://localhost:8000/api/messages";
+
+      try {
+        const response = await fetch(url, requestOptions);
+        const result = await response.json();
+        if (result.id !== undefined) {
+          this.result = result;
+
+          for (const participantId of membresNonLu) {
+            var participantParams = new URLSearchParams();
+            participantParams.append("participants_id", participantId);
+            participantParams.append("message_id", this.result.id);
+            participantParams.append("conversation_id", this.conversation_id.id);
+            participantParams.append("Lu", "0");
+
+            var participantRequestOptions = {
+              method: "POST",
+              body: participantParams,
+              redirect: "follow",
+            };
+
+            let participantUrl = "http://localhost:8000/api/lu";
+            const participantResponse = await fetch(
+              participantUrl,
+              participantRequestOptions
+            );
+            const participantResult = await participantResponse.json();
+            console.log(participantResult);
+          }
+
           this.chargerMessages(this.conversation_id.id);
           this.content = "";
-        })
-        .catch((error) => console.log("error", error));
+        } else {
+          console.log("Response does not contain an ID.");
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
     },
 
     // Afficher
@@ -651,16 +712,10 @@ export default {
               </button>
             </div>
             <div class="contenu">
-              <div
-                v-if="message.Lu == 0"
-                @mouseover="Lu(message)"
-                style="font-weight: bold; font-size: 19px"
-              >
+              <div>
                 {{ message.message }}
               </div>
-              <div v-else>
-                {{ message.message }}
-              </div>
+             
             </div>
             <div class="datemessage">
               {{ moment(message.created_at).format("DD/MM/YYYY") }}
@@ -675,8 +730,17 @@ export default {
                 </div>
               </div>
             </div>
-            <div class="contenu">
-              {{ message.message }}
+            <div v-for="lu in lus">
+<div v-if="lu.message_id== message.id">
+{{ lu }}
+  <div class="contenu" v-if="lu.Lu == 0" style="font-weight: bold;font-size: 20px;">
+
+    {{ message.message }}
+  </div>
+  <div v-else>
+{{ message.message }}
+  </div>
+              </div>
             </div>
             <div class="datemessage">
               {{ moment(message.created_at).format("DD/MM/YYYY") }}

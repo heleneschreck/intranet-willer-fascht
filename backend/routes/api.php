@@ -23,6 +23,7 @@ use App\Http\Controllers\API\ConversationController;
 use App\Http\Controllers\API\ParticipantsController;
 use App\Http\Controllers\API\ConversationUsersController;
 use App\Http\Controllers\API\IllustrationsController;
+use App\Http\Controllers\API\LusController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,7 @@ use App\Http\Controllers\API\IllustrationsController;
 
 Route::apiResource("users", UserController::class); // Les routes "users.*" de l'API
 Route::apiResource("messages", MessagesController::class); // Les routes "messages
+Route::apiResource("lu", LusController::class); // Les routes "messages
 Route::get('/messages/conversation/{conversation_id}', [MessagesController::class, 'getMessageByConversation']);
 
 

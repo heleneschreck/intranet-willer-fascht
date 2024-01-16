@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('participants_id');
             $table->string('message_id');
+            $table->string('conversation_id');
             $table->boolean('Lu');
             $table->timestamps();
         });

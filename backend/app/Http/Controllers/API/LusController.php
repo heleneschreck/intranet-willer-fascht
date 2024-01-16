@@ -15,7 +15,8 @@ class LusController extends Controller
      */
     public function index()
     {
-        //
+        $lus = lus::all();
+        return response()->json($lus);
     }
 
     /**
@@ -26,7 +27,26 @@ class LusController extends Controller
      */
     public function store(Request $request)
     {
-        //
+          // La validation de données
+          $this->validate($request, [
+            'participants_id' => 'required|max:100',
+            'message_id' => 'required|max:100',
+            'conversation_id' => 'required|max:100',
+            'Lu' => 'required|max:100',
+            
+        ]);
+
+        // On crée un nouvel utilisateur
+        $user = Lus::create([
+            'participants_id' => $request->participants_id,
+            'message_id' => $request->message_id,
+            'conversation_id' => $request->conversation_id,
+            'Lu' => $request->Lu,
+          
+        ]);
+       
+        // On retourne les informations du nouvel utilisateur en JSON
+        return response()->json($user, 201);
     }
 
     /**
@@ -37,7 +57,7 @@ class LusController extends Controller
      */
     public function show(Lus $lus)
     {
-        //
+        return response()->json($lus, 201);
     }
 
     /**
@@ -47,9 +67,12 @@ class LusController extends Controller
      * @param  \App\Models\Lus  $lus
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Lus $lus)
+    public function update(Request $request, $id)
     {
-        //
+        
+        $lus = Lus::find($id);
+        $lus->update($request->all());
+        return $lus;
     }
 
     /**
@@ -58,8 +81,14 @@ class LusController extends Controller
      * @param  \App\Models\Lus  $lus
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Lus $lus)
+    public function destroy($id)
     {
-        //
+        $lus = Lus::findOrFail($id);
+        if ($lus)
+            $lus->delete();
+
+        else
+            return response()->json('error');
+        return response()->json(null);
     }
 }
