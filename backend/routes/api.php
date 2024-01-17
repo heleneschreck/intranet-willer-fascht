@@ -39,6 +39,10 @@ use App\Http\Controllers\API\LusController;
 Route::apiResource("users", UserController::class); // Les routes "users.*" de l'API
 Route::apiResource("messages", MessagesController::class); // Les routes "messages
 Route::apiResource("lu", LusController::class); // Les routes "messages
+Route::get('/lu/{participants_id}/{conversation_id}', [LusController::class, 'getLusByUserAndConversation']);
+Route::get('/lus/count/{participants_id}', [LusController::class, 'getCountByParticipant']);
+Route::put('/lus/update/{participants_id}/{conversation_id}/{Lu}',[LusController::class,'updateByParticipantAndConversation'] );
+
 Route::get('/messages/conversation/{conversation_id}', [MessagesController::class, 'getMessageByConversation']);
 
 

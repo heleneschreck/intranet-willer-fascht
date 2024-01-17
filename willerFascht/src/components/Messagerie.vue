@@ -19,10 +19,12 @@ export default {
       particpantsConversation: [],
       NomembresIds: [],
       lus: [],
+      NBMessageNonlu: [],
       conversation_id: null,
     };
   },
   mounted() {},
+
   computed: {
     ...mapState(["userInfos"]),
   },
@@ -57,6 +59,12 @@ export default {
     );
     this.conversationsUser = await fetched_conversationsUser.json();
     // console.log(this.conversationsUser);
+
+    for (let i = 0; i < this.conversationsUser.length; i++) {
+      const conversationUser = this.conversationsUser[i];
+      //  console.log(conversationUser);
+      await this.fetchLuForCount(conversationUser);
+    }
     function delay(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
@@ -72,10 +80,7 @@ export default {
     }
     for (let i = 0; i < this.generalConversations.length; i++) {
       await this.fetchConversationsForCount(this.generalConversations[i]);
-    }
-
-    function delay(ms) {
-      return new Promise((resolve) => setTimeout(resolve, ms));
+      //  console.log(this.generalConversations[i].id);
     }
 
     let fetched_destinataires = await fetch(
@@ -101,6 +106,31 @@ export default {
       }
     },
 
+    async fetchLuForCount(conversationUser) {
+      let NBMessageNonluURL =
+        "http://localhost:8000/api/lu/" +
+        this.user.id +
+        "/" +
+        conversationUser.conversation_id;
+      // console.log(NBMessageNonluURL);
+      let NBMessageNonlu = await fetch(
+        "http://localhost:8000/api/lu/" +
+          this.user.id +
+          "/" +
+          conversationUser.conversation_id
+      );
+      let NBMessageNonluData = await NBMessageNonlu.json();
+      // console.log(this.NBMessageNonlu.count);
+
+      conversationUser.NBMessageNonlu = {
+        count: NBMessageNonluData.count || 0,
+      };
+    },
+
+    async updateElements(conversationUser) {
+    await this.fetchLuForCount(conversationUser);
+
+  },
     async updateConversationCount(conversationId) {
       const conversation = this.generalConversations.find(
         (conv) => conv.id === conversationId
@@ -184,7 +214,7 @@ export default {
     },
 
     chargerDisplayMessages(conversation_id) {
-      console.log(this.conversation_id.id);
+      // console.log(this.conversation_id.id);
       fetch(
         "http://localhost:8000/api/conversation_users/conversation/" +
           this.conversation_id.id
@@ -204,7 +234,7 @@ export default {
     },
 
     chargerMessages(conversation_id) {
-      console.log(conversation_id);
+      // console.log(conversation_id);
       fetch(
         "http://localhost:8000/api/messages/conversation/" + conversation_id
       )
@@ -219,6 +249,38 @@ export default {
             error
           )
         );
+    },
+    elementsLu (conversation) {
+      var myHeaders = new Headers();
+      myHeaders.append(
+        "Cookie",
+          "XSRF-TOKEN=eyJpdiI6IjY3bkloOE41b2trWDhOc0FwbytJYnc9PSIsInZhbHVlIjoiTGk1Tys0V1QvUUl3NTV1NnlYbzh4VkJVWkNWYUp2aXFQNlFSM3FwbitWK3pxMjlaeHZ0UTN1b21iRUdNaEZXK09LUVZPUStzN05sdmhiaVRmODBRQ0ZqVnhOQWtOMVpsd0xHalNjOFlKMG1IeW1EN1JMVmZlcnloMlE3bWZrWTgiLCJtYWMiOiJjNmM2ZTc5Y2ExY2ZlOGNiMWRhY2I4YTlmNjU2NThkMmUxMWMwMjY1NTJmZjI2NjQwYTEwODBiZjI2YzY2MTUzIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImlRMi9oYU1OOFFsZnNyTGoyVDFEb3c9PSIsInZhbHVlIjoiaXhtNTFiUWlSQ0taRnpIVjd5L2VleUVCUkpOL3VaVFNwVGtrejh0ZTBOOGpLRU11YTNmWnI2b3J6bUpQbWJTY2QxWnk0dFhQamQ5Y1VLVUlJcngxTWI5MDlYQjBPWEVjcEFteWJ2OVhoZ1JOSmRqekVBNThDa3pLUFhPWGdvaCsiLCJtYWMiOiI0MjhmMzc1NjBlMGZhZTJkMDAyODNiOGJkNDgxMDBlMmM0OTZjODY5ZTcyMDc5Yzk1MjRiZmI0YjczYjJhY2E4IiwidGFnIjoiIn0%3D"
+          );
+        var urlencoded = new URLSearchParams();
+      urlencoded.append("Lu", "1")
+      var requestOptions = {
+        method: "PUT",
+        body: urlencoded,
+        redirect: "follow",
+      };
+        fetch(
+          "http://localhost:8000/api/lus/update/"+ this.user.id+ "/" + conversation.id+"/0",
+          requestOptions
+        )
+        .then((response) => response.text())
+        .then((result) => {
+          console.log(result);
+          this.display_Messages(conversation);
+          this.chargerDisplayDestinataire();
+          this.chargerDestinataires();
+          this.chargerConversationsUser();
+          this.updateConversationCount(this.conversation_id.id);
+          this.chargerDisplayMessages(this.conversation_id);
+          this.fetchLuForCount(conversationUser);  
+          this.updateElements(conversationUser)  
+          })
+          .catch((error) => console.log("error", error));
+    
     },
 
     ajouterconversation: async function () {
@@ -275,8 +337,6 @@ export default {
     display_Messages: async function (conversation) {
       // console.log(conversation.user_id);
       this.mode = "conversations";
-      
-             
 
       // destinataires
       let fetched_membresConversation = await fetch(
@@ -292,53 +352,48 @@ export default {
       this.particpantsConversation =
         await fetched_participantsConversation.json();
 
-      console.log(this.particpantsConversation);
-      console.log(this.membres);
+      // console.log(this.particpantsConversation);
+      // console.log(this.membres);
 
       // Convertir les chaînes d'identifiants en nombres
       const participantsIds = this.particpantsConversation.map((participant) =>
         parseInt(participant)
-    
-        
-        );
-        
-        // Filtrer les membres en excluant ceux qui sont déjà participants
-        const membresNonParticipants = this.membres.filter(
-          (membre) => !participantsIds.includes(membre.id)
-          );
-          
-          // Créer un tableau d'objets à partir des membres restants
-          const membresObjets = membresNonParticipants.map((membre) => ({
-            id: membre.id,
-            prenom: membre.prenom,
-            // ... (autres propriétés que vous souhaitez inclure)
-          }));
-          
-          this.NomembresIds = membresObjets;
-          console.log(this.NomembresIds);
+      );
+
+      // Filtrer les membres en excluant ceux qui sont déjà participants
+      const membresNonParticipants = this.membres.filter(
+        (membre) => !participantsIds.includes(membre.id)
+      );
+
+      // Créer un tableau d'objets à partir des membres restants
+      const membresObjets = membresNonParticipants.map((membre) => ({
+        id: membre.id,
+        prenom: membre.prenom,
+        // ... (autres propriétés que vous souhaitez inclure)
+      }));
+
+      this.NomembresIds = membresObjets;
+      // console.log(this.NomembresIds);
 
       let fetched_messages = await fetch(
         "http://localhost:8000/api/messages/conversation/" + conversation.id
       );
       let messages = await fetched_messages.json();
-      messages = messages.sort(
-        (a, b) =>  b.created_at.localeCompare(a.created_at)
-        );
-        this.messages = messages.reverse(); // Reverse the array to display the oldest messages first
-        
-        this.conversation_id = conversation;
+      messages = messages.sort((a, b) =>
+        b.created_at.localeCompare(a.created_at)
+      );
+      this.messages = messages.reverse(); // Reverse the array to display the oldest messages first
 
+      this.conversation_id = conversation;
 
+      let fetched_Lu = await fetch("http://localhost:8000/api/lu");
+      this.lus = await fetched_Lu.json();
+      // console.log(this.lus);
+      return this.conversation_id;
+    },
 
-        let fetched_Lu = await fetch("http://localhost:8000/api/lu")
-              this.lus = await fetched_Lu.json();
-              console.log(this.lus);
-        return this.conversation_id;
-
-      },
-      
-      // Ajouter des participants à la conversation
-      AjoutDestinataire: function () {
+    // Ajouter des participants à la conversation
+    AjoutDestinataire: function () {
       var urlencoded = new URLSearchParams();
       urlencoded.append("users_id", this.users_id);
       urlencoded.append("conversation_id", this.conversation_id.id);
@@ -352,7 +407,7 @@ export default {
       fetch(url, requestOptions)
         .then((response) => response.text())
         .then((result) => {
-          console.log(result);
+          // console.log(result);
           this.chargerDisplayDestinataire();
           this.chargerDestinataires();
           this.chargerConversationsUser();
@@ -371,11 +426,11 @@ export default {
           generalConversation.id
       );
       let ConversationsData = await fetched_count.json();
-      console.log(ConversationsData);
+      // console.log(ConversationsData);
       generalConversation.conversation = {
         count: ConversationsData.count || 0,
       };
-      console.log(generalConversation.conversation.count);
+      // console.log(generalConversation.conversation.count);
     },
 
     // Sortir de la conversation
@@ -510,7 +565,10 @@ export default {
             var participantParams = new URLSearchParams();
             participantParams.append("participants_id", participantId);
             participantParams.append("message_id", this.result.id);
-            participantParams.append("conversation_id", this.conversation_id.id);
+            participantParams.append(
+              "conversation_id",
+              this.conversation_id.id
+            );
             participantParams.append("Lu", "0");
 
             var participantRequestOptions = {
@@ -573,37 +631,66 @@ export default {
       <br />
       <div class="listeConversations">
         <div v-for="conversationUser in conversationsUser" class="conversation">
-          <div v-for="membre in membres" style="display: flex">
-            <div v-for="conversation in generalConversations">
-              <div v-if="conversation.id == conversationUser.conversation_id">
-                <div v-for="destinataire in destinataires">
-                  <div v-if="destinataire.conversation_id == conversation.id">
-                    <div
-                      v-if="
-                        membre.id == destinataire.users_id &&
-                        conversation.conversation.count == 1
-                      "
-                      @click="display_Messages(conversation)"
-                      class="pasdedestinataire"
-                    >
-                      Ajoutez un destinataire à la conversation :
-                    </div>
+          <div
+            style="
+              word-wrap: break-word !important ;
+              display: flex;
+              flex-wrap: wrap;
+              width: 484px;
+            "
+          >
+            <div v-for="membre in membres">
+              <div v-for="conversation in generalConversations">
+                <div v-if="conversation.id == conversationUser.conversation_id">
+                  <div v-for="destinataire in destinataires">
+                    <div v-if="destinataire.conversation_id == conversation.id">
+                      <div
+                        v-if="
+                          membre.id == destinataire.users_id &&
+                          conversation.conversation.count == 1
+                        "
+                       
+                        class="pasdedestinataire"
+                      >
+                        Ajoutez un destinataire à la conversation :
+                      </div>
 
-                    <div
-                      v-else-if="
-                        membre.id == destinataire.users_id &&
-                        destinataire.users_id != user.id
-                      "
-                      @click="display_Messages(conversation)"
-                    >
-                      {{ membre.prenom }},
+                      <div
+                        class="conversationFlex"
+                        v-else-if="
+                          membre.id == destinataire.users_id &&
+                          destinataire.users_id != user.id
+                        "
+                      >
+                      <div v-if="conversationUser.NBMessageNonlu && conversationUser.NBMessageNonlu.count > 0" @click="elementsLu(conversation)" style="font-weight: bold;">
+                          {{ membre.prenom }},
+                          <!-- {{ conversation }} -->
+                        </div>
+                        <div  @click="display_Messages(conversation)" v-else >
+                          {{ membre.prenom }},
+                          <!-- {{ conversation }} -->
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+
+            <span class="nouveauxmessages" v-if="conversationUser.NBMessageNonlu && conversationUser.NBMessageNonlu.count >0">
+              {{ conversationUser.NBMessageNonlu.count }}
+            </span>
           </div>
-          <div class="quitterconversation">
+
+          <div
+            class="quitterconversation"
+            style="
+              position: absolute;
+              left: 90%;
+              border-left: 1px solid;
+              padding-left: 2px;
+            "
+          >
             <img
               src="https://cdn-icons-png.flaticon.com/128/4008/4008990.png"
               class="illustrationQuitterConversation"
@@ -715,7 +802,6 @@ export default {
               <div>
                 {{ message.message }}
               </div>
-             
             </div>
             <div class="datemessage">
               {{ moment(message.created_at).format("DD/MM/YYYY") }}
@@ -731,15 +817,18 @@ export default {
               </div>
             </div>
             <div v-for="lu in lus">
-<div v-if="lu.message_id== message.id">
-{{ lu }}
-  <div class="contenu" v-if="lu.Lu == 0" style="font-weight: bold;font-size: 20px;">
-
-    {{ message.message }}
-  </div>
-  <div v-else>
-{{ message.message }}
-  </div>
+              <div v-if="lu.message_id == message.id">
+              
+                <div
+                  class="contenu"
+                  v-if="lu.Lu == 0"
+                  style="font-weight: bold; font-size: 20px"
+                >
+                  {{ message.message }}
+                </div>
+                <div v-else>
+                  {{ message.message }}
+                </div>
               </div>
             </div>
             <div class="datemessage">
@@ -942,5 +1031,18 @@ export default {
   font-size: 28px;
 
   margin-left: 30%;
+}
+.nouveauxmessages{
+
+  position: relative;
+  border: 1px solid;
+
+  border-radius: 50px;
+  padding: 2px;
+  left: 20px;
+  background-color: white;
+  font-weight: 900;
+  color: green;
+
 }
 </style>

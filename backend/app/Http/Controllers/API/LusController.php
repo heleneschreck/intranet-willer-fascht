@@ -27,13 +27,13 @@ class LusController extends Controller
      */
     public function store(Request $request)
     {
-          // La validation de données
-          $this->validate($request, [
+        // La validation de données
+        $this->validate($request, [
             'participants_id' => 'required|max:100',
             'message_id' => 'required|max:100',
             'conversation_id' => 'required|max:100',
             'Lu' => 'required|max:100',
-            
+
         ]);
 
         // On crée un nouvel utilisateur
@@ -42,9 +42,9 @@ class LusController extends Controller
             'message_id' => $request->message_id,
             'conversation_id' => $request->conversation_id,
             'Lu' => $request->Lu,
-          
+
         ]);
-       
+
         // On retourne les informations du nouvel utilisateur en JSON
         return response()->json($user, 201);
     }
@@ -60,6 +60,42 @@ class LusController extends Controller
         return response()->json($lus, 201);
     }
 
+
+    public function getLusByUserAndConversation($participants_id, $conversation_id)
+    {
+
+        $count = Lus::where('participants_id', $participants_id)->where('conversation_id', $conversation_id)
+        ->where('Lu', 0) // Ajoutez cette condition pour filtrer les objets avec Lu = 0
+        ->count();
+
+    $lusData = [
+        'count' => $count
+    ];
+
+    return response()->json($lusData);
+    //     $lus = lus::where('participants_id', $participants_id)->get();
+    //     $count = $lus->count();
+    //     $lusData = [
+    //         'count' => $count
+    //     ];
+    //     return response()->json($lusData);
+    }
+
+    public function getCountByParticipant($participants_id)
+    {
+        $count = Lus::where('participants_id', $participants_id)
+            ->where('Lu', 0) // Ajoutez cette condition pour filtrer les objets avec Lu = 0
+            ->count();
+
+        $lusData = [
+            'count' => $count
+        ];
+
+        return response()->json($lusData);
+    }
+
+
+
     /**
      * Update the specified resource in storage.
      *
@@ -69,11 +105,38 @@ class LusController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+
         $lus = Lus::find($id);
         $lus->update($request->all());
         return $lus;
     }
+
+    /**
+ * Update all resources with the same participants_id, conversation_id, and Lu value.
+ *
+ * @param  \Illuminate\Http\Request  $request
+ * @param  int  $participants_id
+ * @param  int  $conversation_id
+ * @param  int  $Lu
+ * @return \Illuminate\Http\Response
+ */
+public function updateByParticipantAndConversation(Request $request, $participants_id, $conversation_id, $Lu)
+{
+    // Validate the request data if needed
+    // $this->validate($request, [
+    //     'your_validation_rules_here',
+    // ]);
+
+    // Update all records that match the criteria
+    Lus::where('participants_id', $participants_id)
+        ->where('conversation_id', $conversation_id)
+        ->where('Lu', $Lu)
+        ->update($request->all());
+
+    // Optionally, you can return a response if needed
+    return response()->json(['message' => 'Records updated successfully']);
+}
+
 
     /**
      * Remove the specified resource from storage.

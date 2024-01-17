@@ -15,6 +15,7 @@ export default {
       evenements: [],
       candidats: [],
       taches: [],
+      newMessages: [],
     };
   },
   computed: {
@@ -31,7 +32,10 @@ export default {
     let fetched_profils = await fetch("http://127.0.0.1:8000/api/profils");
     this.profils = await fetched_profils.json();
     // console.table(this.profils);
-
+    
+    let fetched_NewMessages = await fetch("http://localhost:8000/api/lus/count/"+ this.user.id);
+    this.newMessages = await fetched_NewMessages.json();
+    console.log(this.newMessages);
     
     let fetched_evenements = await fetch(
       "http://127.0.0.1:8000/api/rendezvous"
@@ -131,7 +135,9 @@ export default {
     toogleAside(){
       console.log('coucou');
       this.mode =='vue3'
-    }
+    },
+
+   
   },
 };
 </script>
@@ -403,21 +409,27 @@ export default {
             <span class="nouveauxcandidats"> {{ candidats.count }} </span> 
           </button>
      </router-link>
-          <button
-            aria-label="chat"
-            class="w-10 h-10 rounded-xl border bg-gray-100 focus:bg-gray-100 active:bg-gray-200"
-          >
-            <img
-              src="https://cdn-icons-png.flaticon.com/128/2594/2594044.png"
-              alt=""
-            />
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
-            />
-          </button>
+     <router-link :to="`messagerie`">
+      <button
+      aria-label="chat"
+      class="w-10 h-10 rounded-xl border bg-gray-100 focus:bg-gray-100 active:bg-gray-200"
+      >
+      <img
+      src="https://cdn-icons-png.flaticon.com/128/2594/2594044.png"
+      alt=""
+      />
+      <div v-if="newMessages.count>0">
+        
+        <span class="nouveauxcandidats"> {{ newMessages.count }} </span> 
+      </div>
+      <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
+      />
+    </button>
+  </router-link>
           <button
             aria-label="notification"
             class="w-10 h-10 rounded-xl border bg-gray-100 focus:bg-gray-100 active:bg-gray-200"
