@@ -5,7 +5,9 @@ import Navbars from "../components/Navbars.vue";
 
 <template>
   <div class="messagerie">
+
     <Navbars />
+    
     <Messagerie />
   </div>
 </template>

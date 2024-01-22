@@ -28,6 +28,7 @@ export default {
   computed: {
     ...mapState(["userInfos"]),
   },
+
   async created() {
     function delay(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
@@ -74,7 +75,8 @@ export default {
       "http://localhost:8000/api/conversations"
     );
     this.generalConversations = await fetched_generalConversations.json();
-    // console.log(this.generalConversations);
+
+    console.log(this.generalConversations);
     function delay(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
@@ -82,7 +84,9 @@ export default {
       await this.fetchConversationsForCount(this.generalConversations[i]);
       //  console.log(this.generalConversations[i].id);
     }
-
+    function delay(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    }
     let fetched_destinataires = await fetch(
       "http://localhost:8000/api/conversation_users/"
     );
@@ -128,9 +132,8 @@ export default {
     },
 
     async updateElements(conversationUser) {
-    await this.fetchLuForCount(conversationUser);
-
-  },
+      await this.fetchLuForCount(conversationUser);
+    },
     async updateConversationCount(conversationId) {
       const conversation = this.generalConversations.find(
         (conv) => conv.id === conversationId
@@ -250,23 +253,27 @@ export default {
           )
         );
     },
-    elementsLu (conversation) {
+    elementsLu(conversation) {
       var myHeaders = new Headers();
       myHeaders.append(
         "Cookie",
-          "XSRF-TOKEN=eyJpdiI6IjY3bkloOE41b2trWDhOc0FwbytJYnc9PSIsInZhbHVlIjoiTGk1Tys0V1QvUUl3NTV1NnlYbzh4VkJVWkNWYUp2aXFQNlFSM3FwbitWK3pxMjlaeHZ0UTN1b21iRUdNaEZXK09LUVZPUStzN05sdmhiaVRmODBRQ0ZqVnhOQWtOMVpsd0xHalNjOFlKMG1IeW1EN1JMVmZlcnloMlE3bWZrWTgiLCJtYWMiOiJjNmM2ZTc5Y2ExY2ZlOGNiMWRhY2I4YTlmNjU2NThkMmUxMWMwMjY1NTJmZjI2NjQwYTEwODBiZjI2YzY2MTUzIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImlRMi9oYU1OOFFsZnNyTGoyVDFEb3c9PSIsInZhbHVlIjoiaXhtNTFiUWlSQ0taRnpIVjd5L2VleUVCUkpOL3VaVFNwVGtrejh0ZTBOOGpLRU11YTNmWnI2b3J6bUpQbWJTY2QxWnk0dFhQamQ5Y1VLVUlJcngxTWI5MDlYQjBPWEVjcEFteWJ2OVhoZ1JOSmRqekVBNThDa3pLUFhPWGdvaCsiLCJtYWMiOiI0MjhmMzc1NjBlMGZhZTJkMDAyODNiOGJkNDgxMDBlMmM0OTZjODY5ZTcyMDc5Yzk1MjRiZmI0YjczYjJhY2E4IiwidGFnIjoiIn0%3D"
-          );
-        var urlencoded = new URLSearchParams();
-      urlencoded.append("Lu", "1")
+        "XSRF-TOKEN=eyJpdiI6IjY3bkloOE41b2trWDhOc0FwbytJYnc9PSIsInZhbHVlIjoiTGk1Tys0V1QvUUl3NTV1NnlYbzh4VkJVWkNWYUp2aXFQNlFSM3FwbitWK3pxMjlaeHZ0UTN1b21iRUdNaEZXK09LUVZPUStzN05sdmhiaVRmODBRQ0ZqVnhOQWtOMVpsd0xHalNjOFlKMG1IeW1EN1JMVmZlcnloMlE3bWZrWTgiLCJtYWMiOiJjNmM2ZTc5Y2ExY2ZlOGNiMWRhY2I4YTlmNjU2NThkMmUxMWMwMjY1NTJmZjI2NjQwYTEwODBiZjI2YzY2MTUzIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImlRMi9oYU1OOFFsZnNyTGoyVDFEb3c9PSIsInZhbHVlIjoiaXhtNTFiUWlSQ0taRnpIVjd5L2VleUVCUkpOL3VaVFNwVGtrejh0ZTBOOGpLRU11YTNmWnI2b3J6bUpQbWJTY2QxWnk0dFhQamQ5Y1VLVUlJcngxTWI5MDlYQjBPWEVjcEFteWJ2OVhoZ1JOSmRqekVBNThDa3pLUFhPWGdvaCsiLCJtYWMiOiI0MjhmMzc1NjBlMGZhZTJkMDAyODNiOGJkNDgxMDBlMmM0OTZjODY5ZTcyMDc5Yzk1MjRiZmI0YjczYjJhY2E4IiwidGFnIjoiIn0%3D"
+      );
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("Lu", "1");
       var requestOptions = {
         method: "PUT",
         body: urlencoded,
         redirect: "follow",
       };
-        fetch(
-          "http://localhost:8000/api/lus/update/"+ this.user.id+ "/" + conversation.id+"/0",
-          requestOptions
-        )
+      fetch(
+        "http://localhost:8000/api/lus/update/" +
+          this.user.id +
+          "/" +
+          conversation.id +
+          "/0",
+        requestOptions
+      )
         .then((response) => response.text())
         .then((result) => {
           console.log(result);
@@ -276,11 +283,10 @@ export default {
           this.chargerConversationsUser();
           this.updateConversationCount(this.conversation_id.id);
           this.chargerDisplayMessages(this.conversation_id);
-          this.fetchLuForCount(conversationUser);  
-          this.updateElements(conversationUser)  
-          })
-          .catch((error) => console.log("error", error));
-    
+          this.fetchLuForCount(conversationUser);
+          this.updateElements(conversationUser);
+        })
+        .catch((error) => console.log("error", error));
     },
 
     ajouterconversation: async function () {
@@ -649,7 +655,6 @@ export default {
                           membre.id == destinataire.users_id &&
                           conversation.conversation.count == 1
                         "
-                       
                         class="pasdedestinataire"
                       >
                         Ajoutez un destinataire à la conversation :
@@ -662,22 +667,38 @@ export default {
                           destinataire.users_id != user.id
                         "
                       >
-                      <div v-if="conversationUser.NBMessageNonlu && conversationUser.NBMessageNonlu.count > 0" @click="elementsLu(conversation)" style="font-weight: bold;">
-                          {{ membre.prenom }},
+                        <div
+                          v-if="
+                            conversationUser.NBMessageNonlu &&
+                            conversationUser.NBMessageNonlu.count > 0
+                          "
+                          @click="elementsLu(conversation)"
+                          style="font-weight: bold"
+                        >
+                          {{ membre.prenom }}
+                          &nbsp;
                           <!-- {{ conversation }} -->
                         </div>
-                        <div  @click="display_Messages(conversation)" v-else >
-                          {{ membre.prenom }},
-                          <!-- {{ conversation }} -->
-                        </div>
+                        <div @click="display_Messages(conversation)" v-else>
+                          {{ membre.prenom }}
+                          &nbsp;
+                        <!-- {{ conversation }} -->
                       </div>
                     </div>
+                  </div>
+                 
                   </div>
                 </div>
               </div>
             </div>
 
-            <span class="nouveauxmessages" v-if="conversationUser.NBMessageNonlu && conversationUser.NBMessageNonlu.count >0">
+            <span
+              class="nouveauxmessages"
+              v-if="
+                conversationUser.NBMessageNonlu &&
+                conversationUser.NBMessageNonlu.count > 0
+              "
+            >
               {{ conversationUser.NBMessageNonlu.count }}
             </span>
           </div>
@@ -818,7 +839,6 @@ export default {
             </div>
             <div v-for="lu in lus">
               <div v-if="lu.message_id == message.id">
-              
                 <div
                   class="contenu"
                   v-if="lu.Lu == 0"
@@ -1032,17 +1052,18 @@ export default {
 
   margin-left: 30%;
 }
-.nouveauxmessages{
-
-  position: relative;
+.nouveauxmessages {
+  position: absolute;
+  left: 90%;
   border: 1px solid;
 
-  border-radius: 50px;
-  padding: 2px;
-  left: 20px;
-  background-color: white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  background-color: green;
   font-weight: 900;
-  color: green;
-
+  color: white;
+  text-align: center;
+  /* padding-bottom: 10px; */
 }
 </style>

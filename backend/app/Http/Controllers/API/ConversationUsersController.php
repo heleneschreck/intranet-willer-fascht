@@ -15,7 +15,7 @@ class ConversationUsersController extends Controller
      */
     public function index()
     {
-        $conversation_Users = Conversation_Users::all();
+        $conversation_Users = Conversation_Users::latest()->get();
         return response()->json($conversation_Users);
     }
 
@@ -60,7 +60,7 @@ class ConversationUsersController extends Controller
      */
     public function getMessagesByUser($users_id)
     {
-        $conversation = Conversation_Users::where('users_id', $users_id)->get();
+        $conversation = Conversation_Users::where('users_id', $users_id)->latest()->get();
         return response()->json($conversation);
     }
 

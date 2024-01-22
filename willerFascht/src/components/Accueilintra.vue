@@ -6,7 +6,7 @@ export default {
   data() {
     return {
       mode: false,
-      mode: 'vue3',
+      mode: "vue3",
       user: [],
       profils: [],
       affiches: [],
@@ -16,6 +16,9 @@ export default {
       candidats: [],
       taches: [],
       newMessages: [],
+      listeNewMessagesLu: [],
+      messages: [],
+      membres: [],
     };
   },
   computed: {
@@ -25,37 +28,50 @@ export default {
     this.moment = moment;
     this.user = JSON.parse(localStorage.getItem("user") || "[]");
     console.log(this.user);
-    // if (localStorage.getItem("user") != null) {
-    //   this.mode = true;
-    // }
 
     let fetched_profils = await fetch("http://127.0.0.1:8000/api/profils");
     this.profils = await fetched_profils.json();
     // console.table(this.profils);
-    
-    let fetched_NewMessages = await fetch("http://localhost:8000/api/lus/count/"+ this.user.id);
+
+    // messages
+    let fetched_NewMessages = await fetch(
+      "http://localhost:8000/api/lus/count/" + this.user.id
+    );
     this.newMessages = await fetched_NewMessages.json();
     console.log(this.newMessages);
-    
+
+    let fetched_listeNewMessages = await fetch("http://localhost:8000/api/lu");
+    this.listeNewMessagesLu = await fetched_listeNewMessages.json();
+    console.log(this.listeNewMessagesLu);
+
+    let fetched_membres = await fetch("http://127.0.0.1:8000/api/users");
+    this.membres = await fetched_membres.json();
+
+    let fetched_messages = await fetch("http://localhost:8000/api/messages");
+    this.messages = await fetched_messages.json();
+    console.log(this.messages);
+
+
+    // planning
     let fetched_evenements = await fetch(
       "http://127.0.0.1:8000/api/rendezvous"
-      );
-      let lListe = await fetched_evenements.json();
-      lListe = lListe.sort((a, b) => b.start.localeCompare(a.start));
-      this.evenements = lListe;
-      // console.table(this.evenements);
-      
-      lListe = lListe.sort((a, b) => b.start.localeCompare(a.start));
-      
-      let fetched_projects = await fetch("http://127.0.0.1:8000/api/project");
-      this.projects = await fetched_projects.json();
+    );
+    let lListe = await fetched_evenements.json();
+    lListe = lListe.sort((a, b) => b.start.localeCompare(a.start));
+    this.evenements = lListe;
+    // console.table(this.evenements);
+
+    lListe = lListe.sort((a, b) => b.start.localeCompare(a.start));
+
+    let fetched_projects = await fetch("http://127.0.0.1:8000/api/project");
+    this.projects = await fetched_projects.json();
     // console.table(this.projects);
 
-      let fetched_candidats = await fetch(
-        "http://localhost:8000/api/candidats/see/0"
-      );
-      this.candidats = await fetched_candidats.json();
-      console.table(this.candidats);
+    let fetched_candidats = await fetch(
+      "http://localhost:8000/api/candidats/see/0"
+    );
+    this.candidats = await fetched_candidats.json();
+    console.table(this.candidats);
     let fetched_statuts = await fetch("http://127.0.0.1:8000/api/statut");
     this.statuts = await fetched_statuts.json();
     // console.table(this.statuts);
@@ -71,14 +87,11 @@ export default {
     this.affiches = affiches.slice(0, 4);
   },
   methods: {
-    async fetchedcandidats() {
-
-    },
+    async fetchedcandidats() {},
     logout: function () {
       this.$store.commit("logout");
       this.$router.push("/");
     },
-
 
     deleteimage: function (profil) {
       console.log(profil.id);
@@ -132,22 +145,20 @@ export default {
         this.$router.go(this.$router.currentRoute);
       }, "2000");
     },
-    toogleAside(){
-      console.log('coucou');
-      this.mode =='vue3'
+    toogleAside() {
+      console.log("coucou");
+      this.mode == "vue3";
     },
-
-   
   },
 };
 </script>
 <template>
-<aside
-  class="ml-[-100%] fixed z-10 top-0 pb-3 px-6 w-full flex flex-col justify-between h-screen border-r bg-white lg:ml-0 lg:w-[25%] xl:w-[20%] 2xl:w-[15%]"
-  style="overflow: scroll;margin-top: 95px;"
+  <aside
+    class="ml-[-100%] fixed z-10 top-0 pb-3 px-6 w-full flex flex-col justify-between h-screen border-r bg-white lg:ml-0 lg:w-[25%] xl:w-[20%] 2xl:w-[15%]"
+    style="overflow: scroll; margin-top: 95px"
   >
-  <!-- <img src="https://www.flaticon.com/fr/icone-gratuite/fleche-vers-le-bas-vers-la-gauche_20856" class="fermerAside" alt=""> -->
-  <div>
+    <!-- <img src="https://www.flaticon.com/fr/icone-gratuite/fleche-vers-le-bas-vers-la-gauche_20856" class="fermerAside" alt=""> -->
+    <div>
       <div class="-mx-6 px-6 py-4"></div>
 
       <div class="mt-8 text-center" v-for="profil in profils">
@@ -313,8 +324,8 @@ export default {
             <span class="group-hover:text-gray-700">L'équipe</span>
           </a>
         </router-link>
-       
-        <router-link :to="`/candidats`" v-if="user.niveau==1">
+
+        <router-link :to="`/candidats`" v-if="user.niveau == 1">
           <a
             href="#"
             class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
@@ -324,7 +335,9 @@ export default {
               style="width: 30px; height: 30px; margin-right: 18%"
               alt=""
             />
-            <span class="group-hover:text-gray-700">Examiner les candidats</span>
+            <span class="group-hover:text-gray-700"
+              >Examiner les candidats</span
+            >
           </a>
         </router-link>
         <router-link :to="`/`">
@@ -360,7 +373,10 @@ export default {
         <h5 hidden class="text-3xl text-gray-600 font-medium lg:block">
           Les actualités de l'association
         </h5>
-        <button class="w-12 h-16 -mr-2 border-r lg:hidden" @click="toogleAside()" >
+        <button
+          class="w-12 h-16 -mr-2 border-r lg:hidden"
+          @click="toogleAside()"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-6 w-6 my-auto"
@@ -398,38 +414,39 @@ export default {
           </button>
           <!-- Candidats -->
           <router-link :to="`candidats`">
-          <button
-            aria-label="chat"
-            class="w-10 h-10 rounded-xl border bg-gray-100 focus:bg-gray-100 active:bg-gray-200"
-            v-if="user.niveau==1 && candidats.count >= 1"  >
-            <img
-              src="https://cdn-icons-png.flaticon.com/128/10754/10754151.png"
-              alt=""
-            />
-            <span class="nouveauxcandidats"> {{ candidats.count }} </span> 
-          </button>
-     </router-link>
-     <router-link :to="`messagerie`">
-      <button
-      aria-label="chat"
-      class="w-10 h-10 rounded-xl border bg-gray-100 focus:bg-gray-100 active:bg-gray-200"
-      >
-      <img
-      src="https://cdn-icons-png.flaticon.com/128/2594/2594044.png"
-      alt=""
-      />
-      <div v-if="newMessages.count>0">
-        
-        <span class="nouveauxcandidats"> {{ newMessages.count }} </span> 
-      </div>
-      <path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
-      d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
-      />
-    </button>
-  </router-link>
+            <button
+              aria-label="chat"
+              class="w-10 h-10 rounded-xl border bg-gray-100 focus:bg-gray-100 active:bg-gray-200"
+              v-if="user.niveau == 1 && candidats.count >= 1"
+            >
+              <img
+                src="https://cdn-icons-png.flaticon.com/128/10754/10754151.png"
+                alt=""
+              />
+              <span class="nouveauxcandidats"> {{ candidats.count }} </span>
+            </button>
+          </router-link>
+          <router-link :to="`messagerie`">
+            <button
+              aria-label="chat"
+              class="w-10 h-10 rounded-xl border bg-gray-100 focus:bg-gray-100 active:bg-gray-200 " style="padding: 3px !important;"
+            >
+              <img
+                src="https://cdn-icons-png.flaticon.com/128/2594/2594044.png"
+                alt=""
+              
+              />
+              <div v-if="newMessages.count > 0">
+                <span class="nouveauxmessagesaccueil"> {{ newMessages.count }} </span>
+              </div>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
+              />
+            </button>
+          </router-link>
           <button
             aria-label="notification"
             class="w-10 h-10 rounded-xl border bg-gray-100 focus:bg-gray-100 active:bg-gray-200"
@@ -495,33 +512,74 @@ export default {
             <div class="EvenementTitleAccueilIntra">
               <div v-for="evenement in evenements">
                 <!-- <div > -->
-                  <li v-if="moment(evenement.end) > moment()">
-                    <router-link :to="`/rendezvous/${evenement.id}`">
-                      {{ evenement.title }} - Du
-                      {{
-                        moment(evenement.start).format("DD/MM/YYYY [à] HH[h]mm")
-                      }}
-                      au
-                      {{
-                        moment(evenement.start).format("DD/MM/YYYY [à] HH[h]mm")
-                      }}
-                    </router-link>
-                  </li>
+                <li v-if="moment(evenement.end) > moment()">
+                  <router-link :to="`/rendezvous/${evenement.id}`">
+                    {{ evenement.title }} - Du
+                    {{
+                      moment(evenement.start).format("DD/MM/YYYY [à] HH[h]mm")
+                    }}
+                    au
+                    {{
+                      moment(evenement.start).format("DD/MM/YYYY [à] HH[h]mm")
+                    }}
+                  </router-link>
+                </li>
                 <!-- </div> -->
               </div>
             </div>
           </div>
         </div>
         <div class="onglet">
-          <div
-            class="h-full py-6 px-6 rounded-xl border border-gray-200 bg-white onglets"
-          >
-            <h5 class="text-xl text-gray-700 rubrique">
-              Nouveaux membres de l'association :
-            </h5>
-          </div>
+  <div class="h-full py-6 px-6 rounded-xl border border-gray-200 bg-white onglets">
+    <div>
+
+      <div class="titreRubrique">
+        
+        <h5 class="text-xl text-gray-700 rubrique">Nouveaux messages :</h5>
+        
+      </div>
+      <div class="pasdeMessages" v-if="newMessages.count == 0">
+      Tu n'as pas de messages 😜
+    </div>
+    <div class="listesdesnouveauxmessages" v-else>
+<div v-for="MessagesNonLu in listeNewMessagesLu">
+  <!-- {{ MessagesNonLu.Lu }}
+  {{ this.user.id }} -->
+  <div v-if="MessagesNonLu.participants_id == this.user.id && MessagesNonLu.Lu =='0'">
+
+   
+<div v-for="message in messages">
+<div v-if="message.id == MessagesNonLu.message_id">
+  <div v-for="membre in membres">
+<div v-if="membre.id == message.user_id ">
+<li>
+  <router-link :to="`messagerieConversation`" class="lienMessagerie">{{ membre.prenom }} </router-link> t'a envoyé un message
+
+
+
+</li>  
+</div>
+  </div>
+
+
+</div>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+    </div>
+  </div>
+</div>
+</div>
+        <div>
+
+
         </div>
-        <div></div>
       </div>
       <div
         class="lg:h-full py-8 px-6 text-gray-600 rounded-xl border border-gray-200 bg-white listderniereaffiches"
@@ -555,28 +613,26 @@ export default {
       <div
         class="lg:h-full py-8 px-6 text-gray-600 rounded-xl border border-gray-200 bg-white listderniereaffiches"
       >
-        
-          <h5 class="text-xl text-gray-700 rubrique">Nouveaux membres de l'association  :</h5>
-        
+        <h5 class="text-xl text-gray-700 rubrique">
+          Nouveaux membres de l'association :
+        </h5>
+
         <div class="dernieresAffiche">
-         
-            <div class="derniereAffiche">
-              <div class="titleDerniereaffiches"> :</div>
-              <div class="imageDerniereAffiche">
-                <img src= "https://cdn-icons-png.flaticon.com/128/6373/6373828.png"
-                  style="
-                    width: 400px;
-                    height: 460px;
-                    margin-left: auto;
-                    margin-right: auto;
-                    margin-bottom: 15px;
-                  "
-                />
-              </div>
-              <div class="creea">
-              
-              </div>
-          
+          <div class="derniereAffiche">
+            <div class="titleDerniereaffiches">:</div>
+            <div class="imageDerniereAffiche">
+              <img
+                src="https://cdn-icons-png.flaticon.com/128/6373/6373828.png"
+                style="
+                  width: 400px;
+                  height: 460px;
+                  margin-left: auto;
+                  margin-right: auto;
+                  margin-bottom: 15px;
+                "
+              />
+            </div>
+            <div class="creea"></div>
           </div>
         </div>
       </div>
@@ -585,21 +641,37 @@ export default {
 </template>
 <style>
 .fermerAside {
-    position: absolute;
-    top: 63px;
-    z-index: 1;
-    LEFT: 243px;
+  position: absolute;
+  top: 63px;
+  z-index: 1;
+  left: 243px;
 }
-.nouveauxcandidats{
-  position: relative;
+.nouveauxcandidats {
+  position: absolute;
+  left: 25px;
+  top: 26px;
   border: 1px solid;
-  border-radius: 25px;
-  padding: 2px;
-  left: 20px;
-  bottom: 10px;
-  background-color: white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  background-color: green;
   font-weight: 900;
-  color: green;
+  color: white;
+  text-align: center;
+}
+.nouveauxmessagesaccueil{
+  position: absolute;
+  left: 25px;
+  top: -10px;
+  border: 1px solid;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  background-color: green;
+  font-weight: 900;
+  color: white;
+  text-align: center;
+  
 }
 .accueilintra {
   /* margin-top: 4% !important; */
@@ -660,5 +732,16 @@ export default {
 .onglet {
   width: 40%;
   margin-right: 7px;
+}
+.pasdeMessages{
+  font-size: 25px;
+}
+.lienMessagerie{
+  color:rgb(70, 137, 226);;
+}
+.lienMessagerie:hover{
+  cursor: pointer;
+  font-style: italic;
+
 }
 </style>

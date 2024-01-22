@@ -15,9 +15,10 @@ class ConversationController extends Controller
      */
     public function index()
     {
-        $conversation = Conversation::all();
-        return response()->json($conversation);
+        $conversations = Conversation::latest()->get();
+        return response()->json($conversations);
     }
+    
      /**
      * Get the participants by user_id.
      *

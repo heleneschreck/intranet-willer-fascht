@@ -295,7 +295,8 @@ nav {
   margin-left: -70px;
 }
 .listeonglets {
-  padding-left: -30px !important;
+  padding-left: -20px !important;
+  font-size: 18px !important;
 }
 
 .ongletaccueil {

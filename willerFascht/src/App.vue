@@ -29,9 +29,9 @@ export default {
   async beforeMount() {
     this.user = JSON.parse(localStorage.getItem("user") || "[]");
     console.log(this.user);
-    // if (localStorage.getItem("user") != null) {
-    //   this.mode = true;
-    // }
+    let fetched_membres = await fetch("http://127.0.0.1:8000/api/users");
+    this.membres = await fetched_membres.json();
+    console.log(this.membres);
 
 
   },
