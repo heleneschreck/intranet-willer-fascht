@@ -49,12 +49,13 @@ export default {
           day: "Jour",
           
         },
+        height: 600,
+        
         editable: true,
         selectable: true,
         dateClick: this.handleDateClick,
         eventColor: '#378006',
         eventClick: this.handleEventClick,
-        
         selectMirror: true, 
         nowIndicator: true,
        
@@ -75,16 +76,15 @@ export default {
       
       // console.table(this.evenements);
       this.calendarOptions.events = this.evenements;
-      this.calendarOptions.editable = true;
-      // console.log(this.calendarOptions.events);
-      let backgroundcolor = this.calendarOptions.events.background
-      backgroundcolor = this.evenements.backgroundcolor
-
-      console.log(backgroundcolor);
+      this.calendarOptions.editable = true; 
+  
+    
   },
 
   methods: {
-
+getBackgroundColor(evenement) {
+      return evenement.backgroundcolor;
+    },
    
     
     
@@ -124,34 +124,43 @@ export default {
 };
 </script>
 <template>
-  <!-- <h1>{{ evenements }} </h1> -->
-  <div class="action">
-    <!-- <router-link :to="`/addEvent`">
-      <button
-        href="#"
-        class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-      >
-        Ajouter un évènement
-      </button></router-link
-    > -->
 
+  <div class="action">
+ 
     <router-link :to="`/liste`">
       <button
         href="#"
-        class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-      style="padding: 30% !important;">
+        class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 retourliste"
+     >
         Liste
       </button></router-link
     >
   </div>
 
-  <FullCalendar :options="calendarOptions" />
+
+    <FullCalendar :options="calendarOptions" />
+  
 </template>
-<style>
+
+<style >
 .Planning {
-  /* margin-top: 8% !important; */
-  width: 99%;
+
   margin: auto;
+  
+
+
+}
+.retourliste{
+  margin-left: 10px;
+  /* margin-bottom: 35px !important; */
+  border-radius: 20px;
+  width: 200px;
+  border: 5px solid rgb(70, 137, 226);
+  background-color: rgb(70, 137, 226);
+  /* color: white !important; */
+  font-weight: bold;
+  font-size: 20px;
+  height: 70px !important;
 
 }
 body {

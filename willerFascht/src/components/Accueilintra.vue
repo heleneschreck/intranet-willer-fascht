@@ -6,6 +6,7 @@ export default {
   data() {
     return {
       mode: false,
+      showAside: false,
       mode: "vue3",
       user: [],
       profils: [],
@@ -50,7 +51,6 @@ export default {
     let fetched_messages = await fetch("http://localhost:8000/api/messages");
     this.messages = await fetched_messages.json();
     console.log(this.messages);
-
 
     // planning
     let fetched_evenements = await fetch(
@@ -145,17 +145,19 @@ export default {
         this.$router.go(this.$router.currentRoute);
       }, "2000");
     },
-    toogleAside() {
+    toogleAside: function () {
       console.log("coucou");
-      this.mode == "vue3";
+      console.log(document.querySelector("aside"));
+      this.showAside = !this.showAside;
     },
   },
 };
 </script>
 <template>
   <aside
-    class="ml-[-100%] fixed z-10 top-0 pb-3 px-6 w-full flex flex-col justify-between h-screen border-r bg-white lg:ml-0 lg:w-[25%] xl:w-[20%] 2xl:w-[15%]"
-    style="overflow: scroll; margin-top: 95px"
+    class="fixed z-10 top-0 pb-3 px-6 w-full flex flex-col justify-between h-screen border-r bg-white lg:ml-0 lg:w-[25%] xl:w-[20%] 2xl:w-[15%]"
+    style="overflow: scroll"
+    v-bind:class="{ notVisibility: !showAside, asideResponsive: showAside }"
   >
     <!-- <img src="https://www.flaticon.com/fr/icone-gratuite/fleche-vers-le-bas-vers-la-gauche_20856" class="fermerAside" alt=""> -->
     <div>
@@ -166,7 +168,7 @@ export default {
           <img
             v-bind:src="profil.url"
             alt=""
-            class="m-auto rounded-full object-cover lg:w-40 lg:h-40"
+            class="m-auto rounded-full object-cover w-40 h-40 z-1"
           />
           <div class="deletephotoprofil">
             <img
@@ -366,7 +368,10 @@ export default {
     </div>
   </aside>
   <div class="ml-auto mb-6 lg:w-[75%] xl:w-[80%] 2xl:w-[85%]">
-    <div class="sticky z-10 top-0 h-16 border-b bg-white lg:py-2.5">
+    <div
+      class="sticky z-10 top-0 h-16 border-b bg-white lg:py-2.5"
+      v-bind:class="{ barreasideResponsive: showAside }"
+    >
       <div
         class="px-6 flex items-center justify-between space-x-1 2xl:container"
       >
@@ -393,25 +398,6 @@ export default {
           </svg>
         </button>
         <div class="flex space-x-4">
-          <!--search bar -->
-          <div hidden class="md:block"></div>
-          <!--/search bar -->
-          <button
-            aria-label="search"
-            class="w-10 h-10 rounded-xl border bg-gray-100 focus:bg-gray-100 active:bg-gray-200 md:hidden"
-          >
-            <svg
-              xmlns="http://ww50w3.org/2000/svg"
-              class="w-4 mx-auto fill-current text-gray-600"
-              viewBox="0 0 35.997 36.004"
-            >
-              <path
-                id="Icon_awesome-search"
-                data-name="search"
-                d="M35.508,31.127l-7.01-7.01a1.686,1.686,0,0,0-1.2-.492H26.156a14.618,14.618,0,1,0-2.531,2.531V27.3a1.686,1.686,0,0,0,.492,1.2l7.01,7.01a1.681,1.681,0,0,0,2.384,0l1.99-1.99a1.7,1.7,0,0,0,.007-2.391Zm-20.883-7.5a9,9,0,1,1,9-9A8.995,8.995,0,0,1,14.625,23.625Z"
-              ></path>
-            </svg>
-          </button>
           <!-- Candidats -->
           <router-link :to="`candidats`">
             <button
@@ -429,15 +415,17 @@ export default {
           <router-link :to="`messagerie`">
             <button
               aria-label="chat"
-              class="w-10 h-10 rounded-xl border bg-gray-100 focus:bg-gray-100 active:bg-gray-200 " style="padding: 3px !important;"
+              class="w-10 h-10 rounded-xl border bg-gray-100 focus:bg-gray-100 active:bg-gray-200"
+              style="padding: 3px !important"
             >
               <img
                 src="https://cdn-icons-png.flaticon.com/128/2594/2594044.png"
                 alt=""
-              
               />
               <div v-if="newMessages.count > 0">
-                <span class="nouveauxmessagesaccueil"> {{ newMessages.count }} </span>
+                <span class="nouveauxmessagesaccueil">
+                  {{ newMessages.count }}
+                </span>
               </div>
               <path
                 stroke-linecap="round"
@@ -502,7 +490,7 @@ export default {
 
         <div class="onglet">
           <div
-            class="h-full py-6 px-6 rounded-xl border border-gray-200 bg-white"
+            class="h-full py-8 px-6 rounded-xl border border-gray-200 bg-white"
           >
             <router-link :to="`liste`">
               <h5 class="text-xl text-gray-700 rubrique">
@@ -530,56 +518,51 @@ export default {
           </div>
         </div>
         <div class="onglet">
-  <div class="h-full py-6 px-6 rounded-xl border border-gray-200 bg-white onglets">
-    <div>
-
-      <div class="titreRubrique">
-        
-        <h5 class="text-xl text-gray-700 rubrique">Nouveaux messages :</h5>
-        
-      </div>
-      <div class="pasdeMessages" v-if="newMessages.count == 0">
-      Tu n'as pas de messages 😜
-    </div>
-    <div class="listesdesnouveauxmessages" v-else>
-<div v-for="MessagesNonLu in listeNewMessagesLu">
-  <!-- {{ MessagesNonLu.Lu }}
+          <div
+            class="h-full py-6 px-6 rounded-xl border border-gray-200 bg-white onglets"
+          >
+            <div>
+              <div class="titreRubrique">
+                <h5 class="text-xl text-gray-700 rubrique">
+                  Nouveaux messages :
+                </h5>
+              </div>
+              <div class="pasdeMessages" v-if="newMessages.count == 0">
+                Tu n'as pas de messages 😜
+              </div>
+              <div class="listesdesnouveauxmessages" v-else>
+                <div v-for="MessagesNonLu in listeNewMessagesLu">
+                  <!-- {{ MessagesNonLu.Lu }}
   {{ this.user.id }} -->
-  <div v-if="MessagesNonLu.participants_id == this.user.id && MessagesNonLu.Lu =='0'">
-
-   
-<div v-for="message in messages">
-<div v-if="message.id == MessagesNonLu.message_id">
-  <div v-for="membre in membres">
-<div v-if="membre.id == message.user_id ">
-<li>
-  <router-link :to="`messagerieConversation`" class="lienMessagerie">{{ membre.prenom }} </router-link> t'a envoyé un message
-
-
-
-</li>  
-</div>
-  </div>
-
-
-</div>
-
-</div>
-
-</div>
-
-
-</div>
-
-
-    </div>
-  </div>
-</div>
-</div>
-        <div>
-
-
+                  <div
+                    v-if="
+                      MessagesNonLu.participants_id == this.user.id &&
+                      MessagesNonLu.Lu == '0'
+                    "
+                  >
+                    <div v-for="message in messages">
+                      <div v-if="message.id == MessagesNonLu.message_id">
+                        <div v-for="membre in membres">
+                          <div v-if="membre.id == message.user_id">
+                            <li>
+                              <router-link
+                                :to="`messagerieConversation`"
+                                class="lienMessagerie"
+                                >{{ membre.prenom }}
+                              </router-link>
+                              t'a envoyé un message
+                            </li>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+        <div></div>
       </div>
       <div
         class="lg:h-full py-8 px-6 text-gray-600 rounded-xl border border-gray-200 bg-white listderniereaffiches"
@@ -637,15 +620,192 @@ export default {
         </div>
       </div>
     </div>
+
+    <!-- Mode responsive -->
+    <div class="OngletsResponsives">
+      <div class="ongletResponsive">
+        <div
+          class="h-full py-6 px-6 space-y-6 rounded-xl border border-gray-200 bg-white"
+        >
+          <div>
+            <h5 class="text-xl text-gray-600 text-center rubrique">
+              <router-link :to="`todo`"> Projets en cours : </router-link>
+            </h5>
+            <div v-for="project in projects">
+              <router-link :to="`projet/${project.id}`">
+                <div class="titreprojectsencours">
+                  {{ project.title }} -
+                  {{ moment(project.end).format("DD/MM/YYYY") }} :
+                </div>
+              </router-link>
+              <div v-for="tache in taches">
+                <div
+                  v-if="
+                    tache.status_id == '2' && tache.project_id == project.id
+                  "
+                >
+                  <div v-if="tache.user_id == user.id">
+                    <div class="tacheafaire">
+                      {{ tache.title }}
+                    </div>
+                  </div>
+                </div>
+                <div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ongletResponsive">
+          <div
+            class="h-full py-6 px-6 space-y-6 rounded-xl border border-gray-200 bg-white"
+            style="width:110.5%; margin-left: -5%;"
+          >
+            <router-link :to="`liste`">
+              <h5 class="text-xl text-gray-700 rubrique">
+                Prochains rendez-vous:
+              </h5>
+            </router-link>
+            <div class="EvenementTitleAccueilIntra">
+              <div v-for="evenement in evenements">
+                <!-- <div > -->
+                <li v-if="moment(evenement.end) > moment()">
+                  <router-link :to="`/rendezvous/${evenement.id}`">
+                    {{ evenement.title }} - Du
+                    {{
+                      moment(evenement.start).format("DD/MM/YYYY [à] HH[h]mm")
+                    }}
+                    au
+                    {{
+                      moment(evenement.start).format("DD/MM/YYYY [à] HH[h]mm")
+                    }}
+                  </router-link>
+                </li>
+                <!-- </div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ongletResponsive">
+          <div
+            class="h-full py-6 px-6 rounded-xl border border-gray-200 bg-white" style="width:110.5%; margin-left: -5%;"
+          >
+            <div>
+              <div class="titreRubrique">
+                <h5 class="text-xl text-gray-700 rubrique">
+                  Nouveaux messages :
+                </h5>
+              </div>
+              <div class="pasdeMessages" v-if="newMessages.count == 0">
+                Tu n'as pas de messages 😜
+              </div>
+              <div class="listesdesnouveauxmessages" v-else>
+                <div v-for="MessagesNonLu in listeNewMessagesLu">
+                  <div
+                    v-if="
+                      MessagesNonLu.participants_id == this.user.id &&
+                      MessagesNonLu.Lu == '0'
+                    "
+                  >
+                    <div v-for="message in messages">
+                      <div v-if="message.id == MessagesNonLu.message_id">
+                        <div v-for="membre in membres">
+                          <div v-if="membre.id == message.user_id">
+                            <li>
+                              <router-link
+                                :to="`messagerieConversation`"
+                                class="lienMessagerie"
+                                >{{ membre.prenom }}
+                              </router-link>
+                              t'a envoyé un message
+                            </li>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div></div>
+      </div>
+      <div
+        class="lg:h-full py-8 px-6 text-gray-600 rounded-xl border border-gray-200 bg-white listderniereaffichesResponsive" 
+      >
+        <router-link :to="`affiches`">
+          <h5 class="text-xl text-gray-700 rubrique">Dernières affiches :</h5>
+        </router-link>
+        <div class="dernieresAffiche">
+          <div v-for="(affiche, index) in affiches.slice(0, 3)" >
+            <div class="derniereAffiche">
+              <div class="titleDerniereaffiches">{{ affiche.title }} :</div>
+              <div class="imageDerniereAffiche">
+                <img
+                  v-bind:src="affiche.url"
+                  style="
+                    width: 400px;
+                    height: 300px;
+                    margin-left: auto;
+                    margin-right: auto;
+                    margin-bottom: 15px;
+                  "
+                />
+              </div>
+              <div class="creea">
+                {{ moment(affiche.created_at).format("DD/MM/YYYY") }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="lg:h-full py-8 px-6 text-gray-600 rounded-xl border border-gray-200 bg-white listNouveauxMembres"
+      >
+        <h5 class="text-xl text-gray-700 rubrique">
+          Nouveaux membres de l'association :
+        </h5>
+
+        <div class="dernieresAffiche">
+          <div class="derniereAffiche">
+            <div class="titleDerniereaffiches">:</div>
+            <div class="imageDerniereAffiche">
+              <img
+                src="https://cdn-icons-png.flaticon.com/128/6373/6373828.png"
+                style="
+                  width: 400px;
+                  height: 460px;
+                  margin-left: auto;
+                  margin-right: auto;
+                  margin-bottom: 15px;
+                "
+              />
+            </div>
+            <div class="creea"></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <style>
-.fermerAside {
+.OngletsResponsives{
+  display: none;
+}
+.asideResponsive {
+  width: 300px !important;
+  /* margin-top: 90px; */
+  z-index: 1 !important;
+}
+
+
+/* .fermerAside {
   position: absolute;
   top: 63px;
   z-index: 1;
   left: 243px;
-}
+} */
 .nouveauxcandidats {
   position: absolute;
   left: 25px;
@@ -659,7 +819,7 @@ export default {
   color: white;
   text-align: center;
 }
-.nouveauxmessagesaccueil{
+.nouveauxmessagesaccueil {
   position: absolute;
   left: 25px;
   top: -10px;
@@ -671,7 +831,6 @@ export default {
   font-weight: 900;
   color: white;
   text-align: center;
-  
 }
 .accueilintra {
   /* margin-top: 4% !important; */
@@ -733,15 +892,51 @@ export default {
   width: 40%;
   margin-right: 7px;
 }
-.pasdeMessages{
+.pasdeMessages {
   font-size: 25px;
 }
-.lienMessagerie{
-  color:rgb(70, 137, 226);;
+.lienMessagerie {
+  color: rgb(70, 137, 226);
 }
-.lienMessagerie:hover{
+.lienMessagerie:hover {
   cursor: pointer;
   font-style: italic;
+}
 
+@media screen and (max-width: 800px) {
+  /* .px-6 {
+display: none;
+ }  */
+ .OngletsResponsives{
+  display: block !important;;
+}
+  .onglets {
+    display: none;
+  }
+  .listderniereaffiches {
+    display: none;
+  }
+  .ongletResponsive {
+    width: 90%;
+    margin-left: 4.5%;
+  }
+  .listderniereaffichesResponsive{
+    width: 90%;
+    margin-left: 4.5%;
+
+  }
+  .listNouveauxMembres{
+    width: 90%;
+    margin-left: 4.5%;
+
+  }
+}
+@media screen and (max-width: 1022px) {
+  .barreasideResponsive {
+    margin-left: 301px !important;
+  }
+  .notVisibility {
+    display: none !important;
+  }
 }
 </style>

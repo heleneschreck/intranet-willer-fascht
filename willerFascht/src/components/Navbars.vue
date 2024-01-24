@@ -104,7 +104,7 @@ export default {
             >
               <a
                 :class="{
-                  'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
+                  'block py-2 pl-3 pr-4 text-white  rounded md:bg-transparent text-blue-700 md:p-0 dark:text-white':
                   $router.currentRoute._value.name === 'accueilintra',
                 }"
                 href="#"
@@ -122,7 +122,7 @@ export default {
             >
               <a
                 :class="{
-                  'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
+                  'block py-2 pl-3 pr-4 text-white  rounded md:bg-transparent text-blue-700 md:p-0 dark:text-white':
                   $router.currentRoute._value.name === 'mesinfos',
                 }"
                 href="#"
@@ -139,7 +139,7 @@ export default {
             >
               <a
                 :class="{
-                  'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
+                  'block py-2 pl-3 pr-4 text-white  rounded md:bg-transparent text-blue-700 md:p-0 dark:text-white':
                   $router.currentRoute._value.name === 'planning',
                 }"
                 href="#"
@@ -156,7 +156,7 @@ export default {
             >
               <a
                 :class="{
-                  'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
+                  'block py-2 pl-3 pr-4 text-white  rounded md:bg-transparent text-blue-700 md:p-0 dark:text-white':
                   $router.currentRoute._value.name === 'membres',
                 }"
                 href="#"
@@ -173,7 +173,7 @@ export default {
             >
               <a
                 :class="{
-                  'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
+                  'block py-2 pl-3 pr-4 text-white  rounded md:bg-transparent text-blue-700 md:p-0 dark:text-white':
                   $router.currentRoute._value.name === 'createmembres',
                 }"
                 href="#"
@@ -191,7 +191,7 @@ export default {
               <a
                 href="#"
                 :class="{
-                  'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
+                  'block py-2 pl-3 pr-4 text-white  rounded md:bg-transparent text-blue-700 md:p-0 dark:text-white':
                   $router.currentRoute._value.name === 'messagerie',
                 }"
                 class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
@@ -208,7 +208,7 @@ export default {
               <a
                 href="#"
                 :class="{
-                  'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
+                  'block py-2 pl-3 pr-4 text-white  rounded md:bg-transparent text-blue-700 md:p-0 dark:text-white':
                   $router.currentRoute._value.name === 'todo',
                 }"
                 class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
@@ -225,7 +225,7 @@ export default {
               <a
                 href="#"
                 :class="{
-                  'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
+                  'block py-2 pl-3 pr-4 text-white  rounded md:bg-transparent text-blue-700 md:p-0 dark:text-white':
                   $router.currentRoute._value.name === 'affiches',
                 }"
                 class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
@@ -243,8 +243,8 @@ export default {
               <a
                 href="#"
                 :class="{
-                  'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white':
-                  $router.currentRoute._value.name === 'affiches',
+                  'block py-2 pl-3 pr-4 text-white  rounded md:bg-transparent text-blue-700 md:p-0 dark:text-white':
+                  $router.currentRoute._value.name === 'mesarticles',
                 }"
                 class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                 >Mes articles</a
@@ -285,6 +285,7 @@ export default {
 nav {
   background-color: white !important;
   box-shadow: inset 4px 1px 20px 0px black;
+  z-index: 1 !important;
 }
 
 
@@ -292,17 +293,50 @@ nav {
   color: black !important;
 }
 .logonav {
-  margin-left: -70px;
+  margin-left: 10px !important;
 }
 .listeonglets {
   padding-left: -20px !important;
-  font-size: 18px !important;
 }
 
 .ongletaccueil {
   margin-right: 27px !important;
 }
 li {
+  margin-right: 5px;
+  font-size: 0.8vw !important; 
   margin-left: 24px !important;
 }
+
+@media screen and (max-width: 1022px){
+  .logonav {
+    margin-left: 1% !important;
+  }
+  li {
+    margin-bottom: 5px;
+
+  }
+  button{
+    margin-top: 15px;
+  }
+}
+@media (min-width: 1022px)  and (max-width:1500px) {
+  .logonav {
+  margin-left: 180px !important;
+  }
+  .listeonglets {
+    font-size: 1vw !important; /* 1.5% de la largeur de l'écran */
+  }
+  li {
+    margin-left: 5px !important;
+
+  }
+  /* li {
+    margin-bottom: 5px;
+  }
+  button{
+    margin-top: 15px;
+  } */
+}
+
 </style>

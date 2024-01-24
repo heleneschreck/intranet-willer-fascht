@@ -314,7 +314,7 @@ export default {
     <!-- </div> -->
   <!-- </div> -->
 </template>
-<style>
+<style scoped>
 .updatenvx {
   margin-bottom: 15px;
   margin-left: 155px;

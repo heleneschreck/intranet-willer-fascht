@@ -194,36 +194,33 @@ export default defineComponent({
           Accueil
         </router-link>
         
-      </li> </div>
-          <div v-if="mode == true">
-         
-      
-      
-     
-     
-          <button
-            class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group"
-          
+      </li> 
+    </div>
+    <div v-if="mode == true">
+    <li class="logout-li">
+        <button
+            class="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group logout-button"
             @click="logout()"
-          >
+        >
             <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-              />
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
             </svg>
             <span class="group-hover:text-gray-700">Deconnexion</span>
-          </button>
-       
-  </div>
+        </button>
+    </li>
+</div>
+
     <div v-else>
       <router-link :to="`/connexion`">
         <button
@@ -299,11 +296,11 @@ export default defineComponent({
     </div>
     <div>
       <div class="boutonschangementsdepages" style="padding-left: 43%; background-color: hsla(0, 0%, 84%, 0.3);">
-        <button @click="changePage(-1)" :disabled="currentPage === 1">
+        <button @click="changePage(-1)" :disabled="currentPage === 1" style="margin-right: 15px;"> 
           Précédent
         </button>
         <span>{{ currentPage }}</span>
-        <button @click="changePage(1)" :disabled="currentPage === totalPages">
+        <button @click="changePage(1)" :disabled="currentPage === totalPages" style="margin-left: 15px;">
           Suivant
         </button>
       </div>
@@ -382,6 +379,7 @@ export default defineComponent({
       </div>
       <div v-if="candidaturevalider== false">
         <h2>Vous souhaitez nous rejoindre ?</h2>
+        
         <div class="inputCandidature">
         <input
           v-model="name"
@@ -420,9 +418,7 @@ export default defineComponent({
   </div>
 </template>
 <style scoped>
-.bod {
-  margin-top: 7%;
-}
+
 nav {
   background-color: white !important;
   box-shadow: inset 4px 1px 20px 0px black;
@@ -432,9 +428,7 @@ nav {
 .nav-item {
   color: black !important;
 }
-.logonav {
-  margin-left: -70px;
-}
+
 .listeonglets {
   /* padding-left: -20px !important; */
 
@@ -509,34 +503,34 @@ li {
 }
 .inputCandidaturenom {
   height: 55px;
-  margin-left: 30%;
+  margin-left: 28%;
   margin-right: 30px;
   margin-bottom: 15px;
-  width: 700px;
+  width: 40%;
   border-radius: 15px;
 }
 .inputCandidatureprenom {
-  margin-left: 30%;
+  margin-left: 28%;
   margin-right: 30px;
   height: 55px;
   margin-bottom: 15px;
-  width: 700px;
+  width: 40%;
   border-radius: 15px;
 }
 .inputCandidaturetelephone {
-  margin-left: 30%;
-  height: 55px;
+  margin-left: 28%;
+    height: 55px;
   margin-right: 30px;
   margin-bottom: 15px;
-  width: 700px;
+  width: 40%;
   border-radius: 15px;
 }
 .inputCandidatureemail {
-  margin-left: 30%;
-  height: 55px;
+  margin-left: 28%;
+    height: 55px;
   margin-right: 30px;
   margin-bottom: 15px;
-  width: 700px;
+  width: 40%;
   border-radius: 15px;
 }
 .titlePostAccueil {
@@ -586,4 +580,16 @@ li {
   border: 1px solid rgba(164, 158, 158, 0.279);
   box-shadow: 2px 1px 15px 0px black;
 }
+.addpartenaire{
+  margin-left: 45% !important;
+}
+.logout-li {
+    display: flex;
+    align-items: center;
+}
+
+.logout-button {
+    padding: 8px; /* Ajustez la valeur en fonction de vos préférences */
+}
+
 </style>

@@ -33,19 +33,20 @@ export default {
 <template>
   <div class="mesinfos">
     <router-link :to="`/accueilintra`">
-      <button class="button rounded-lg retourintra">Retour</button>
+      <button class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 retourliste">Retour</button>
     </router-link>
 
     <div class="flex items-center h-screen w-full justify-center carduser">
       <div class="max-w-xs">
-        <div class="bg-white shadow-xl rounded-lg py-3">
+        <div class="bg-white shadow-xl rounded-lg py-3" >
           <div v-for="profil in profils" class="photo-wrapper p-2" style="text-overflow: ellipsis">
             <div v-if="profil.user_id == user.id">
        
           <img
             v-bind:src="profil.url"
             alt=""
-            class="w-40 h-40 rounded-full mx-auto"
+            class="w-60 h-60 rounded-full mx-auto"
+            
           />
          </div>
           </div>
@@ -90,16 +91,29 @@ export default {
     </div>
   </div>
 </template>
-<style>
+<style scoped>
 /* .mesinfos {
   margin-top: 8%;
 } */
 .retourintra {
   margin-left: 10%;
-  margin-bottom: -25px !important;
+  margin-bottom: 45px !important;
+  border-radius: 20px;
+  width: 200px;
+  border: 5px solid rgb(70, 137, 226);
+  background-color: rgb(70, 137, 226);
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  height: 70px;
+  margin-bottom: 5% ;
 }
 .carduser {
-  margin-top: 194px;
+  margin-top: 220px !important;
   height: 100px !important;
+  
+}
+td{
+  border: 1px solid black;
 }
 </style>

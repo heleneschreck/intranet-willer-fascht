@@ -94,24 +94,25 @@ export default {
 };
 </script>
 <template>
-
-  <h1>Liste des rendez-vous organisés</h1>
   <div class="action">
     <router-link :to="`/planning`">
-      <button class="button rounded-lg" style="padding: 13.5px !important">
+      <button
+        href="#"
+        class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 retourliste"
+      >
         Planning
-      </button>
-    </router-link>
-
+      </button></router-link
+    >
     <router-link :to="`/addEvent`">
       <button
         href="#"
-        class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+        class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 retourliste"
       >
         Ajouter un évènement
       </button></router-link
     >
   </div>
+  <h1>Liste des rendez-vous organisés</h1>
   <div class="listDeRendezVous">
     <table>
       <thead>
@@ -120,7 +121,7 @@ export default {
         <th>Fin</th>
         <th>Description</th>
         <th>Type d'évènement</th>
-        <th v-if="user.niveau == '1'" >Participants</th>
+        <th v-if="user.niveau == '1'">Participants</th>
         <th>Supprimer</th>
       </thead>
       <tbody>
@@ -160,15 +161,17 @@ export default {
           </td>
 
           <td @mouseover="sortir()" style="width: 30% !important">
-            <span v-if="evenement.description.length > 50" style="display: flex;margin-left: 25px;">
-              {{ evenement.description.substring(0, 50)}}
+            <span
+              v-if="evenement.description.length > 50"
+              style="display: flex; margin-left: 25px"
+            >
+              {{ evenement.description.substring(0, 50) }}
               <router-link :to="`/rendezvous/${evenement.id}`">
-              <img
-                src="https://t3.ftcdn.net/jpg/00/21/91/78/240_F_21917862_Td1omsXyzb3ESogD4cIBsgCpsPvN5dTP.jpg"
-                alt="Image"
-                style="vertical-align: middle; width: 25px; "
-            
-              />
+                <img
+                  src="https://t3.ftcdn.net/jpg/00/21/91/78/240_F_21917862_Td1omsXyzb3ESogD4cIBsgCpsPvN5dTP.jpg"
+                  alt="Image"
+                  style="vertical-align: middle; width: 25px"
+                />
               </router-link>
             </span>
             <span v-else>
@@ -186,13 +189,12 @@ export default {
           ></td>
 
           <td style="width: 7% !important" v-if="user.niveau == '1'">
-            <div >
-
+            <div>
               <router-link :to="`/participants/${evenement.id}`">
                 <img
-                src="https://cdn-icons-png.flaticon.com/512/1634/1634406.png"
-                style="width: 39px; margin: auto"
-                alt=""
+                  src="https://cdn-icons-png.flaticon.com/512/1634/1634406.png"
+                  style="width: 39px; margin: auto"
+                  alt=""
                 />
               </router-link>
             </div>
@@ -214,7 +216,6 @@ export default {
       </tbody>
     </table>
     <br />
-
     <table class="legende">
       <th>Légende</th>
       <th>Couleur</th>
@@ -246,17 +247,20 @@ export default {
     </table>
   </div>
 </template>
-<style>
+<style scoped>
+
+.listDeRendezVous{
+
+  margin-left: 5%;
+}
 .liste {
-  /* margin-top: 8% !important; */
-  width: 90%;
+  /* width: 90%; */
   margin: auto;
 }
 td {
   text-align: center;
   align-content: center;
   width: 15% !important;
-
   /* padding: -15px !important; */
 }
 .modiferevenement {
@@ -264,9 +268,18 @@ td {
 }
 .legende {
   width: 20%;
+  box-shadow: 4px 1px 20px 0px black;
   font-size: 10px;
   position: absolute;
   /* bottom: -455px; */
-  right: 1px;
+  right: 11%;
+}
+td {
+
+  border: 1px solid black;
+}
+th {
+
+  border: 1px solid black;
 }
 </style>

@@ -1,13 +1,13 @@
 <script>
 import { mapState } from "vuex";
 import { RouterLink, RouterView } from "vue-router";
-import Planning from "./components/Planning.vue";
+
 
 
 export default {
   name: "app",
   components: {
-    Planning,
+
   },
   data() {
     return {

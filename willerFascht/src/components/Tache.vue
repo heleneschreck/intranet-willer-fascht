@@ -1,9 +1,7 @@
 <script>
 import { mapState } from "vuex";
 import { useRoute } from "vue-router";
-import { VueDraggableNext } from "vue-draggable-next";
 const route = useRoute();
-import { Draggable } from "@fullcalendar/interaction";
 export default {
   data() {
     return {
@@ -39,6 +37,9 @@ export default {
     console.table(this.soustaches);
   },
   methods: {
+    generateCheckboxId(soustache) {
+    return `check1-${soustache.id}`;
+  },
     logout: function () {
       this.$store.commit("logout");
       this.$router.push("/");
@@ -109,6 +110,7 @@ export default {
         .then((result) => {
           console.log(result);
           this.chargersousTaches();
+          this.title = "";
         })
         .catch((error) => console.log("error", error));
     },
@@ -132,7 +134,7 @@ export default {
         .catch((error) => console.log("error", error));
     },
     notvalidate: function (soustache) {
-      // console.log(soustache.id);
+      console.log(soustache.id);
 
       var urlencoded = new URLSearchParams();
       urlencoded.append("isvalidate", "0");
@@ -171,7 +173,8 @@ export default {
   <div v-for="tache in taches">
     <div v-if="tache.id == $route.params.tache">
       <router-link :to="`/projet/${tache.project_id}`">
-        <button class="button rounded-lg Retour">Retour</button>
+        <button         class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 retourliste"
+>Retour</button>
       </router-link>
     </div>
   </div>
@@ -198,8 +201,38 @@ export default {
               @mouseover="survol(soustache)"
               style="margin-top: 10px"
             >
-              <input type="checkbox" @click="notvalidate(soustache)" checked />
-              <button class="validate">{{ soustache.title }}</button>
+              <div class="checkbox-wrapper">
+             
+                <input
+                  type="checkbox"
+                  @click="notvalidate(soustache)"
+                  class="check"
+                  :id="generateCheckboxId(soustache)"
+                  checked     />
+                <label :for="generateCheckboxId(soustache)" class="label">
+                  <svg width="45" height="45" viewBox="0 0 95 95">
+                    <rect
+                      x="30"
+                      y="20"
+                      width="50"
+                      height="50"
+                      stroke="black"
+                      fill="none"
+                    ></rect>
+                    <g transform="translate(0,-952.36222)">
+                      <path
+                        d="m 56,963 c -102,122 6,9 7,9 17,-5 -66,69 -38,52 122,-77 -7,14 18,4 29,-11 45,-43 23,-4"
+                        stroke="black"
+                        stroke-width="3"
+                        fill="none"
+                        class="path1"
+                      ></path>
+                    </g>
+                  </svg>
+                  <button class="validate">{{ soustache.title }}</button>
+                </label>
+              </div>
+
               <div class="deletesoustache" v-if="mode == 'display'">
                 <button
                   @click="deletesoustache(soustache)"
@@ -218,11 +251,39 @@ export default {
               @mouseover="survol(soustache)"
               style="margin-top: 10px"
             >
-              <input type="checkbox" @click="validate(soustache)" />
+              <div class="checkbox-wrapper">
+                <input
+         @click="validate(soustache)" 
+                  type="checkbox"
+                  class="check"
+                  :id="generateCheckboxId(soustache)"
+                />
+                <label :for="generateCheckboxId(soustache)"  class="label">
+                  <svg width="45" height="45" viewBox="0 0 95 95">
+                    <rect
+                      x="30"
+                      y="20"
+                      width="50"
+                      height="50"
+                      stroke="black"
+                      fill="none"
+                    ></rect>
+                    <g transform="translate(0,-952.36222)">
+                      <path
+                        d="m 56,963 c -102,122 6,9 7,9 17,-5 -66,69 -38,52 122,-77 -7,14 18,4 29,-11 45,-43 23,-4"
+                        stroke="black"
+                        stroke-width="3"
+                        fill="none"
+                        class="path1"
+                      ></path>
+                    </g>
+                  </svg>
 
-              <button @click="update" class="soustacheavalider">
-                {{ soustache.title }}
-              </button>
+                  <button @click="update" class="soustacheavalider">
+                    {{ soustache.title }}
+                  </button>
+                </label>
+              </div>
 
               <div v-if="mode == 'display'" class="deletesoustache">
                 <button
@@ -272,7 +333,51 @@ export default {
     </button>
   </div>
 </template>
-<style>
+<style scoped>
+.checkbox-wrapper input[type="checkbox"] {
+  visibility: hidden;
+  display: none;
+}
+
+.checkbox-wrapper *,
+.checkbox-wrapper ::after,
+.checkbox-wrapper ::before {
+  box-sizing: border-box;
+  user-select: none;
+}
+
+.checkbox-wrapper {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+
+.checkbox-wrapper .label {
+  cursor: pointer;
+}
+
+.checkbox-wrapper .check {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  opacity: 0;
+}
+
+.checkbox-wrapper .label svg {
+  vertical-align: middle;
+}
+
+.checkbox-wrapper .path1 {
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+  transition: 0.5s stroke-dashoffset;
+  opacity: 0;
+}
+
+.checkbox-wrapper .check:checked + label svg g path {
+  stroke-dashoffset: 0;
+  opacity: 1;
+}
 .validate {
   text-decoration: line-through;
   font-weight: lighter;
@@ -356,5 +461,8 @@ h2 {
 .illustrationvalidatesoustache {
   width: 30px;
   margin-bottom: -10px !important;
+}
+.label {
+  display: flex !important;
 }
 </style>

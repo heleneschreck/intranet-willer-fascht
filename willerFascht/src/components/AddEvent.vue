@@ -124,38 +124,56 @@ export default {
 };
 </script>
 <template>
+  <div style="display: flex; margin-top: 50px; margin-left:30px ">
 
-  <h1>Nouveau rendez-vous :</h1>
+    <router-link :to="`/liste`">
+      <button
+      href="#"
+      class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white  dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 retourliste"
+     >
+     Liste
+    </button>
+  </router-link>
+  
+  <router-link :to="`/planning`">
+    <button class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white  dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 retourliste" style="padding: 13.5px !important">
+      Planning
+    </button>
+  </router-link>
+</div>
   <div class="créationevent">
-    <div class="input">
+    <h1>Nouveau rendez-vous :</h1>
+    <div >
       <label for="start" style="margin-top: 30px">Début:</label>
       <input
-        style="margin-top: 30px"
+        
         v-model="start"
         type="datetime-local"
         id="start"
-        name="start"
+        name="start" class="input"
       />
     </div>
-    <div class="input">
+    <div >
       <label for="end">Fin:</label>
-      <input v-model="end" type="datetime-local" id="end" name="end" />
+      <input v-model="end" type="datetime-local" id="end" name="end" class="input"/>
     </div>
-    <div class="input">
+    <div >
       <label for="title">Evenement:</label>
-      <input v-model="title" class="input" type="text" />
+      <input v-model="title" type="text" class="input"/>
     </div>
-    <div class="input">
+    <div >
       <label for="description">Contenus:</label>
       <textarea v-model="description" class="input" type="text" />
     </div>
-    <div class="input">
-      <label for="backgroundcolor">Type de rendez-vous :</label>
+    <div >
+      <label for="backgroundcolor" >Type de rendez-vous :</label> 
+      <hr/>
       <select
         v-model="backgroundcolor"
         name="backgroundcolor"
-        id="backgroundcolor"
+        id="backgroundcolor" class="input rdv"
       >
+
         <option value="#F9E9BD">Réunion</option>
         <option value="#EB380D">Evenèment</option>
         <option value="#0DEBC5">Préparation</option>
@@ -169,27 +187,42 @@ export default {
     <br />
     <div>
    
-      <div class="add">
-        <button @click="addEvent()" class="button rounded-lg button-disabled">
+      <div class="">
+        <button @click="addEvent()" class="button rounded-lg add">
           Nouveau rendez-vous
         </button>
       </div>
     </div>
   </div>
 </template>
-<style>
+<style scoped>
+.créationevent{
+  box-shadow: 4px 1px 20px 0px black;
+  border: 1px solid;
+  width: 670px;
+  text-align: center;
+  padding: 1%;
+  margin-left: 35%;
+  margin-top: 108px;
+}
+body {
+  font-family:Arial, Helvetica, sans-serif!important;
+}
+
 .input {
-  display: flex;
-  justify-content: space-evenly;
-  margin-bottom: 9px;
-  width: 52% !important;
-  margin-left: 30%;
+  /* display: flex; */
+  /* justify-content: space-evenly; */
+  /* margin-bottom: 9px; */
+  /* width: 52% !important; */
+  /* margin-left: 30px; */
+  margin-left: 180px !important;
 }
 .addevent {
   /* margin-top: 8% !important; */
-  width: 90%;
+  /* width: 90%; */
   margin: auto;
-  border: 1px solid;
+  border: 1px solid black;
+
   border-radius: 5px;
 }
 .créationevent {
@@ -197,16 +230,21 @@ export default {
 
   padding: 5px;
 }
-
+.add{
+  border-radius: 0.5rem;
+  border: 5px solid green;
+  background-color: green;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+}
 .createinscriptionmethod {
   margin-left: 0%;
   margin-top: -12px;
   margin-bottom: 10px;
   /* display: none; */
 }
-/* .add{
-  margin-top: -86px;
-} */
+
 .input {
   display: flex;
   justify-content: space-evenly;
