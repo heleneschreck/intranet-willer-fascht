@@ -331,7 +331,11 @@ export default {
 </script>
 <template>
   <router-link :to="`/accueilintra`">
-    <button class="button rounded-lg retourcompterendu">Retour</button>
+    <button
+      class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 retourliste"
+    >
+      Retour
+    </button>
   </router-link>
   <h1>Supports publicitaires</h1>
   <div class="supportpublicitaires">
@@ -492,13 +496,14 @@ export default {
         accept=".jpg, .jpeg, .png"
         id=""
       />
+      <hr>
       <button @click="add_support()" class="addaffiche">
         Ajouter un nouveau support publicitaire
       </button>
     </div>
   </div>
 </template>
-<style>
+<style scoped>
 h1 {
   background-color: white;
 }
@@ -545,14 +550,18 @@ h1 {
   background-color: white;
 }
 .addaffiche {
-  margin-left: 30px;
+  border-radius: 20px;
+  border: 5px solid green;
   background-color: green;
   color: white;
   font-weight: bold;
-
+  font-size: 20px;
+  /* margin-left: 38%; */
+  margin-bottom: 15px;
+  margin-top: 15px;
 }
 .ajoutdaffiche {
-  margin-left: 24%;
+  /* margin-left: 24%; */
   
 
 }
@@ -674,8 +683,16 @@ h1 {
   width: 25px;
 }
 .uploadaffiche {
-  display: flex;
-  justify-content: center;
+  display: flex !important;
   align-items: center;
+  justify-content: center;
+}
+@media screen and (max-width: 800px) {
+  .supportpublicitaires{
+    width: 100% !important;
+  }
+  .supportpublicitaire{
+    width: 90% !important;
+  }
 }
 </style>

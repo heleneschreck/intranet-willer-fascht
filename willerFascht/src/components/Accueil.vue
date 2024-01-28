@@ -424,6 +424,10 @@ nav {
   box-shadow: inset 4px 1px 20px 0px black;
 }
 
+h2{
+  font-size: 25px;
+  text-align: center;
+}
 
 .nav-item {
   color: black !important;

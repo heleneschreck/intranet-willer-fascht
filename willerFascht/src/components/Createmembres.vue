@@ -52,30 +52,69 @@ export default {
 };
 </script>
 <template>
+  <router-link :to="`/accueilintra`">
+    <button
+      class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 retourliste"
+    >
+      Retour
+    </button>
+  </router-link>
   <div class="addmembres">
     <h1>Ajouter un membre</h1>
-    <label for="name">Nom:</label>
-    <input v-model="name" class="input" type="text" />
-    <label for="prenom">Prénom:</label>
-    <input v-model="prenom" class="input" type="text" />
-    <label for="telephone">Télèphone:</label>
-    <input v-model="telephone" class="input" type="tel" />
-    <label for="mail">Adresse mail:</label>
-    <input v-model="email" class="input" type="email" />
-    <label for="password">Password:</label>
-    <input v-model="password" class="input" type="password" />
-    <label for="niveau">Niveau:</label>
-    <input v-model="niveau" class="input" type="number" max="1" min="0" />
+    <div class="question">
+      <!-- <label for="name">Nom:</label> -->
+      <input v-model="name" placeholder="Nom" class="input" type="text" />
+    </div>
+    <div class="question">
+      <!-- <label for="prenom">Prénom:</label> -->
+      <input v-model="prenom" placeholder="Prénom" class="input" type="text" />
+    </div>
+    <div class="question">
+      <!-- <label for="telephone">Télèphone:</label> -->
+      <input
+        v-model="telephone"
+        placeholder="Télèphone"
+        class="input"
+        type="tel"
+      />
+    </div>
+    <div class="question">
+      <!-- <label for="mail">Adresse mail:</label> -->
+      <input v-model="email" class="input" placeholder="Email" type="email" />
+    </div>
+    <div class="question">
+      <!-- <label for="password">Password:</label> -->
+      <input
+        v-model="password"
+        class="input"
+        placeholder="Mot de passe"
+        type="password"
+      />
+    </div>
+    <div class="question">
+      <!-- <label for="niveau">Niveau:</label> -->
+      <input
+        v-model="niveau"
+        class="input"
+        placeholder="Niveau"
+        type="number"
+        max="1"
+        min="0"
+      />
+    </div>
     <br />
-    <button
+    <div class="contaigner">
+
+      <button
       @click="createMember()"
       class="button rounded-lg button-disabled connexions"
-    >
+      >
       Ajouter le membre
     </button>
   </div>
+  </div>
 </template>
-<style>
+<style scoped>
 h1 {
   font-size: large;
 }
@@ -83,8 +122,40 @@ nav {
   margin-bottom: 1%;
 }
 .addmembres {
-  margin-top: 7%;
-  margin-left: 1%;
-  margin-right: 1%;
+  box-shadow: 4px 1px 20px 0px black;
+  border: 1px solid;
+  width: 45%;
+
+  margin-left: 31%;
+
+  margin-bottom: 13px; 
+
 }
+.contaigner{
+    display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+.retourliste {
+  margin-bottom: 15px !important;
+}
+.input {
+  width: 90%;
+  border-radius: 15px;
+  /* height: 55px; */
+}
+.connexions {
+  border-radius: 20px;
+  border: 5px solid green;
+  background-color: green;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  /* margin-left: 38%; */
+  margin-bottom: 15px;
+ 
+}
+/* .input {
+  position: absolute;
+} */
 </style>

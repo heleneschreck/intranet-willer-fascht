@@ -91,20 +91,23 @@ export default {
         }, "2000");
       }
     },
-
-    
   },
 };
 </script>
 <template>
   <router-link :to="`/accueilintra`">
-    <button class="button rounded-lg retourintra">Retour</button>
+    <button
+      class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 retourliste"
+    >
+      Retour
+    </button>
   </router-link>
   <div class="membres">
     <table>
       <caption>
         Membres de l'association
       </caption>
+      
       <thead>
         <th>Nom</th>
         <th>Prénom</th>
@@ -113,9 +116,7 @@ export default {
         <th v-show="user.niveau == '1'">Niveau</th>
         <th v-show="user.niveau == '1'">Supprimer</th>
       </thead>
-      <div v-show="user.id == user.id">
-
-      </div>
+      <div v-show="user.id == user.id"></div>
       <tbody>
         <tr v-for="membre in membres">
           <td @mouseover="survol()">
@@ -280,12 +281,12 @@ export default {
             <div class="text-center text-gray-400 text-xs font-semibold">
                 <p>Web Developer</p>
             </div> -->
-            <!-- <table class="text-xs my-3">
+  <!-- <table class="text-xs my-3">
               <tbody>
                 <tr> -->
-                  <!-- <td class="px-2 py-2 text-gray-500 font-semibold">Mot de passe</td>
+  <!-- <td class="px-2 py-2 text-gray-500 font-semibold">Mot de passe</td>
                     <td class="px-2 py-2">{{user.password}}</td> -->
-                <!-- </tr>
+  <!-- </tr>
                 <tr>
                   <td class="px-2 py-2 text-gray-500 font-semibold">
                     Télèphone
@@ -307,11 +308,11 @@ export default {
                   >Modifier mes infos</a
                 >
               </router-link> -->
-            <!-- </div> -->
-          <!-- </div> -->
-        <!-- </div> -->
-      <!-- </div> -->
-    <!-- </div> -->
+  <!-- </div> -->
+  <!-- </div> -->
+  <!-- </div> -->
+  <!-- </div> -->
+  <!-- </div> -->
   <!-- </div> -->
 </template>
 <style scoped>
@@ -342,6 +343,7 @@ table {
 }
 td,th /*Toutes les cellules des tableaux...*/ {
   border: 1px solid black;
+  text-align: center;
 }
 
 caption {

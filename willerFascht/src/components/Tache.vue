@@ -14,8 +14,9 @@ export default {
       statuts: [],
       taches: [],
       soustaches: [],
-      mode: "nodisplay",
+      // mode: "nodisplay",
       tache: "",
+      pasencoredetaches: true,
     };
   },
   computed: {
@@ -35,11 +36,21 @@ export default {
     );
     this.soustaches = await fetched_soustaches.json();
     console.table(this.soustaches);
+
+    for (let i = 0; i < this.soustaches.length; i++) {
+      const soustache = this.soustaches[i];
+      console.log(soustache.tache_id);
+      console.log(this.$route.params.tache);
+      if (soustache.tache_id == this.$route.params.tache) {
+        console.log("pasencoredetaches");
+        this.pasencoredetaches = false;
+      }
+    }
   },
   methods: {
     generateCheckboxId(soustache) {
-    return `check1-${soustache.id}`;
-  },
+      return `check1-${soustache.id}`;
+    },
     logout: function () {
       this.$store.commit("logout");
       this.$router.push("/");
@@ -49,6 +60,18 @@ export default {
       // Then specify how you want your dates to be formatted
       return date.format("dddd MMMM D, YYYY");
     },
+    chargerPasencoredetache(){
+      for (let i = 0; i < this.soustaches.length; i++) {
+      const soustache = this.soustaches[i];
+      console.log(soustache.tache_id);
+      console.log(this.$route.params.tache);
+      if (soustache.tache_id == this.$route.params.tache) {
+        console.log("pasencoredetaches");
+        this.pasencoredetaches = false;
+      }
+    }
+    },
+
     chargersousTaches() {
       fetch("http://localhost:8000/api/soustaches")
         .then((response) => response.json())
@@ -75,6 +98,7 @@ export default {
         .then((result) => {
           console.log(result);
           this.chargersousTaches();
+          this.chargerPasencoredetache();
         })
         .catch((error) => console.log("error", error));
     },
@@ -110,6 +134,9 @@ export default {
         .then((result) => {
           console.log(result);
           this.chargersousTaches();
+          this.chargerPasencoredetache();
+          document.getElementsByClassName("pasencoredetaches")[0].style.display = "none";
+          
           this.title = "";
         })
         .catch((error) => console.log("error", error));
@@ -173,8 +200,11 @@ export default {
   <div v-for="tache in taches">
     <div v-if="tache.id == $route.params.tache">
       <router-link :to="`/projet/${tache.project_id}`">
-        <button         class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 retourliste"
->Retour</button>
+        <button
+          class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 retourliste"
+        >
+          Retour
+        </button>
       </router-link>
     </div>
   </div>
@@ -191,24 +221,26 @@ export default {
           />
           Check-List :
         </div>
+        <div v-if="pasencoredetaches == true" class="pasencoredetaches">Ajouter une tache 😜</div>
         <div v-for="soustache in soustaches">
           <div
             v-if="soustache.tache_id == $route.params.tache"
             class="titlesoustache"
           >
+
             <div
               v-if="soustache.isvalidate == '1'"
               @mouseover="survol(soustache)"
               style="margin-top: 10px"
             >
               <div class="checkbox-wrapper">
-             
                 <input
                   type="checkbox"
                   @click="notvalidate(soustache)"
                   class="check"
                   :id="generateCheckboxId(soustache)"
-                  checked     />
+                  checked
+                />
                 <label :for="generateCheckboxId(soustache)" class="label">
                   <svg width="45" height="45" viewBox="0 0 95 95">
                     <rect
@@ -253,12 +285,12 @@ export default {
             >
               <div class="checkbox-wrapper">
                 <input
-         @click="validate(soustache)" 
+                  @click="validate(soustache)"
                   type="checkbox"
                   class="check"
                   :id="generateCheckboxId(soustache)"
                 />
-                <label :for="generateCheckboxId(soustache)"  class="label">
+                <label :for="generateCheckboxId(soustache)" class="label">
                   <svg width="45" height="45" viewBox="0 0 95 95">
                     <rect
                       x="30"
@@ -463,6 +495,12 @@ h2 {
   margin-bottom: -10px !important;
 }
 .label {
+  
   display: flex !important;
+}
+.pasencoredetaches {
+  text-align: center;
+  font-size: 25px  !important;
+  
 }
 </style>

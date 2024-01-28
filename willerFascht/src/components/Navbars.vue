@@ -314,6 +314,7 @@ li {
   }
   li {
     margin-bottom: 5px;
+    font-size: 18px !important;
 
   }
   button{
