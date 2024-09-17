@@ -142,7 +142,7 @@ getBackgroundColor(evenement) {
   
 </template>
 
-<style >
+<style scoped >
 .Planning {
 
   margin: auto;
@@ -157,7 +157,7 @@ getBackgroundColor(evenement) {
   width: 200px;
   border: 5px solid rgb(70, 137, 226);
   background-color: rgb(70, 137, 226);
-  /* color: white !important; */
+  color: white ;
   font-weight: bold;
   font-size: 20px;
   height: 70px !important;

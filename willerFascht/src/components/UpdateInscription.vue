@@ -204,7 +204,7 @@ export default {
     </div>
   </div>
 </template>
-<style>
+<style scoped>
 .updateinscription {
   /* margin-top: 8% !important; */
   width: 90%;

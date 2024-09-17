@@ -74,7 +74,7 @@ et un caractère d'un autre type (ponctuation, contrôle...)" type ="password"
     <button @click="update_user">Mise à jour</button>
   </div>
 </template>
-<style>
+<style scoped>
 h1 {
   font-size: large;
 }

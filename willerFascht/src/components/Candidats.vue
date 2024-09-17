@@ -115,17 +115,21 @@ export default {
 </script>
 <template>
   <router-link :to="`/accueilintra`">
-    <button class="button rounded-lg retourintra">Retour</button>
-  </router-link>
+    <button
+      class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 retourliste"
+    >
+      Retour
+    </button>
+    </router-link>
   <h1>Candidats</h1>
   <div class="listecandidats">
     <div
       v-for="candidat in candidats"
-      style="margin-bottom: 10%; margin-left: 3%;"
+      style=" margin-left: 3%;"
     >
       <!-- {{ this.candidatsSee }} -->
       <div v-if="candidat.vu == 0">
-        <div class="flex items-center h-screen w-full justify-center carduser">
+        <div class="flex items-center " style="margin-bottom: 13% !important;">
           <div class="max-w-xs">
             <div class="bg-white shadow-xl rounded-lg py-3">
               <div class="photo-wrapper p-2" style="overflow: scroll ">
@@ -141,7 +145,7 @@ export default {
                 <div class="p-2">
                   <h3
                     class="text-center text-xl text-gray-900 font-medium leading-8"
-                    style="font-weight: 900 !important"
+                    style="font-weight: 900 !important ; font-size:90%" 
                   >
                     {{ candidat.nom }} {{ candidat.prenom }}
                   </h3>
@@ -182,7 +186,7 @@ export default {
         </div>
       </div>
       <div v-else>
-        <div class="flex items-center h-screen w-full justify-center carduser">
+        <div class="flex items-center ">
           <div class="max-w-xs">
             <div class="bg-white shadow-xl rounded-lg py-3">
               <div class="photo-wrapper p-2" style="overflow: scroll ">
@@ -204,6 +208,7 @@ export default {
                 <div class="p-2">
                   <h3
                     class="text-center text-xl text-gray-900 font-medium leading-8"
+                    style="font-size:90%"
                   >
                     {{ candidat.nom }} {{ candidat.prenom }}
                   </h3>
@@ -231,7 +236,7 @@ export default {
                     </tbody>
                     <button
                       @click="delete_inscription(candidat.id)"
-                      style="margin-top: 15px !important"
+                    
                       class="addpartenaire"
                     >
                       Candidature examinée
@@ -250,8 +255,8 @@ export default {
 .listecandidats {
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 55px !important;
   margin-left: 8%;
+  
 }
 .menunonlu:hover {
   cursor: pointer;

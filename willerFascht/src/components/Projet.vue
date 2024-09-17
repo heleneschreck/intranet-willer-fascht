@@ -577,6 +577,19 @@ export default {
   </div>
 </template>
 <style scoped>
+.retourliste {
+  margin-left: 1%;
+  margin-bottom: -140px !important;
+  border-radius: 20px;
+  width: 200px;
+  border: 5px solid rgb(70, 137, 226);
+  background-color: rgb(70, 137, 226);
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  height: 70px;
+  margin-bottom: 5% ;
+}
 .projet {
   background-color: hsla(0, 0%, 84%, 0.3) !important;
 }
@@ -684,5 +697,12 @@ h1 {
 .prenom {
   font-weight: bolder !important;
   color: black !important;
+}
+@media screen and (max-width: 800px) {
+
+}
+@media screen and (max-width: 1022px) {
+
+
 }
 </style>

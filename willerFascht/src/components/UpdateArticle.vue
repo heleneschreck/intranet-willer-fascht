@@ -271,7 +271,7 @@ export default {
     </div>
   </div>
 </template>
-<style>
+<style scoped>
 .updaterendezvous {
   /* margin-top: 8% !important; */
   width: 90%;

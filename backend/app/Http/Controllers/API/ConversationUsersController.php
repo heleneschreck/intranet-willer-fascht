@@ -15,7 +15,7 @@ class ConversationUsersController extends Controller
      */
     public function index()
     {
-        $conversation_Users = Conversation_Users::latest()->get();
+        $conversation_Users = Conversation_Users::orderBy('updated_at', 'desc')->get();
         return response()->json($conversation_Users);
     }
 
@@ -96,6 +96,20 @@ class ConversationUsersController extends Controller
     public function show(Conversation_Users $conversation_Users)
     {
         return response()->json($conversation_Users);
+    }
+    
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Conversation_Users  $tache
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $tache = Conversation_Users::find($id);
+        $tache->update($request->all());
+        return $tache;
     }
 
 

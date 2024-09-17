@@ -15,7 +15,7 @@ class ConversationController extends Controller
      */
     public function index()
     {
-        $conversations = Conversation::latest()->get();
+        $conversations = Conversation::orderBy('updated_at', 'desc')->get();
         return response()->json($conversations);
     }
     
@@ -60,6 +60,19 @@ class ConversationController extends Controller
         return response()->json($conversation);
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Conversation  $tache
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $tache = Conversation::find($id);
+        $tache->update($request->all());
+        return $tache;
+    }
     /**
      * Remove the specified resource from storage.
      *

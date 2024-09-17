@@ -366,6 +366,19 @@ export default {
   </div>
 </template>
 <style scoped>
+.retourliste {
+  margin-left: 1%;
+  margin-bottom: 45px !important;
+  border-radius: 20px;
+  width: 200px;
+  border: 5px solid rgb(70, 137, 226);
+  background-color: rgb(70, 137, 226);
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  height: 70px;
+  margin-bottom: 5% ;
+}
 .checkbox-wrapper input[type="checkbox"] {
   visibility: hidden;
   display: none;
@@ -503,4 +516,5 @@ h2 {
   font-size: 25px  !important;
   
 }
+
 </style>

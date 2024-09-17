@@ -206,7 +206,7 @@ let url= "http://127.0.0.1:8000/api/project/"
       </div>
   </div>
 </template>
-<style>
+<style scoped>
 
 .projets {
   display: flex;

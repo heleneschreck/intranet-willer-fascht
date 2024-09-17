@@ -115,7 +115,7 @@ export default {
 </ul>
 
 </template>
-<style>
+<style scoped>
 .participant {
   /* margin-top: 8% !important; */
   width: 90%;

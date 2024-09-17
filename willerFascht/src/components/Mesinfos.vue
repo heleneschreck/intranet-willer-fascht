@@ -95,8 +95,8 @@ export default {
 /* .mesinfos {
   margin-top: 8%;
 } */
-.retourintra {
-  margin-left: 10%;
+.retourliste {
+  margin-left: 1%;
   margin-bottom: 45px !important;
   border-radius: 20px;
   width: 200px;

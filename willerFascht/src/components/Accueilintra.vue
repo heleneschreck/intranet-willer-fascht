@@ -19,7 +19,9 @@ export default {
       newMessages: [],
       listeNewMessagesLu: [],
       messages: [],
+      messagesConversation: [],
       membres: [],
+      OpenConversation: false,
     };
   },
   computed: {
@@ -35,9 +37,11 @@ export default {
     // console.table(this.profils);
 
     // messages
+
     let fetched_NewMessages = await fetch(
       "http://localhost:8000/api/lus/count/" + this.user.id
     );
+
     this.newMessages = await fetched_NewMessages.json();
     console.log(this.newMessages);
 
@@ -87,6 +91,90 @@ export default {
     this.affiches = affiches.slice(0, 4);
   },
   methods: {
+    OpenConversations: async function (message) {
+      console.log(message);
+      this.OpenConversation = true;
+      let fetched_messages = await fetch(
+        "http://localhost:8000/api/messages/conversation/" +
+          message.conversation_id
+      );
+      let messages = await fetched_messages.json();
+      messages = messages.sort((a, b) =>
+        b.created_at.localeCompare(a.created_at)
+      );
+      this.messagesConversation = messages.reverse();
+      console.log(this.messagesConversation);
+    },
+    sortir: function () {
+      this.OpenConversation = false;
+    },
+    chargerCountMessages() {
+      // console.log(this.conversation_id.id);
+      fetch("http://localhost:8000/api/lus/count/" + this.user.id)
+        .then((response) => response.json())
+        .then((data) => {
+          // Mettre à jour les données du composant avec les nouvelles données de l'API
+          this.newMessages = data;
+        })
+        .catch((error) =>
+          console.error(
+            "Erreur lors du chargement des candidats depuis l'API",
+            error
+          )
+        );
+    },
+    chargerAffichage() {
+      // console.log(this.conversation_id.id);
+      fetch("http://localhost:8000/api/lu")
+        .then((response) => response.json())
+        .then((data) => {
+          // Mettre à jour les données du composant avec les nouvelles données de l'API
+          this.listeNewMessagesLu = data;
+        })
+        .catch((error) =>
+          console.error(
+            "Erreur lors du chargement des candidats depuis l'API",
+            error
+          )
+        );
+    },
+    chargerDisplayMessages(lu) {
+
+      fetch(
+        "http://localhost:8000/api/messages/conversation/" + this.messagesConversation[0].conversation_id
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          this.messagesConversation = data;
+        })
+        .catch((error) =>
+          console.error(
+            "Erreur lors du chargement des candidats depuis l'API",
+            error
+          )
+        );
+    },
+    elementVue: function (lu) {
+      console.log(lu.id);
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("Lu", "1");
+      var requestOptions = {
+        method: "PUT",
+        body: urlencoded,
+        redirect: "follow",
+      };
+
+      fetch("http://localhost:8000/api/lu/" + lu.id, requestOptions)
+        .then((response) => response.text())
+        .then((result) => {
+          console.log(result);
+          this.chargerDisplayMessages(this.messagesConversation[0].conversation_id);
+          this.chargerCountMessages();
+          this.chargerAffichage();
+        })
+        .catch((error) => console.log("error", error));
+    },
+
     async fetchedcandidats() {},
     logout: function () {
       this.$store.commit("logout");
@@ -146,9 +234,109 @@ export default {
       }, "2000");
     },
     toogleAside: function () {
-      console.log("coucou");
       console.log(document.querySelector("aside"));
       this.showAside = !this.showAside;
+    },
+    ajoutMessage: async function () {
+      console.log(this.messagesConversation);
+      console.log(this.messagesConversation[0].conversation_id);
+      let fetched_participantsConversation = await fetch(
+        "http://localhost:8000/api/conversation_users/participants/" +
+          this.messagesConversation[0].conversation_id
+      );
+      this.participantsConversation =
+        await fetched_participantsConversation.json();
+      console.log(this.participantsConversation);
+
+      const participantsArray = Object.values(this.participantsConversation);
+
+      const membresNonLu = participantsArray
+        .filter((participantId) => participantId !== `${this.user.id}`)
+        .map((participantId) => participantId);
+
+      console.log(membresNonLu);
+
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("user_id", this.user.id);
+      urlencoded.append("conversation_id", this.messagesConversation[0].conversation_id);
+      urlencoded.append("message", this.content);
+      urlencoded.append("Lu", "0");
+
+      var requestOptions = {
+        method: "POST",
+        body: urlencoded,
+        redirect: "follow",
+      };
+
+      const url = "http://localhost:8000/api/messages";
+
+      try {
+        const response = await fetch(url, requestOptions);
+        const result = await response.json();
+        if (result.id !== undefined) {
+          this.result = result;
+
+          for (const participantId of membresNonLu) {
+            var participantParams = new URLSearchParams();
+            participantParams.append("participants_id", participantId);
+            participantParams.append("message_id", this.result.id);
+            participantParams.append(
+              "conversation_id",
+              this.messagesConversation[0].conversation_id
+            );
+            participantParams.append("Lu", "0");
+
+            var participantRequestOptions = {
+              method: "POST",
+              body: participantParams,
+              redirect: "follow",
+            };
+
+            let participantUrl = "http://localhost:8000/api/lu";
+            const participantResponse = await fetch(
+              participantUrl,
+              participantRequestOptions
+            );
+            const participantResult = await participantResponse.json();
+            console.log(participantResult);
+          }
+
+       
+          this.content = "";
+        } else {
+          console.log("Response does not contain an ID.");
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+      var myHeaders = new Headers();
+      myHeaders.append(
+        "Cookie",
+        "XSRF-TOKEN=eyJpdiI6IjY3bkloOE41b2trWDhOc0FwbytJYnc9PSIsInZhbHVlIjoiTGk1Tys0V1QvUUl3NTV1NnlYbzh4VkJVWkNWYUp2aXFQNlFSM3FwbitWK3pxMjlaeHZ0UTN1b21iRUdNaEZXK09LUVZPUStzN05sdmhiaVRmODBRQ0ZqVnhOQWtOMVpsd0xHalNjOFlKMG1IeW1EN1JMVmZlcnloMlE3bWZrWTgiLCJtYWMiOiJjNmM2ZTc5Y2ExY2ZlOGNiMWRhY2I4YTlmNjU2NThkMmUxMWMwMjY1NTJmZjI2NjQwYTEwODBiZjI2YzY2MTUzIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImlRMi9oYU1OOFFsZnNyTGoyVDFEb3c9PSIsInZhbHVlIjoiaXhtNTFiUWlSQ0taRnpIVjd5L2VleUVCUkpOL3VaVFNwVGtrejh0ZTBOOGpLRU11YTNmWnI2b3J6bUpQbWJTY2QxWnk0dFhQamQ5Y1VLVUlJcngxTWI5MDlYQjBPWEVjcEFteWJ2OVhoZ1JOSmRqekVBNThDa3pLUFhPWGdvaCsiLCJtYWMiOiI0MjhmMzc1NjBlMGZhZTJkMDAyODNiOGJkNDgxMDBlMmM0OTZjODY5ZTcyMDc5Yzk1MjRiZmI0YjczYjJhY2E4IiwidGFnIjoiIn0%3D"
+      );
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("Lu", "1");
+      var requestOptions = {
+        method: "PUT",
+        body: urlencoded,
+        redirect: "follow",
+      };
+      fetch(
+        "http://localhost:8000/api/lus/update/" +
+          this.user.id +
+          "/" +
+          this.messagesConversation[0].conversation_id +
+          "/0",
+        requestOptions
+      )
+      .then((response) => response.text())
+        .then((result) => {
+          console.log(result);
+          this.chargerDisplayMessages(this.messagesConversation[0].conversation_id);
+          this.chargerCountMessages();
+          this.chargerAffichage();
+        })
+        .catch((error) => console.log("error", error));
     },
   },
 };
@@ -367,7 +555,100 @@ export default {
       </ul>
     </div>
   </aside>
-  <div class="ml-auto mb-6 lg:w-[75%] xl:w-[80%] 2xl:w-[85%]">
+  <div
+    class="container mx-auto mt-12 conversationSelectionne"
+    style="left: 40%; top: 150px; position: absolute; z-index: 1 !important"
+    v-if="OpenConversation == true"
+  >
+    <img
+      src="https://cdn-icons-png.flaticon.com/128/45/45320.png"
+      class="croixSortir"
+      style="width: 15px; position: absolute; left: 30%; top: 10px; z-index: 1"
+      @click="sortir()"
+      alt=""
+    />
+
+    <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-3">
+      <div
+        class="w-full px-4 py-5 bg-white rounded-lg shadow"
+        style="background-color: hsla(0, 0%, 84%, 0.3)"
+      >
+        <div class="messs">
+          <div v-for="message in messagesConversation">
+            <div v-if="user.id == message.user_id">
+              <div class="mess">
+                <div
+                  v-for="membre in membres"
+                  style="color: gray; margin-bottom: 5px"
+                >
+                  <div v-if="membre.id == message.user_id">
+                    {{ membre.prenom }}
+                  </div>
+                </div>
+                {{ message.message }}
+
+                <div class="datemessage">
+                  {{ moment(message.created_at).format("DD/MM/YYYY") }}
+                </div>
+              </div>
+            </div>
+            <div v-else>
+              <div class="mess" style="margin-left: 27%">
+                <div
+                  v-for="membre in membres"
+                  style="color: gray; margin-bottom: 5px"
+                >
+                  <div v-if="membre.id == message.user_id">
+                    {{ membre.prenom }}
+                  </div>
+                </div>
+                <div v-for="lu in listeNewMessagesLu">
+                  <div v-if="lu.message_id == message.id">
+                    <div
+                      v-if="lu.Lu == 0"
+                      style="font-weight: bold"
+                      @mouseover="elementVue(lu)"
+                    >
+                      {{ message.message }}
+                    </div>
+                    <div v-else>
+                      {{ message.message }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="datemessage">
+                  {{ moment(message.created_at).format("DD/MM/YYYY") }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ajoutermessage">
+          <textarea
+            v-model="content"
+            class="inputmessages"
+            style="margin-right: 10px !important"
+          />
+          <div
+            class="imageajoutmessage"
+            @keydown.enter.prevent="ajoutMessage()"
+            @click="ajoutMessage()"
+          >
+            <img
+              src="https://cdn-icons-png.flaticon.com/128/2161/2161491.png"
+              class="addmessage"
+              alt=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="ml-auto mb-6 lg:w-[75%] xl:w-[80%] 2xl:w-[85%]"
+    :class="{ blurred: OpenConversation }"
+  >
     <div
       class="sticky z-10 top-0 h-16 border-b bg-white lg:py-2.5"
       v-bind:class="{ barreasideResponsive: showAside }"
@@ -528,12 +809,12 @@ export default {
                 </h5>
               </div>
               <div class="pasdeMessages" v-if="newMessages.count == 0">
-                Tu n'as pas de messages 😜
+                Tu n'as pas de nouveaux messages 😜
               </div>
               <div class="listesdesnouveauxmessages" v-else>
                 <div v-for="MessagesNonLu in listeNewMessagesLu">
-                  <!-- {{ MessagesNonLu.Lu }}
-  {{ this.user.id }} -->
+                  <!-- {{ MessagesNonLu.Lu }} -->
+                  <!--  {{ this.user.id }} -->
                   <div
                     v-if="
                       MessagesNonLu.participants_id == this.user.id &&
@@ -545,11 +826,15 @@ export default {
                         <div v-for="membre in membres">
                           <div v-if="membre.id == message.user_id">
                             <li>
-                              <router-link
-                                :to="`messagerieConversation`"
+                              <!-- <router-link
+                                :to="`messagerieConversation`" -->
+                              <span
                                 class="lienMessagerie"
-                                >{{ membre.prenom }}
-                              </router-link>
+                                @click="OpenConversations(message)"
+                              >
+                                {{ membre.prenom }}
+                              </span>
+                              <!-- </router-link> -->
                               t'a envoyé un message
                             </li>
                           </div>
@@ -562,6 +847,7 @@ export default {
             </div>
           </div>
         </div>
+
         <div></div>
       </div>
       <div
@@ -659,7 +945,7 @@ export default {
         <div class="ongletResponsive">
           <div
             class="h-full py-6 px-6 space-y-6 rounded-xl border border-gray-200 bg-white"
-            style="width:110.5%; margin-left: -5%;"
+            style="width: 110.5%; margin-left: -5%"
           >
             <router-link :to="`liste`">
               <h5 class="text-xl text-gray-700 rubrique">
@@ -688,7 +974,8 @@ export default {
         </div>
         <div class="ongletResponsive">
           <div
-            class="h-full py-6 px-6 rounded-xl border border-gray-200 bg-white" style="width:110.5%; margin-left: -5%;"
+            class="h-full py-6 px-6 rounded-xl border border-gray-200 bg-white"
+            style="width: 110.5%; margin-left: -5%"
           >
             <div>
               <div class="titreRubrique">
@@ -732,13 +1019,13 @@ export default {
         <div></div>
       </div>
       <div
-        class="lg:h-full py-8 px-6 text-gray-600 rounded-xl border border-gray-200 bg-white listderniereaffichesResponsive" 
+        class="lg:h-full py-8 px-6 text-gray-600 rounded-xl border border-gray-200 bg-white listderniereaffichesResponsive"
       >
         <router-link :to="`affiches`">
           <h5 class="text-xl text-gray-700 rubrique">Dernières affiches :</h5>
         </router-link>
         <div class="dernieresAffiche">
-          <div v-for="(affiche, index) in affiches.slice(0, 3)" >
+          <div v-for="(affiche, index) in affiches.slice(0, 3)">
             <div class="derniereAffiche">
               <div class="titleDerniereaffiches">{{ affiche.title }} :</div>
               <div class="imageDerniereAffiche">
@@ -789,8 +1076,8 @@ export default {
     </div>
   </div>
 </template>
-<style>
-.OngletsResponsives{
+<style scoped>
+.OngletsResponsives {
   display: none;
 }
 .asideResponsive {
@@ -798,8 +1085,6 @@ export default {
   /* margin-top: 90px; */
   z-index: 1 !important;
 }
-
-
 /* .fermerAside {
   position: absolute;
   top: 63px;
@@ -902,14 +1187,26 @@ export default {
   cursor: pointer;
   font-style: italic;
 }
+.messs {
+  margin-top: 15px;
+  overflow: scroll;
+  height: 500px;
+}
+.mess {
+  background-color: white;
+  margin-bottom: 5px;
+  padding: 5px;
+  border-radius: 5px;
+  width: 70%;
+}
 
 @media screen and (max-width: 800px) {
   /* .px-6 {
 display: none;
  }  */
- .OngletsResponsives{
-  display: block !important;;
-}
+  .OngletsResponsives {
+    display: block !important;
+  }
   .onglets {
     display: none;
   }
@@ -920,15 +1217,13 @@ display: none;
     width: 90%;
     margin-left: 4.5%;
   }
-  .listderniereaffichesResponsive{
+  .listderniereaffichesResponsive {
     width: 90%;
     margin-left: 4.5%;
-
   }
-  .listNouveauxMembres{
+  .listNouveauxMembres {
     width: 90%;
     margin-left: 4.5%;
-
   }
 }
 @media screen and (max-width: 1022px) {
@@ -937,6 +1232,10 @@ display: none;
   }
   .notVisibility {
     display: none !important;
+  }
+  .conversationSelectionne {
+    left: 5% !important;
+    width: 80% !important;
   }
 }
 </style>

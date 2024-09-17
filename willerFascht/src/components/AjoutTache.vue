@@ -72,20 +72,39 @@ export default {
 </script>
 <template>
   <router-link :to="`/projet/${this.$route.params.projet}`">
-    <button class="button rounded-lg  Retour">Retour</button>
+    <button
+      class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 retourliste"
+    >
+      Retour
+    </button>
   </router-link>
   <div class="formulaire">
     <h1>Tache à ajouter</h1>
 
-    <label for="title">Tache :</label>
-    <input v-model="title" class="inputTitle" type="text" @keyup.enter="createTache()" />
-
-    <label for="end">Date buttoir :</label>
-    <input v-model="end" class="inputDate" type="date" @keyup.enter="createTache()"/>
-
+    <label for="title">Tache :</label> <br />
+    <input
+      v-model="title"
+      class="inputTitle"
+      type="text"
+      @keyup.enter="createTache()"
+    />
+    <br />
+    <label for="end">Date buttoir :</label> <br />
+    <input
+      v-model="end"
+      class="inputDate"
+      type="date"
+      @keyup.enter="createTache()"
+    />
+    <br />
     <label for="user_id">Je confie cette tache à :</label>
+    <br />
     <select v-model="user_id" name="user_id" id="user_id">
-      <option v-for="membre in membres" :value="membre.id" @keyup.enter="createTache()">
+      <option
+        v-for="membre in membres"
+        :value="membre.id"
+        @keyup.enter="createTache()"
+      >
         {{ membre.prenom }}
       </option>
     </select>
@@ -98,32 +117,34 @@ export default {
     </button>
   </div>
 </template>
-<style>
+<style scoped>
 body {
-  background-color:hsla(0, 0%, 84%, 0.3) !important;
+  background-color: hsla(0, 0%, 84%, 0.3) !important;
 }
 .ajouttache {
   /* background-color: hsla(0, 0%, 84%, 0.3); */
- height: 100% !important;
+  height: 100% !important;
 }
 .formulaire {
   text-align: center;
   border: 1px solid;
-  width: 27%;
+  width: 527px;
   margin-left: 35%;
+  margin-top:15px !important;
   border-radius: 10px;
   background-color: white;
   box-shadow: 10px 12px 15px black;
- 
 }
 
-.AjoutTache{
+.AjoutTache {
   background-color: green;
   color: white;
   font-weight: bold;
   padding: 5px !important;
+  margin-top: 8px !important;
+  margin-bottom: 8px !important;
 }
-.Retour{
+.Retour {
   border-radius: 20px;
   margin-left: 3%;
   border: 5px solid rgb(9, 59, 125);
@@ -131,5 +152,16 @@ body {
   color: white;
   font-weight: bold;
   /* font-size: 20px; */
+}
+@media screen and (max-width: 800px) {
+.formulaire {
+  margin-left :25% !important;
+}
+}
+@media screen and (max-width: 1022px) {
+  .formulaire {
+    margin-left :25% !important;
+  }
+  
 }
 </style>

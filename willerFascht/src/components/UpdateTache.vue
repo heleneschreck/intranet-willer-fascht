@@ -100,7 +100,7 @@ export default {
     </div>
   </div>
 </template>
-<style>
+<style scoped>
 
 .updateTache {
   background-color: green;

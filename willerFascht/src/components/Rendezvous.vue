@@ -187,7 +187,7 @@ export default {
   </div>
 </template>
 
-<style>
+<style scoped>
 h1 {
   font-weight: bolder !important;
 }
