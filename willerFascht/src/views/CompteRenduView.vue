@@ -9,3 +9,9 @@ import Navbars from '../components/Navbars.vue'
     <CompteRendu />
   </div>
 </template>
+<style>
+.compterendu{
+  background-color: hsla(0, 0%, 84%, 0.3);
+}
+
+</style>

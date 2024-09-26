@@ -51,13 +51,15 @@ export default {
 </script>
 <template>
   <h1>Compte Rendu</h1>
-  <router-link :to="`/addCompterendu`">
-    <button
+  <div class="listCompteRendu">
+
+    <router-link :to="`/addCompterendu`">
+      <button
       href="#"
-      class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+      class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 ajout"
     >
-      Ajouter le nouveau compte rendu
-    </button></router-link
+    Ajouter le nouveau compte rendu
+  </button></router-link
   >
   <table>
     <thead>
@@ -82,18 +84,49 @@ export default {
             <img
                 src="https://cdn-icons-png.flaticon.com/128/216/216658.png"
                 alt=""
-                style="width: 25px;"
+                style="width: 25px;
+                margin-top: 5%;"
               />
           </button>
         </td>
       </tr>
     </tbody>
   </table>
+</div>
 </template>
-<style>
+<style scoped>
+h1{
+  background-color: white;
+  margin-top:-10px !important;
+}
 .compterendu {
   /* margin-top: 8% !important; */
   margin-left: 3%;
   width: 95%;
+}
+template{
+  background-color: hsla(0, 0%, 84%, 0.3);
+}
+.ajout{
+  background-color: green;
+    color: white;
+    font-weight: bold;
+    padding: 13px;
+
+    /* width: 15%; */
+    margin-left: 1%;
+}
+table{
+  width: 95%;
+  margin-top: 15px;
+  margin-left: 1%;
+}
+td {
+    border: 1px solid black;
+    text-align: center;
+}
+th {
+    border: 1px solid black;
+    text-align: center;
 }
 </style>

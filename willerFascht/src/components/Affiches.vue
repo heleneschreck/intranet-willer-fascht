@@ -329,14 +329,14 @@ export default {
   },
 };
 </script>
-<template>
-  <router-link :to="`/accueilintra`">
-    <button
-      class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 retourliste"
-    >
-      Retour
-    </button>
-  </router-link>
+<template >
+  <div class="entete">
+
+    
+  </div>
+  <!-- <router-link :to="`/accueilintra`">
+    <button class="button rounded-lg retourtodo">Retour</button>
+  </router-link> -->
   <h1>Supports publicitaires</h1>
   <div class="supportpublicitaires">
     <div v-for="affiche in affiches">
@@ -504,12 +504,31 @@ export default {
   </div>
 </template>
 <style scoped>
-h1 {
-  background-color: white;
+.affiches{
+  background-color: hsla(0, 0%, 84%, 0.3) ;
+}
+h1{
+  margin-top: 1% !important;
+  margin-bottom: 1% !important;
+  /* background-color: hsla(0, 0%, 84%, 0.3) !important; */
+}
+.retourliste {
+  margin-left: 1%;
+  /* margin-bottom: 45px !important; */
+  border-radius: 20px;
+  /* width: 200px; */
+  border: 5px solid rgb(70, 137, 226);
+  background-color: rgb(70, 137, 226);
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  /* height: 70px; */
+  margin-bottom: 5% ;
 }
 
 .inputtitle {
   margin-bottom: 13px;
+  text-align: center;
 }
 .affichetitle {
   font-size: 30px;
@@ -530,17 +549,20 @@ h1 {
 
   flex-direction: column;
 }
+
 .supportpublicitaires {
   display: flex;
-
-  margin-top: 45px;
-  margin-bottom: 45px;
-  margin-left: 60px;
-  margin-right: 10px;
+  background-color: hsla(0, 0%, 84%, 0.3) ;
+/* margin-top: -50px; */
+  padding-top: 45px;
+  padding-bottom: 45px;
+  padding-left: 60px;
+  padding-right: 10px;
   flex-wrap: wrap;
   position: relative;
 }
 .supportpublicitaire {
+  box-shadow:  2px 1px 10px 0px gray;
   margin-left: 15px;
   margin-right: 20px;
   padding-bottom: 15px;
@@ -548,6 +570,7 @@ h1 {
   padding-right: 10px;
   border-radius: 3px;
   background-color: white;
+  margin-bottom: 5px;
 }
 .addaffiche {
   border-radius: 20px;

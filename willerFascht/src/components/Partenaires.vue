@@ -86,9 +86,9 @@ export default {
 };
 </script>
 <template>
-  <router-link :to="`/accueilintra`">
+  <!-- <router-link :to="`/accueilintra`">
     <button class="button rounded-lg retourtodo">Retour</button>
-  </router-link>
+  </router-link> -->
   <h1>Liste des partenaire de l'association :</h1>
   <div class="listedespartenaires">
     <div v-for="partenaire in partenaires">
@@ -107,11 +107,14 @@ export default {
         class="block max-w-[18rem] rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 listespartenaires"
       >
         <div
-          class="relative overflow-hidden bg-cover bg-no-repeat "
-          
+          class="relative overflow-hidden bg-cover bg-no-repeat"
           @mouseover="display_delete()"
         >
-          <img class="rounded-t-lg logoPartenaire" v-bind:src="partenaire.url" alt="" />
+          <img
+            class="rounded-t-lg logoPartenaire"
+            v-bind:src="partenaire.url"
+            alt=""
+          />
         </div>
         <hr />
         <div class="p-3">
@@ -122,7 +125,7 @@ export default {
       </div>
     </div>
   </div>
-  <br>
+  <br />
   <!-- <button
     class="button rounded-lg ajoutpartenaire"
     @click="display_ajoutpartenaire()"
@@ -133,7 +136,7 @@ export default {
   <div class="ajoutdepartenaire" @mouseover="not_display()">
     <input
       v-model="title"
-      placeholder="titre"
+      placeholder="Titre"
       class="inputtitlepartenaire"
       type="text"
     />
@@ -185,14 +188,31 @@ export default {
     <button @click="add_support()" class="addpartenaire">Valider</button>
   </div>
 </template>
-<style>
+<style scoped>
+.retourtodo {
+  margin-left: 1%;
+  margin-bottom: 1px !important;
+  border-radius: 20px;
+  width: 200px;
+  border: 5px solid rgb(70, 137, 226);
+  background-color: rgb(70, 137, 226);
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  height: 70px;
+  margin-bottom: 5%;
+}
 .partenaires {
   /* margin-top: 4% !important; */
-  background-color: hsla(0, 0%, 84%, 0.3);
+  background-color: hsla(0, 0%, 84%, 0.3) !important;
   padding-bottom: 25px;
 }
 h1 {
-  background-color: transparent !important;
+  margin-top: 1% !important;
+  margin-bottom: 1% !important;
+  background-color: white !important;
+  margin-top: -10px !important;
+  /* background-color: hsla(0, 0%, 84%, 0.3) !important; */
 }
 .listespartenaires {
   margin-top: 25px;
@@ -200,15 +220,13 @@ h1 {
   box-shadow: 12px 15px 25px black !important;
   width: 500px;
   height: 270px;
-  align-content: center; 
- 
+  align-content: center;
 }
 .logoPartenaire {
-
   display: block;
   margin-left: auto;
   margin-right: auto;
-height: 200px;
+  height: 200px;
 }
 .listedespartenaires {
   display: flex;
@@ -244,9 +262,13 @@ height: 200px;
   padding-right: 10px;
 }
 .inputtitlepartenaire {
-  margin-bottom: 15px;
+  margin-bottom: 23px;
+  text-align: center;
+  width: 20%;
+  border-radius: 15px;
   border-color: hsla(0, 0%, 84%, 0.3);
-  margin-left: 41%;
+  margin-left: 40%;
+  box-shadow: 4px 10px 15px black;
 }
 .addpartenaire {
   /* margin-left: auto; */
@@ -258,5 +280,6 @@ height: 200px;
   color: white;
   font-weight: bold;
   font-size: 20px;
+  margin-bottom: 1% !important;
 }
 </style>
