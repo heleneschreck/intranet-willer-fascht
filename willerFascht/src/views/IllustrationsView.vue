@@ -9,3 +9,10 @@ import Navbars from "../components/Navbars.vue";
     <Illustrations />
   </div>
 </template>
+<style>
+.illustrations {
+  background-color: hsla(0, 0%, 84%, 0.3) !important; 
+}
+
+
+</style>

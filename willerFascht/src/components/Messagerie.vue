@@ -1,6 +1,7 @@
 <script>
 import { mapState } from "vuex";
 import moment from "moment";
+import { debounce } from "lodash";
 export default {
   data() {
     return {
@@ -93,10 +94,10 @@ export default {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
     let fetched_destinataires = await fetch(
-      "http://localhost:8000/api/conversation_users/"
+      "http://localhost:8000/api/conversation_users"
     );
     this.destinataires = await fetched_destinataires.json();
-    // console.log(this.destinataires);
+    console.log(this.destinataires);
     function delay(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
@@ -433,15 +434,15 @@ export default {
     },
     async fetchConversationsForCount(generalConversation) {
       let fetched_count = await fetch(
-        "http://localhost:8000/api/conversation_users/conversation/" +
+        "http://localhost:8000/api/conversation_users/conversation/"+
           generalConversation.id
       );
       let ConversationsData = await fetched_count.json();
-      // console.log(ConversationsData);
+      console.log(ConversationsData);
       generalConversation.conversation = {
         count: ConversationsData.count || 0,
       };
-      // console.log(generalConversation.conversation.count);
+     
     },
 
     // Sortir de la conversation
@@ -921,6 +922,20 @@ class="loading"
   </div>
 </template>
 <style scoped>
+h3 {
+  color: black!important;
+}
+span {
+  color: black!important;
+}
+.conversation {
+  color: black!important;
+}
+.conversationMessages {
+  color: black!important;
+}
+
+
 .retourliste{
   margin-left: 10px;
   /* margin-bottom: 35px !important; */

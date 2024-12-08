@@ -159,8 +159,8 @@ export default {
           const createdPostId = data.id;
           console.log("ID of the created post:", createdPostId);
           setTimeout(() => {
-        this.$router.push({ path: "/illustrations/"+createdPostId});
-      }, "2000");
+            this.$router.push({ path: "/illustrations/" + createdPostId });
+          }, "2000");
         })
         .catch((error) => console.error("Error:", error));
     },
@@ -169,9 +169,9 @@ export default {
 </script>
 
 <template>
-  <router-link :to="`/accueilintra`">
+  <!-- <router-link :to="`/accueilintra`">
     <button class="button rounded-lg retourtodo">Retour</button>
-  </router-link>
+  </router-link> -->
   <h1>Mise en ligne :</h1>
 
   <div id="form">
@@ -180,7 +180,8 @@ export default {
       type="text"
       name="title"
       id="title"
-      placeholder="title"
+      placeholder="Title"
+      style="font-size: 25px"
     />
     <br />
     <div class="options">
@@ -239,7 +240,7 @@ export default {
       id="content"
       cols="30"
       rows="5"
-      style="font-size: 15px"
+      style="font-size: 25px"
     >
     </textarea>
     <br />
@@ -254,12 +255,7 @@ export default {
     </button>
   </div>
 </template>
-<style>
-.miseenligne {
-  /* padding-top: 8% !important; */
-  background-color: hsla(0, 0%, 84%, 0.3);
-}
-
+<style scoped>
 label {
   margin-right: 3%;
 }
@@ -268,10 +264,11 @@ label {
 }
 h1 {
   text-align: center;
-  margin-top: 3% !important;
+  margin-top: -12px !important;
   margin-bottom: 3% !important;
   font-size: 27px !important;
   font-weight: 600 !important;
+  background-color: white !important;
 }
 
 #form {
@@ -285,9 +282,13 @@ textarea {
   padding: 1%;
 }
 #title {
-  border: 3px solid;
-  padding-left: 1%;
-  margin-bottom: 2%;
+  margin-bottom: 23px;
+  text-align: center;
+  width: 20%;
+  border-radius: 15px;
+  border-color: hsla(0, 0%, 84%, 0.3);
+  /* margin-left: 40%; */
+  box-shadow: 4px 10px 15px black;
 }
 .options {
   border: 1px solid;
@@ -331,5 +332,6 @@ textarea {
   font-weight: bold;
   /* width: 15%; */
   margin-left: 30%;
+  padding-left: 10px;
 }
 </style>

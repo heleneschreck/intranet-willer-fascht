@@ -25,18 +25,32 @@ class ConversationUsersController extends Controller
      * @param  int  $user_id
      * @return \Illuminate\Http\Response
      */
+    // public function getMessagesByConversations($conversation_id)
+    // {
+    //     $conversation = Conversation_Users::where('conversation_id', $conversation_id)->get();
+    //     $count = $conversation->count();
+
+    //     $conversationData = [
+    //         'conversation' => $conversation,
+    //         'count' => $count,
+    //     ];
+    //     return response()->json($conversationData);
+    // }
     public function getMessagesByConversations($conversation_id)
     {
         $conversation = Conversation_Users::where('conversation_id', $conversation_id)->get();
         $count = $conversation->count();
-
-        $conversationData = [
-            'conversation' => $conversation,
-            'count' => $count,
-        ];
+    
+        // Créer un objet vide
+        $conversationData = new \stdClass();
+        
+        // Ajouter les propriétés à l'objet
+        $conversationData->conversation = $conversation;
+        $conversationData->count = $count;
+    
         return response()->json($conversationData);
     }
-
+    
 
     public function getParticipantsByMessages($conversation_id)
     {

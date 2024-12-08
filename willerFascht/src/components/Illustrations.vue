@@ -122,13 +122,11 @@ export default {
 };
 </script>
 <template>
-  <router-link :to="`/accueilintra`">
-    <button class="button rounded-lg retourcompterendu">Retour</button>
-  </router-link>
-  <router-link :to="`/mesarticles`">
-    <button class="button rounded-lg retourcompterendu">Mes articles</button>
-  </router-link>
   <h1>Ajouter des photos à notre publication :</h1>
+  
+  <router-link :to="`/mesarticles`">
+    <button class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 retourcompterendu">Mes articles</button>
+  </router-link>
   <div class="ajoutdepartenaire" @mouseover="not_display()">
     <div class="flex items-center justify-center w-full">
       <label
@@ -205,12 +203,39 @@ export default {
     </div>
   </div>
 </template>
-<style>
+<style scoped>
+
+.retourcompterendu{
+  margin-left: 1%;
+  /* margin-bottom: -140px !important; */
+  border-radius: 20px;
+  width: 200px;
+  border: 5px solid rgb(70, 137, 226);
+  background-color: rgb(70, 137, 226);
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  height: 70px;
+  margin-bottom: 1% ;
+  word-wrap: break-word; 
+}
+hr{
+  margin-top: 3%;;
+}
 .validerpost {
   display: inline-flex;
   justify-content: space-between;
   width: 90%;
   margin-left: -3%;
+}
+h1{ 
+  text-align: center;
+  margin-top: -12px !important;
+  margin-bottom: 3% !important;
+  font-size: 27px !important;
+  font-weight: 600 !important;
+  background-color: white !important;
+
 }
 .addillustrations {
   border-radius: 20px;
@@ -237,18 +262,23 @@ export default {
   float: right;
 }
 .illustrationListe {
+  margin-top: 11px;
+margin-left: 5px;
   width: 315px;
   height: 400px;
   margin-right: 20px;
 }
 .illustrationArticle {
   display: flex;
+  background-color: hsla(0, 0%, 84%, 0.3);
 }
 .deleteillustration {
   position: absolute;
+  top:5px;
+  left:5px;
   z-index: 1;
   width: 35px;
   border: none;
-  background-color: rgba(34, 33, 33, 0.535);
+  /* background-color: rgba(34, 33, 33, 0.535); */
 }
 </style>

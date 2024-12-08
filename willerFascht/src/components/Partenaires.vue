@@ -282,4 +282,17 @@ h1 {
   font-size: 20px;
   margin-bottom: 1% !important;
 }
+@media screen and (max-width: 1022px) {
+  .listespartenaires[data-v-3fdadf91] {
+    /* margin-top: 25px;
+    margin-left: 25px;
+    box-shadow: 12px 15px 25px black !important;
+    width: 500px;
+    height: 270px;
+    align-content: center; */
+    /* width: 90% !important;
+    display: flex !important;
+    flex-direction: column !important; */
+}
+}
 </style>

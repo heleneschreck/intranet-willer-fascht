@@ -179,6 +179,43 @@ export default {
     display: function () {
       this.mode = "display";
     },
+    displayEnattente: function () {
+      var termine = document.querySelector(".afficheTermine");
+      console.log(termine);
+      document.querySelector(".statut:nth-child(1)").style.display = "block";
+      document.querySelector(".statut:nth-child(2)").style.display = "none";
+      document.querySelector(".afficheEnAttente").style.display = "none";
+      document.querySelector(".afficheTermine").style.display = "none";
+      document.querySelector(".afficheEncours").style.display = "block";
+      document.querySelector(".afficheEncours").style.left = "79%"; 
+      document.querySelector(".afficheEncours").style.top = "43%"; 
+      
+      
+      
+    },
+    displayEncours: function () {
+      // console.log();
+      document.querySelector(".statut:nth-child(1)").style.display = "none";
+      document.querySelector(".statut:nth-child(2)").style.display = "block";
+      document.querySelector(".statut:nth-child(3)").style.display = "none";
+      document.querySelector(".afficheEnAttente").style.display = "block";
+      document.querySelector(".afficheTermine").style.display = "block";
+      document.querySelector(".afficheEncours").style.display = "none";
+      
+      
+    },
+    displayTermine: function () {
+      document.querySelector(".statut:nth-child(2)").style.display = "none";
+      document.querySelector(".statut:nth-child(3)").style.display = "block";
+      document.querySelector(".afficheEnAttente").style.display = "none";
+      document.querySelector(".afficheTermine").style.display = "none";
+      document.querySelector(".afficheEncours").style.display = "block";
+      document.querySelector(".afficheEncours").style.left = "32px"; 
+      document.querySelector(".afficheEncours").style.top = "9%"; 
+
+
+    },
+
     nodisplay: function () {
       this.mode = "nodisplay";
     },
@@ -215,19 +252,36 @@ export default {
 };
 </script>
 <template>
-  <router-link :to="`/todo`">
-    <button
-      class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 retourliste"
-    >
-      Retour
-    </button>
-  </router-link>
-
   <br />
   <!-- La tache a changé est {{ dragtache }} -->
+  <button class="responsiveOption afficheEnAttente" @click="displayEnattente()">
+    En attente
+  </button>
+  <button class="responsiveOption afficheTermine" @click="displayTermine()">
+    Terminé
+  </button>
+  <!-- <button
+    class="responsiveOption afficheTermine"
+    @click="displayTermine()"
+  >
+    Terminés
+  </button> -->
+  <button class="responsiveOption afficheEncours" @click="displayEncours()">
+    En cours
+  </button>
   <div v-for="project in projects" v-show="$route.params.projet == project.id">
-    <h1 style="background-color: transparent">{{ project.title }}</h1>
+    <router-link :to="`/todo`">
+      <button
+        class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 retourliste"
+      >
+        Retour
+      </button>
+    </router-link>
+    <br />
 
+    <h1 style="background-color: transparent !important">
+      {{ project.title }}
+    </h1>
     <div class="tableau">
       <div v-for="statut in statuts" class="statut">
         {{ statut.statut }}
@@ -577,9 +631,26 @@ export default {
   </div>
 </template>
 <style scoped>
+.responsiveOption {
+  display: none;
+    z-index: 1;
+}
+.afficheEnAttente {
+  position: absolute;
+  left: 5px;
+}
+.afficheTerminé {
+  position: absolute;
+  left: 500px;
+}
+.afficheEncours {
+  position: absolute;
+  left: 500px;
+  top: 1%;
+}
 .retourliste {
   margin-left: 1%;
-  margin-bottom: -140px !important;
+  margin-bottom: 20px; /* Ajustez la marge pour espacer correctement le bouton du h1 */
   border-radius: 20px;
   width: 200px;
   border: 5px solid rgb(70, 137, 226);
@@ -588,7 +659,7 @@ export default {
   font-weight: bold;
   font-size: 20px;
   height: 70px;
-  margin-bottom: 5% ;
+  /* z-index: 1; */
 }
 .projet {
   background-color: hsla(0, 0%, 84%, 0.3) !important;
@@ -623,7 +694,7 @@ export default {
   font-size: 15px;
 }
 .display {
-  margin-left: 40%;
+  /* margin-left: 40%; */
 }
 .arriere {
   margin-left: 45%;
@@ -638,7 +709,7 @@ export default {
   width: 30px;
 }
 .incremente {
-  margin-left: 360px;
+  margin-left: 90%;
   margin-bottom: 3px !important;
   margin-top: -44px !important;
   width: 30px;
@@ -654,9 +725,12 @@ export default {
 }
 
 h1 {
-  font-size: 53px !important;
   text-align: center;
-  margin-bottom: 3%;
+  margin-top: -35px !important;
+  margin-bottom: 3% !important;
+  font-size: 27px !important;
+  font-weight: 600 !important;
+  background-color: white !important;
 }
 .tableau {
   display: flex;
@@ -668,6 +742,7 @@ h1 {
 .statut {
   font-size: 20px;
   margin-right: 10px;
+  width: 30%;
 }
 .ajout {
   width: 110px;
@@ -681,6 +756,7 @@ h1 {
   width: 400px;
   font-family: Arial Narrow Bold !important;
   box-shadow: 10px 12px 15px black;
+  width: 100%;
 }
 .suppmod {
   display: flex;
@@ -690,6 +766,7 @@ h1 {
   padding-right: 20%;
 }
 .affichagetache {
+  margin-left: 35%;
   box-shadow: 10px 12px 15px black;
   width: 40% !important;
   margin-bottom: 25px !important;
@@ -699,10 +776,38 @@ h1 {
   color: black !important;
 }
 @media screen and (max-width: 800px) {
-
+  .afficheEnAttente {
+    display: block;
+    position: absolute;
+    left: 26px;
+    top: 17%;
+    z-index: 1;
+  }
+  .afficheTermine {
+    display: block;
+    position: absolute;
+    left: 72%;
+    top: 17%;
+    z-index: 1;
+  }
+  .afficheEncours {
+    display: none;
+  }
+  .statut:nth-child(3) {
+    display: none;
+  }
+  .statut:nth-child(1) {
+    display: none;
+  }
+  .statut {
+    width: 90%;
+  }
+  .affichagetache {
+    width: 90% !important;
+    margin-left: 5%;
+    font-size: 90%;
+  }
 }
 @media screen and (max-width: 1022px) {
-
-
 }
 </style>

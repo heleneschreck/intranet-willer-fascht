@@ -155,16 +155,20 @@ export default defineComponent({
 });
 </script>
 <template>
-  <div class="navigation">
-    <router-link :to="`/accueilintra`">
-      <button class="button rounded-lg Retour">Retour</button>
-    </router-link>
+  <!-- <div class="navigation"> -->
+    <!-- <router-link :to="`/accueilintra`">
+      <button class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 Retour">Retour</button>
+    </router-link> -->
+  
+    
+    <!-- <br> -->
+    
     <router-link :to="`/miseenligne`">
-      <button class="button rounded-lg Retour">Mise en ligne</button>
+      <button class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 Retour">Mise en ligne</button>
     </router-link>
-  </div>
-
-  <h1>Liste des articles dont je suis l'auteur</h1>
+    
+  <!-- </div> -->
+  
   <!-- menu article -->
   <div class="MenuArticle" v-if="isMenuOpen == true">
     <img
@@ -323,7 +327,11 @@ export default defineComponent({
     </div>
   </div>
 </template>
-<style>
+<style scoped>
+h1{
+  background-color: white !important;
+  margin-top: -11px !important;
+}
 .open:hover {
   cursor: pointer;
   z-index: 1 !important;
@@ -339,6 +347,7 @@ export default defineComponent({
 }
 .ContenuArticle {
   border: 1px solid black;
+  /* box-shadow: 12px 15px 25px black !important; */
   height: 300px;
   margin-bottom: 5px;
   margin-left: 10px;
@@ -367,6 +376,20 @@ export default defineComponent({
   text-align: center;
   font-size: 25px;
   font-weight: bold;
+}
+.Retour{
+  margin-left: 1%;
+  /* margin-bottom: -140px !important; */
+  border-radius: 20px;
+  width: 200px;
+  border: 5px solid rgb(70, 137, 226);
+  background-color: rgb(70, 137, 226);
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  height: 70px;
+  margin-bottom: 1% ;
+  word-wrap: break-word; 
 }
 .articleCardContent {
   text-align: justify;
@@ -409,7 +432,7 @@ span:hover {
   background-color: whitesmoke;
   box-shadow:  4px 1px 20px 0px black;
   position: absolute;
-  top: 50%;
+  top: 250px;
   left: 44%;
   font-weight: bolder !important;
 }

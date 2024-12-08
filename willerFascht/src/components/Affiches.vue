@@ -330,14 +330,11 @@ export default {
 };
 </script>
 <template >
-  <div class="entete">
-
-    
-  </div>
+  
   <!-- <router-link :to="`/accueilintra`">
     <button class="button rounded-lg retourtodo">Retour</button>
   </router-link> -->
-  <h1>Supports publicitaires</h1>
+  <!-- <h1>Supports publicitaires</h1> -->
   <div class="supportpublicitaires">
     <div v-for="affiche in affiches">
       <div class="supportpublicitaire">
@@ -527,10 +524,18 @@ h1{
 }
 
 .inputtitle {
+  margin-bottom: 23px;
+  text-align: center;
+  width: 100%;
+  border-radius: 15px;
+  border-color: hsla(0, 0%, 84%, 0.3);
+  /* margin-left: 40%; */
+  box-shadow: 4px 10px 15px black;
   margin-bottom: 13px;
   text-align: center;
 }
 .affichetitle {
+  
   font-size: 30px;
   text-align: center;
 }
